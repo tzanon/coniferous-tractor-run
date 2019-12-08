@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.061871843"
-     inkscape:cx="-1081.2111"
-     inkscape:cy="-1275.6352"
+     inkscape:zoom="0.70710678"
+     inkscape:cx="472.92335"
+     inkscape:cy="569.66635"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -47,7 +47,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -998,45 +998,15 @@
        y="24.680195"
        transform="rotate(-90)" />
     <rect
-       y="173.38222"
-       x="314.16324"
+       y="55.222507"
+       x="44.580441"
        height="33.866665"
        width="16.933332"
        id="rect2322"
        style="opacity:1;fill:#ff8b00;fill-opacity:1;stroke:none;stroke-width:0.18382074;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96" />
-    <g
-       transform="translate(-79.068412,22.948331)"
-       id="g2929"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96">
-      <g
-         id="g2925"
-         transform="translate(5.8799295,-3.2072343)">
-        <rect
-           style="opacity:1;fill:#43b5ff;fill-opacity:1;stroke:none;stroke-width:0.2517069;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="rect2921"
-           width="25.4"
-           height="42.333332"
-           x="430.21426"
-           y="159.68874" />
-        <rect
-           y="134.28874"
-           x="417.51425"
-           height="25.4"
-           width="50.799999"
-           id="rect2923"
-           style="opacity:1;fill:#43b5ff;fill-opacity:1;stroke:none;stroke-width:0.27573112;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-      </g>
-      <rect
-         style="opacity:1;fill:#ff8b00;fill-opacity:1;stroke:none;stroke-width:0.14532305;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         id="rect2927"
-         width="16.933332"
-         height="21.166666"
-         x="440.32751"
-         y="143.96283" />
-    </g>
+       inkscape:export-ydpi="96"
+       inkscape:export-filename="D:\Unity_Projects\forest-maze-chaser\Assets\Sprites\ph_player.png" />
     <rect
        y="595.64301"
        x="-574.75818"
@@ -2157,13 +2127,9 @@
       </g>
     </g>
     <g
-       id="g2707"
-       transform="translate(-291.13607,-369.06909)"
-       inkscape:export-filename="D:\Unity_Projects\forest-maze-chaser\Assets\Sprites\fixed_large_ph_path.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96">
+       id="g1735">
       <g
-         transform="translate(375.74859,349.94504)"
+         transform="translate(80.33621,-65.094381)"
          id="g2734">
         <rect
            style="opacity:1;fill:#896400;fill-opacity:1;stroke:none;stroke-width:0.89740402;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -2182,7 +2148,7 @@
       </g>
       <g
          id="g2771"
-         transform="matrix(-1,0,0,1,-175.48539,349.94505)">
+         transform="matrix(-1,0,0,1,-470.89777,-65.094381)">
         <rect
            inkscape:export-ydpi="96"
            inkscape:export-xdpi="96"
@@ -2200,7 +2166,7 @@
       </g>
       <g
          id="g2777"
-         transform="matrix(1,0,0,-1,308.01527,1531.5784)">
+         transform="matrix(1,0,0,-1,12.60289,1116.539)">
         <rect
            inkscape:export-ydpi="96"
            inkscape:export-xdpi="96"
@@ -2217,7 +2183,7 @@
            inkscape:connector-curvature="0" />
       </g>
       <g
-         transform="rotate(-180,-53.876034,765.78921)"
+         transform="rotate(-180,-201.58222,558.26949)"
          id="g2783">
         <rect
            style="opacity:1;fill:#896400;fill-opacity:1;stroke:none;stroke-width:0.89740402;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -2236,81 +2202,77 @@
       </g>
     </g>
     <g
-       id="g2693"
-       transform="translate(-292.16938,-325.19155)"
-       inkscape:export-filename="D:\Unity_Projects\forest-maze-chaser\Assets\Sprites\fixed_large_ph_path.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96">
+       id="g1721">
       <g
-         transform="translate(-292.99454,24.965925)"
-         id="g1698">
+         transform="matrix(0.99999991,0,0,0.99999802,-44.901287,47.040011)"
+         id="g1658">
         <rect
            inkscape:export-ydpi="96"
            inkscape:export-xdpi="96"
-           y="770.31805"
-           x="394.15948"
-           height="67.733459"
+           y="328.83154"
+           x="-190.87473"
+           height="67.733315"
            width="67.73333"
            id="rect2645"
-           style="opacity:1;fill:#896400;fill-opacity:1;stroke:none;stroke-width:0.89740402;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+           style="opacity:1;fill:#896400;fill-opacity:1;stroke:none;stroke-width:0.89740306;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
         <path
-           style="opacity:1;fill:#499005;fill-opacity:1;stroke:none;stroke-width:0.63456041;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           d="M 461.89279,838.05153 V 770.3182 h -8.46666 v 67.73333 z"
+           style="opacity:1;fill:#499005;fill-opacity:1;stroke:none;stroke-width:0.63455975;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m -123.14143,396.56487 v -67.73318 h -8.46666 v 67.73318 z"
            id="path2538"
            inkscape:connector-curvature="0" />
         <path
            inkscape:connector-curvature="0"
            id="path2553"
-           d="M 402.62613,838.05153 V 770.3182 h -8.46666 v 67.73333 z"
-           style="opacity:1;fill:#499005;fill-opacity:1;stroke:none;stroke-width:0.63456041;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+           d="m -182.40809,396.56487 v -67.73318 h -8.46666 v 67.73318 z"
+           style="opacity:1;fill:#499005;fill-opacity:1;stroke:none;stroke-width:0.63455975;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
       </g>
       <g
-         transform="translate(-340.00218,25.605305)"
-         id="g1703">
+         transform="matrix(0.99999991,0,0,0.99999802,-47.039443,-48.107892)"
+         id="g1667">
         <rect
            inkscape:export-ydpi="96"
            inkscape:export-xdpi="96"
-           y="769.67883"
-           x="508.90045"
-           height="67.733459"
+           y="423.97964"
+           x="-121.00325"
+           height="67.733322"
            width="67.73333"
            id="rect2655"
-           style="opacity:1;fill:#896400;fill-opacity:1;stroke:none;stroke-width:0.89740402;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+           style="opacity:1;fill:#896400;fill-opacity:1;stroke:none;stroke-width:0.89740306;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
         <path
            inkscape:connector-curvature="0"
            id="path1900"
-           d="m 576.63379,769.67882 h -67.73333 v 8.46666 h 67.73333 z"
-           style="opacity:1;fill:#499005;fill-opacity:1;stroke:none;stroke-width:0.63456041;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+           d="m -53.26991,423.97963 h -67.73333 v 8.46664 h 67.73333 z"
+           style="opacity:1;fill:#499005;fill-opacity:1;stroke:none;stroke-width:0.63455975;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
         <path
-           style="opacity:1;fill:#499005;fill-opacity:1;stroke:none;stroke-width:0.63456041;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           d="m 576.63379,828.94548 h -67.73333 v 8.46666 h 67.73333 z"
+           style="opacity:1;fill:#499005;fill-opacity:1;stroke:none;stroke-width:0.63455975;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m -53.26991,483.24616 h -67.73333 v 8.46665 h 67.73333 z"
            id="path2536"
            inkscape:connector-curvature="0" />
       </g>
       <rect
          inkscape:export-ydpi="96"
          inkscape:export-xdpi="96"
-         y="795.28387"
-         x="-34.301716"
-         height="67.733459"
-         width="67.73333"
+         y="375.87082"
+         x="-371.24268"
+         height="67.733322"
+         width="67.733322"
          id="rect1676"
-         style="opacity:1;fill:#896400;fill-opacity:1;stroke:none;stroke-width:0.89740402;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+         style="opacity:1;fill:#896400;fill-opacity:1;stroke:none;stroke-width:0.89740306;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
       <g
-         transform="translate(-219.93229,33.106185)"
-         id="g1707">
+         transform="matrix(0.99999991,0,0,0.99999802,-47.039467,-48.107541)"
+         id="g1662">
         <rect
            inkscape:export-ydpi="96"
            inkscape:export-xdpi="96"
-           y="762.17767"
-           x="253.36391"
+           y="423.97922"
+           x="-256.46991"
            height="67.733459"
            width="67.73333"
            id="rect1684"
            style="opacity:1;fill:#896400;fill-opacity:1;stroke:none;stroke-width:0.89740402;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
         <path
            style="opacity:1;fill:#499005;fill-opacity:1;stroke:none;stroke-width:0.63456041;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           d="m 253.36391,762.1778 v 8.46667 50.8 8.46666 h 59.26666 8.46667 v -8.46666 -50.8 -8.46667 h -8.46667 z m 8.46666,8.46667 h 50.8 v 50.8 h -50.8 z"
+           d="m -256.4699,423.97934 v 8.46667 50.8 8.46666 h 59.26666 8.46667 v -8.46666 -50.8 -8.46667 h -8.46667 z m 8.46666,8.46667 h 50.8 v 50.8 h -50.8 z"
            id="path1686"
            inkscape:connector-curvature="0" />
       </g>
@@ -3256,7 +3218,7 @@
     </g>
     <g
        id="g2874"
-       transform="translate(-626.91516,-402.1026)"
+       transform="translate(-626.91516,-419.4895)"
        inkscape:export-filename="D:\Unity_Projects\forest-maze-chaser\Assets\Sprites\ph_path_large_halves_H.png"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96">
@@ -5304,5 +5266,244 @@
        width="33.866665"
        id="rect5001"
        style="opacity:1;fill:#499005;fill-opacity:1;stroke:none;stroke-width:0.44870201;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <g
+       id="g1849"
+       transform="translate(-132.74138,-72.344622)"
+       inkscape:export-filename="D:\Unity_Projects\forest-maze-chaser\Assets\Sprites\ph_tractor_right.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
+      <rect
+         transform="rotate(-90)"
+         style="opacity:1;fill:#43b5ff;fill-opacity:1;stroke:none;stroke-width:0.2517069;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect1747"
+         width="25.4"
+         height="42.333332"
+         x="-231.82838"
+         y="347.96378" />
+      <rect
+         transform="rotate(-90)"
+         y="322.56378"
+         x="-244.5284"
+         height="25.4"
+         width="38.100002"
+         id="rect1749"
+         style="opacity:1;fill:#43b5ff;fill-opacity:1;stroke:none;stroke-width:0.23879017;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         y="193.72836"
+         x="340.29086"
+         height="21.166666"
+         width="16.933332"
+         id="rect1753"
+         style="opacity:1;fill:#ff8b00;fill-opacity:1;stroke:none;stroke-width:0.14532305;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.09748568;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect1764"
+         width="12.7"
+         height="12.7"
+         x="-244.52838"
+         y="377.59711"
+         transform="rotate(-90)" />
+      <rect
+         transform="rotate(-90)"
+         y="322.56378"
+         x="-244.5284"
+         height="25.400015"
+         width="25.400015"
+         id="rect1766"
+         style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.19497147;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <g
+       id="g1821"
+       transform="translate(-237.7122,-65.144462)"
+       inkscape:export-filename="D:\Unity_Projects\forest-maze-chaser\Assets\Sprites\ph_tractor_fwd.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
+      <rect
+         y="116.72362"
+         x="342.6799"
+         height="42.333332"
+         width="25.4"
+         id="rect2921"
+         style="opacity:1;fill:#43b5ff;fill-opacity:1;stroke:none;stroke-width:0.2517069;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         style="opacity:1;fill:#43b5ff;fill-opacity:1;stroke:none;stroke-width:0.27573112;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect2923"
+         width="50.799999"
+         height="25.4"
+         x="329.97989"
+         y="91.323624" />
+      <rect
+         style="opacity:1;fill:#ff8b00;fill-opacity:1;stroke:none;stroke-width:0.14532305;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect2927"
+         width="16.933332"
+         height="21.166666"
+         x="346.91321"
+         y="104.20495" />
+      <rect
+         style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1378656;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect1768"
+         width="25.400015"
+         height="12.7"
+         x="-116.72362"
+         y="329.97989"
+         transform="rotate(-90)" />
+      <rect
+         transform="rotate(-90)"
+         y="368.07986"
+         x="-116.72363"
+         height="12.7"
+         width="25.400015"
+         id="rect1808"
+         style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1378656;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         transform="rotate(-90)"
+         y="336.3299"
+         x="-159.05695"
+         height="6.3499999"
+         width="12.700007"
+         id="rect1810"
+         style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.0689328;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.0689328;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect1812"
+         width="12.700007"
+         height="6.3499999"
+         x="-159.05695"
+         y="368.0799"
+         transform="rotate(-90)" />
+    </g>
+    <g
+       id="g1837"
+       transform="matrix(1,0,0,-1,-154.36845,183.64859)"
+       inkscape:export-filename="D:\Unity_Projects\forest-maze-chaser\Assets\Sprites\ph_tractor_back.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
+      <rect
+         style="opacity:1;fill:#43b5ff;fill-opacity:1;stroke:none;stroke-width:0.2517069;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect1823"
+         width="25.4"
+         height="42.333332"
+         x="342.6799"
+         y="116.72362" />
+      <rect
+         y="91.323624"
+         x="329.97989"
+         height="25.4"
+         width="50.799999"
+         id="rect1825"
+         style="opacity:1;fill:#43b5ff;fill-opacity:1;stroke:none;stroke-width:0.27573112;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         y="104.20495"
+         x="346.91321"
+         height="21.166666"
+         width="16.933332"
+         id="rect1827"
+         style="opacity:1;fill:#ff8b00;fill-opacity:1;stroke:none;stroke-width:0.14532305;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         transform="rotate(-90)"
+         y="329.97989"
+         x="-116.72362"
+         height="12.7"
+         width="25.400015"
+         id="rect1829"
+         style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1378656;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1378656;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect1831"
+         width="25.400015"
+         height="12.7"
+         x="-116.72363"
+         y="368.07986"
+         transform="rotate(-90)" />
+      <rect
+         style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.0689328;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect1833"
+         width="12.700007"
+         height="6.3499999"
+         x="-159.05695"
+         y="336.3299"
+         transform="rotate(-90)" />
+      <rect
+         transform="rotate(-90)"
+         y="368.0799"
+         x="-159.05695"
+         height="6.3499999"
+         width="12.700007"
+         id="rect1835"
+         style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.0689328;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <g
+       transform="matrix(-1,0,0,1,471.30376,-73.330968)"
+       id="g1861"
+       inkscape:export-filename="D:\Unity_Projects\forest-maze-chaser\Assets\Sprites\ph_tractor_left.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
+      <rect
+         y="347.96378"
+         x="-231.82838"
+         height="42.333332"
+         width="25.4"
+         id="rect1851"
+         style="opacity:1;fill:#43b5ff;fill-opacity:1;stroke:none;stroke-width:0.2517069;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         transform="rotate(-90)" />
+      <rect
+         style="opacity:1;fill:#43b5ff;fill-opacity:1;stroke:none;stroke-width:0.23879017;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect1853"
+         width="38.100002"
+         height="25.4"
+         x="-244.5284"
+         y="322.56378"
+         transform="rotate(-90)" />
+      <rect
+         style="opacity:1;fill:#ff8b00;fill-opacity:1;stroke:none;stroke-width:0.14532305;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect1855"
+         width="16.933332"
+         height="21.166666"
+         x="340.29086"
+         y="193.72836" />
+      <rect
+         transform="rotate(-90)"
+         y="377.59711"
+         x="-244.52838"
+         height="12.7"
+         width="12.7"
+         id="rect1857"
+         style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.09748568;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.19497147;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect1859"
+         width="25.400015"
+         height="25.400015"
+         x="-244.5284"
+         y="322.56378"
+         transform="rotate(-90)" />
+    </g>
+    <g
+       id="g1869"
+       inkscape:export-filename="D:\Unity_Projects\forest-maze-chaser\Assets\Sprites\ph_apple.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96"
+       transform="translate(12.722029,-205.04918)">
+      <rect
+         y="284.29999"
+         x="-8.8817842e-016"
+         height="12.7"
+         width="12.7"
+         id="rect1863"
+         style="opacity:1;fill:#d11900;fill-opacity:1;stroke:none;stroke-width:0.09748567;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         inkscape:export-xdpi="96"
+         inkscape:export-ydpi="96"
+         inkscape:export-filename="D:\Unity_Projects\forest-maze-chaser\Assets\Sprites\ph_player.png" />
+      <rect
+         inkscape:export-filename="D:\Unity_Projects\forest-maze-chaser\Assets\Sprites\ph_player.png"
+         inkscape:export-ydpi="96"
+         inkscape:export-xdpi="96"
+         style="opacity:1;fill:#006400;fill-opacity:1;stroke:none;stroke-width:0.03979836;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect1865"
+         width="8.4666662"
+         height="3.175"
+         x="6.3499999"
+         y="282.18332" />
+    </g>
   </g>
 </svg>

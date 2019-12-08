@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Collectible
   layers:
   - Default
   - TransparentFX
@@ -40,4 +41,13 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Ground
+    uniqueID: 529645817
+    locked: 0
+  - name: Collectibles
+    uniqueID: 1903788321
+    locked: 0
+  - name: Actors
+    uniqueID: 1173600139
     locked: 0
