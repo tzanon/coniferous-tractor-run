@@ -631,6 +631,71 @@ public class @ChaserControls : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": true
                 }
             ]
+        },
+        {
+            ""name"": ""Debug"",
+            ""id"": ""37b55069-ed2f-4fc6-9817-a615badc53e8"",
+            ""actions"": [
+                {
+                    ""name"": ""CalculateGraph"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""ee4cd8f7-7b0a-47eb-a4e6-2d6265e312fd"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""LeftClick"",
+                    ""type"": ""Button"",
+                    ""id"": ""693842f5-ae3d-47a0-8f7e-dad209e4bf4f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Position"",
+                    ""type"": ""Value"",
+                    ""id"": ""1a98928b-fa88-4c64-bb11-fbc000820168"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""05e819a3-85bf-4ade-9581-32e4a8279840"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""CalculateGraph"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""148e50fe-fe88-48bc-a0d9-cdc5fd71a398"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dd8a6fcd-c981-492f-ba4d-4aa92898f06f"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Position"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -712,6 +777,11 @@ public class @ChaserControls : IInputActionCollection, IDisposable
         // ForestChaser
         m_ForestChaser = asset.FindActionMap("ForestChaser", throwIfNotFound: true);
         m_ForestChaser_Move = m_ForestChaser.FindAction("Move", throwIfNotFound: true);
+        // Debug
+        m_Debug = asset.FindActionMap("Debug", throwIfNotFound: true);
+        m_Debug_CalculateGraph = m_Debug.FindAction("CalculateGraph", throwIfNotFound: true);
+        m_Debug_LeftClick = m_Debug.FindAction("LeftClick", throwIfNotFound: true);
+        m_Debug_Position = m_Debug.FindAction("Position", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -903,6 +973,55 @@ public class @ChaserControls : IInputActionCollection, IDisposable
         }
     }
     public ForestChaserActions @ForestChaser => new ForestChaserActions(this);
+
+    // Debug
+    private readonly InputActionMap m_Debug;
+    private IDebugActions m_DebugActionsCallbackInterface;
+    private readonly InputAction m_Debug_CalculateGraph;
+    private readonly InputAction m_Debug_LeftClick;
+    private readonly InputAction m_Debug_Position;
+    public struct DebugActions
+    {
+        private @ChaserControls m_Wrapper;
+        public DebugActions(@ChaserControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @CalculateGraph => m_Wrapper.m_Debug_CalculateGraph;
+        public InputAction @LeftClick => m_Wrapper.m_Debug_LeftClick;
+        public InputAction @Position => m_Wrapper.m_Debug_Position;
+        public InputActionMap Get() { return m_Wrapper.m_Debug; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(DebugActions set) { return set.Get(); }
+        public void SetCallbacks(IDebugActions instance)
+        {
+            if (m_Wrapper.m_DebugActionsCallbackInterface != null)
+            {
+                @CalculateGraph.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnCalculateGraph;
+                @CalculateGraph.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnCalculateGraph;
+                @CalculateGraph.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnCalculateGraph;
+                @LeftClick.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnLeftClick;
+                @LeftClick.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnLeftClick;
+                @LeftClick.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnLeftClick;
+                @Position.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnPosition;
+                @Position.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnPosition;
+                @Position.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnPosition;
+            }
+            m_Wrapper.m_DebugActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @CalculateGraph.started += instance.OnCalculateGraph;
+                @CalculateGraph.performed += instance.OnCalculateGraph;
+                @CalculateGraph.canceled += instance.OnCalculateGraph;
+                @LeftClick.started += instance.OnLeftClick;
+                @LeftClick.performed += instance.OnLeftClick;
+                @LeftClick.canceled += instance.OnLeftClick;
+                @Position.started += instance.OnPosition;
+                @Position.performed += instance.OnPosition;
+                @Position.canceled += instance.OnPosition;
+            }
+        }
+    }
+    public DebugActions @Debug => new DebugActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     public InputControlScheme KeyboardMouseScheme
     {
@@ -965,5 +1084,11 @@ public class @ChaserControls : IInputActionCollection, IDisposable
     public interface IForestChaserActions
     {
         void OnMove(InputAction.CallbackContext context);
+    }
+    public interface IDebugActions
+    {
+        void OnCalculateGraph(InputAction.CallbackContext context);
+        void OnLeftClick(InputAction.CallbackContext context);
+        void OnPosition(InputAction.CallbackContext context);
     }
 }

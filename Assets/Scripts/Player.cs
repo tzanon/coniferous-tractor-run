@@ -16,7 +16,7 @@ public class Player : MonoBehaviour
 
 	private int _numCollectibles = 0;
 
-	public int NumCollectibles { get => _numCollectibles; set => _numCollectibles = value; }
+	public int NumCollectibles { get => _numCollectibles; }
 
 	private void Awake()
 	{
