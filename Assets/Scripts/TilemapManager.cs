@@ -2,15 +2,24 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
+
 using Pathfinding;
 
 public class TilemapManager : MonoBehaviour
 {
 	public bool debugMode = false;
+	public bool visualDebugMode = false;
 	public Color nodeHighlight;
+	public Color neighbourHighlight;
 	public Color pathHighlight;
-
+	public float highlightRefreshRate = 0.15f;
 	public Vector3Int testCell;
+
+	public RectTransform visualDebugMenu;
+
+	private enum VisualDebugType { None, Cell, Neighbours }
+	private VisualDebugType _visualDebugtype = VisualDebugType.None;
 
 	private ChaserControls controls;
 	private InputAction leftClick;
@@ -28,6 +37,8 @@ public class TilemapManager : MonoBehaviour
 	public Player player;
 
 	public Vector3 PlayerCell { get => CellOfPosition(player.transform.position); }
+
+	#region Unity functions
 
 	private void Awake()
 	{
@@ -50,11 +61,13 @@ public class TilemapManager : MonoBehaviour
 		mousePosAction.performed += ctx => _mousePosition = ctx.ReadValue<Vector2>();
 	}
 
-	public void Start()
+	private void Start()
 	{
 		PrintMapInfo();
 		PrintPlayerPosition();
 		//PrintCellInfo(testCell);
+
+		visualDebugMenu.gameObject.SetActive(visualDebugMode);
 
 		CalculateGraph();
 	}
@@ -69,16 +82,9 @@ public class TilemapManager : MonoBehaviour
 		controls.Debug.Disable();
 	}
 
-	private void HandleMouseClick(InputAction.CallbackContext ctx)
-	{
-		Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(_mousePosition);
-		Vector3Int mouseCell = CellOfPosition(worldMousePos);
+	#endregion
 
-		Debug.Log("mouse position is " + worldMousePos);
-
-		//HighlightCell(mouseCell);
-		HighlightNodeNeighbours(mouseCell);
-	}
+	#region Tilemap functions
 
 	public Vector3Int CellOfPosition(Vector3 pos)
 	{
@@ -141,17 +147,67 @@ public class TilemapManager : MonoBehaviour
 		}
 	}
 
+	#endregion
+
 	#region debugging
 
+	public void NoVisualDebug()
+	{
+		RemoveHighlight();
+		_visualDebugtype = VisualDebugType.None;
+	}
+
+	public void CellVisualDebug()
+	{
+		_visualDebugtype = VisualDebugType.Cell;
+	}
+
+	public void NeighbourVisualDebug()
+	{
+		_visualDebugtype = VisualDebugType.Neighbours;
+	}
+
+	/// <summary>
+	/// Handle left mouse click for visual debugging
+	/// </summary>
+	/// <param name="ctx"> unused callback context </param>
+	private void HandleMouseClick(InputAction.CallbackContext ctx)
+	{
+		if (_visualDebugtype == VisualDebugType.None)
+			return;
+
+		Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(_mousePosition);
+		Vector3Int mouseCell = CellOfPosition(worldMousePos);
+
+		if (debugMode)
+			Debug.Log("mouse position is " + worldMousePos);
+
+		switch (_visualDebugtype)
+		{
+			case VisualDebugType.Cell:
+				HighlightCell(mouseCell);
+				break;
+			case VisualDebugType.Neighbours:
+				HighlightNodeNeighbours(mouseCell);
+				break;
+			default:
+				break;
+		}
+	}
+
+	/// <summary>
+	/// Highlight a tile on the tilemap
+	/// </summary>
+	/// <param name="cell"> position of tile to highlight </param>
 	public void HighlightCell(Vector3Int cell)
 	{
 		HighlightCells(new Vector3Int[] { cell }, nodeHighlight);
 	}
 
 	/// <summary>
-	/// 
+	/// Highlights the given node and its neighbours
 	/// </summary>
-	/// <param name="node">  </param>
+	/// <param name="node"> node to highlight neighbours of </param>
 	public void HighlightNodeNeighbours(Vector3Int node)
 	{
 		if (!IsPathfindingNode(node))
@@ -163,20 +219,32 @@ public class TilemapManager : MonoBehaviour
 		}
 
 		Vector3Int[] neighbours = pathfindingGraph.NeighboursOfNode(node);
-		Vector3Int[] nodes = new Vector3Int[neighbours.Length + 1];
 
-		nodes[neighbours.Length] = node;
-		for (int i = 0; i < neighbours.Length; i++)
-			nodes[i] = neighbours[i];
-
-		HighlightCells(nodes, nodeHighlight);
+		HighlightCell(node);
+		HighlightCells(neighbours, neighbourHighlight, false);
 	}
 
+	/// <summary>
+	/// Highlights all pathfinding node tiles
+	/// </summary>
 	public void HighlightAllNodes()
 	{
 		HighlightCells(pathfindingGraph.Nodes.ToArray(), nodeHighlight);
 	}
 
+	/// <summary>
+	/// Highlights the path between the given nodes
+	/// </summary>
+	/// <param name="start"> start node of path </param>
+	/// <param name="end"> end node of path </param>
+	public void HighlightPath(Vector3Int start, Vector3Int end)
+	{
+
+	}
+
+	/// <summary>
+	/// Remove any highlighting
+	/// </summary>
 	public void RemoveHighlight()
 	{
 		foreach (Vector3Int cell in highlightedCells)
@@ -187,10 +255,16 @@ public class TilemapManager : MonoBehaviour
 		highlightedCells.Clear();
 	}
 
-	// not highlighting grass tiles?
-	private void HighlightCells(Vector3Int[] cells, Color col)
+	/// <summary>
+	/// Highlight a set of tiles with the given colour
+	/// </summary>
+	/// <param name="cells"> Cells to highlight </param>
+	/// <param name="col"> Colour to highlight tiles with </param>
+	/// <param name="removeExistingHighlight"> whether to reset currently highlighted cell </param>
+	private void HighlightCells(Vector3Int[] cells, Color col, bool removeExistingHighlight=true)
 	{
-		RemoveHighlight();
+		if (removeExistingHighlight)
+			RemoveHighlight();
 
 		foreach (Vector3Int cell in cells)
 		{
@@ -201,8 +275,6 @@ public class TilemapManager : MonoBehaviour
 				continue;
 			}
 
-			if (debugMode)
-				Debug.Log("Setting cell " + cell + " to node color");
 			map.SetColor(cell, col);
 			highlightedCells.Add(cell);
 		}

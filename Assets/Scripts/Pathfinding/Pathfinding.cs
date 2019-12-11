@@ -46,6 +46,15 @@ namespace Pathfinding
 
 		public void AddNode(Vector3Int node, List<Vector3Int> neighbours)
 		{
+			if (MaxNumNeighbours > 0 && neighbours.Count > MaxNumNeighbours)
+			{
+				Debug.Log("Trying to add " + node + " with too many neighbours! Adding first " + MaxNumNeighbours);
+				List<Vector3Int> truncatedNeighbours = neighbours.GetRange(0, MaxNumNeighbours);
+				nodeNeighbours.Add(node, truncatedNeighbours);
+
+				return;
+			}
+
 			nodeNeighbours.Add(node, neighbours);
 		}
 
