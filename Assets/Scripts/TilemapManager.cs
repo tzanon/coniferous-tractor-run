@@ -2,18 +2,17 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
-
 using Pathfinding;
 
 public class TilemapManager : MonoBehaviour
 {
 	public bool debugMode = false;
 	public bool visualDebugMode = false;
+	public bool clearHighlight = true;
 	public Color nodeHighlight;
 	public Color neighbourHighlight;
 	public Color pathHighlight;
-	public float highlightRefreshRate = 0.15f;
+	public float hoverHighlightRefreshRate = 0.15f;
 	public Vector3Int testCell;
 
 	public RectTransform visualDebugMenu;
@@ -65,7 +64,6 @@ public class TilemapManager : MonoBehaviour
 	{
 		PrintMapInfo();
 		PrintPlayerPosition();
-		//PrintCellInfo(testCell);
 
 		visualDebugMenu.gameObject.SetActive(visualDebugMode);
 
@@ -149,7 +147,12 @@ public class TilemapManager : MonoBehaviour
 
 	#endregion
 
-	#region debugging
+	#region visual debugging
+
+	public void ToggleHighlightRefresh()
+	{
+		clearHighlight = !clearHighlight;
+	}
 
 	public void NoVisualDebug()
 	{
@@ -201,7 +204,7 @@ public class TilemapManager : MonoBehaviour
 	/// <param name="cell"> position of tile to highlight </param>
 	public void HighlightCell(Vector3Int cell)
 	{
-		HighlightCells(new Vector3Int[] { cell }, nodeHighlight);
+		HighlightCells(new Vector3Int[] { cell }, nodeHighlight, clearHighlight);
 	}
 
 	/// <summary>
@@ -229,7 +232,7 @@ public class TilemapManager : MonoBehaviour
 	/// </summary>
 	public void HighlightAllNodes()
 	{
-		HighlightCells(pathfindingGraph.Nodes.ToArray(), nodeHighlight);
+		HighlightCells(pathfindingGraph.Nodes.ToArray(), nodeHighlight, clearHighlight);
 	}
 
 	/// <summary>
@@ -279,6 +282,10 @@ public class TilemapManager : MonoBehaviour
 			highlightedCells.Add(cell);
 		}
 	}
+
+	#endregion
+
+	#region Console debugging
 
 	public void PrintCellInfo(Vector3Int cell)
 	{
