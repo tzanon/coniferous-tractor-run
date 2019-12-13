@@ -14,7 +14,7 @@
    viewBox="0 0 507.99998 285.75"
    version="1.1"
    id="svg8"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   inkscape:version="0.92.1 r15371"
    sodipodi:docname="ground_tiles.svg">
   <defs
      id="defs2" />
@@ -25,15 +25,15 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.70710678"
-     inkscape:cx="472.92335"
-     inkscape:cy="569.66635"
+     inkscape:zoom="0.40039945"
+     inkscape:cx="772.08788"
+     inkscape:cy="515.31785"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      units="px"
-     inkscape:window-width="1920"
-     inkscape:window-height="1017"
+     inkscape:window-width="1366"
+     inkscape:window-height="705"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
@@ -1078,7 +1078,7 @@
     </g>
     <g
        id="g2993"
-       transform="translate(503.54458,426.90742)">
+       transform="translate(503.54458,426.90747)">
       <rect
          transform="rotate(90)"
          style="opacity:1;fill:#896400;fill-opacity:1;stroke:none;stroke-width:0.44870201;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -1152,7 +1152,7 @@
     </g>
     <g
        id="g2869"
-       transform="translate(513.26905,320.22025)">
+       transform="translate(513.26904,320.22029)">
       <rect
          inkscape:export-ydpi="96"
          inkscape:export-xdpi="96"
@@ -1660,12 +1660,12 @@
        width="33.866665"
        height="33.86673"
        x="704.84845"
-       y="-308.81766"
+       y="-308.8176"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96" />
     <g
        id="g1619"
-       transform="translate(321.07423,234.25309)">
+       transform="translate(321.07422,234.25306)">
       <rect
          style="opacity:1;fill:#896400;fill-opacity:1;stroke:none;stroke-width:0.44870201;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          id="rect1565"
@@ -1684,7 +1684,7 @@
     </g>
     <g
        id="g1600"
-       transform="translate(321.07423,234.25309)">
+       transform="translate(321.07417,234.25309)">
       <rect
          inkscape:export-ydpi="96"
          inkscape:export-xdpi="96"
@@ -1768,7 +1768,7 @@
     </g>
     <g
        id="g2015"
-       transform="translate(306.47024,245.58098)">
+       transform="translate(306.47022,245.58104)">
       <rect
          style="opacity:1;fill:#896400;fill-opacity:1;stroke:none;stroke-width:0.44870201;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          id="rect1721"
@@ -1857,7 +1857,7 @@
     </g>
     <g
        id="g1853"
-       transform="translate(70.5172,420.95316)">
+       transform="translate(70.517191,420.95319)">
       <rect
          style="opacity:1;fill:#896400;fill-opacity:1;stroke:none;stroke-width:0.44870201;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          id="rect1775"
@@ -3999,7 +3999,10 @@
     </g>
     <g
        transform="rotate(-90,696.39734,755.64559)"
-       id="g4526">
+       id="g4526"
+       inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\hidden_path2.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
       <rect
          transform="scale(-1)"
          inkscape:export-ydpi="96"
@@ -4026,7 +4029,10 @@
     </g>
     <g
        transform="rotate(-90,697.13044,805.10943)"
-       id="g4534">
+       id="g4534"
+       inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\hidden_path1.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
       <rect
          transform="rotate(90)"
          style="opacity:1;fill:#896400;fill-opacity:1;stroke:none;stroke-width:0.44870201;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -4107,7 +4113,7 @@
     </g>
     <g
        id="g4638"
-       transform="matrix(-1,0,0,1,563.24283,327.91635)">
+       transform="matrix(-1,0,0,1,529.37617,327.91647)">
       <rect
          inkscape:export-ydpi="96"
          inkscape:export-xdpi="96"
@@ -4134,7 +4140,7 @@
     </g>
     <g
        id="g4646"
-       transform="matrix(-1,0,0,1,580.34812,327.11465)">
+       transform="matrix(-1,0,0,1,614.21485,327.11465)">
       <rect
          style="opacity:1;fill:#896400;fill-opacity:1;stroke:none;stroke-width:0.44870201;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          id="rect4640"
@@ -4161,7 +4167,10 @@
     </g>
     <g
        transform="rotate(-180,235.53596,918.23163)"
-       id="g4656">
+       id="g4656"
+       inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\open_intersection_path.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
       <rect
          style="opacity:1;fill:#896400;fill-opacity:1;stroke:none;stroke-width:0.44870201;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          id="rect4648"
@@ -4198,7 +4207,10 @@
     </g>
     <g
        transform="translate(862.28379,734.71066)"
-       id="g4664">
+       id="g4664"
+       inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\open_junction_path.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
       <rect
          style="opacity:1;fill:#896400;fill-opacity:1;stroke:none;stroke-width:0.44870201;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          id="rect4658"
@@ -4226,7 +4238,10 @@
     </g>
     <g
        id="g4670"
-       transform="rotate(180,283.20308,822.04031)">
+       transform="rotate(180,283.20308,822.04031)"
+       inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\corner_edge_path.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
       <rect
          inkscape:export-ydpi="96"
          inkscape:export-xdpi="96"
@@ -4247,7 +4262,10 @@
     </g>
     <g
        transform="translate(806.84207,785.62673)"
-       id="g4678">
+       id="g4678"
+       inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\diagonal_edge_path.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
       <rect
          transform="rotate(90)"
          style="opacity:1;fill:#896400;fill-opacity:1;stroke:none;stroke-width:0.44870201;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -4275,7 +4293,10 @@
     </g>
     <g
        transform="translate(709.27904,753.68517)"
-       id="g4698">
+       id="g4698"
+       inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\intersection_path.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
       <rect
          transform="rotate(90)"
          style="opacity:1;fill:#896400;fill-opacity:1;stroke:none;stroke-width:0.44870201;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -4345,7 +4366,10 @@
     </g>
     <g
        transform="translate(452.56685,112.70073)"
-       id="g4708">
+       id="g4708"
+       inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\junction_path.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
       <rect
          inkscape:export-ydpi="96"
          inkscape:export-xdpi="96"
@@ -4380,7 +4404,10 @@
     </g>
     <g
        transform="translate(193.21705,643.9081)"
-       id="g4717">
+       id="g4717"
+       inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\turn_path.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
       <rect
          inkscape:export-ydpi="96"
          inkscape:export-xdpi="96"
@@ -4406,7 +4433,10 @@
     </g>
     <g
        transform="translate(730.13574,651.8635)"
-       id="g4723">
+       id="g4723"
+       inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\edge_path.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
       <rect
          inkscape:export-ydpi="96"
          inkscape:export-xdpi="96"
@@ -4425,7 +4455,10 @@
     </g>
     <g
        transform="translate(426.84738,527.42804)"
-       id="g4729">
+       id="g4729"
+       inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\deadend_path.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
       <rect
          inkscape:export-ydpi="96"
          inkscape:export-xdpi="96"
@@ -4443,7 +4476,10 @@
     </g>
     <g
        transform="translate(687.42897,658.15592)"
-       id="g4735">
+       id="g4735"
+       inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\corner_path.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
       <rect
          style="opacity:1;fill:#896400;fill-opacity:1;stroke:none;stroke-width:0.44870201;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          id="rect4731"
@@ -4471,7 +4507,10 @@
        transform="rotate(90)" />
     <g
        transform="translate(560.83734,589.70076)"
-       id="g4743">
+       id="g4743"
+       inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\closed_path.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
       <rect
          transform="rotate(90)"
          inkscape:export-ydpi="96"
@@ -4490,7 +4529,10 @@
     </g>
     <g
        transform="translate(542.84532,592.13822)"
-       id="g4751">
+       id="g4751"
+       inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\corridor_path.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
       <rect
          transform="rotate(90)"
          style="opacity:1;fill:#896400;fill-opacity:1;stroke:none;stroke-width:0.44870201;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -4520,12 +4562,14 @@
        height="33.86673"
        width="33.866665"
        id="rect4761"
-       style="opacity:1;fill:#499005;fill-opacity:1;stroke:none;stroke-width:0.44870201;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+       style="opacity:1;fill:#499005;fill-opacity:1;stroke:none;stroke-width:0.44870201;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\grass.png" />
     <g
        inkscape:export-ydpi="96"
        inkscape:export-xdpi="96"
        transform="translate(877.96444,789.05624)"
-       id="g4771">
+       id="g4771"
+       inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\grass_flower3.png">
       <rect
          y="310.03906"
          x="-151.88393"
@@ -4556,7 +4600,8 @@
        inkscape:export-ydpi="96"
        inkscape:export-xdpi="96"
        transform="translate(867.85062,787.74367)"
-       id="g4781">
+       id="g4781"
+       inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\grass_flower4.png">
       <rect
          style="opacity:1;fill:#499005;fill-opacity:1;stroke:none;stroke-width:0.44870201;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          id="rect4773"
@@ -4588,7 +4633,8 @@
        inkscape:export-ydpi="96"
        inkscape:export-xdpi="96"
        transform="translate(802.34517,754.56554)"
-       id="g4797">
+       id="g4797"
+       inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\grass_flower1.png">
       <rect
          style="opacity:1;fill:#499005;fill-opacity:1;stroke:none;stroke-width:0.44870201;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          id="rect4783"
@@ -4637,7 +4683,8 @@
        inkscape:export-ydpi="96"
        inkscape:export-xdpi="96"
        transform="translate(742.57626,742.54849)"
-       id="g4807">
+       id="g4807"
+       inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\grass_flower2.png">
       <rect
          y="356.54681"
          x="-71.151276"
@@ -4954,7 +5001,8 @@
        x="1059.2424"
        y="-527.89441"
        inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96" />
+       inkscape:export-ydpi="96"
+       inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\open_path.png" />
     <rect
        transform="rotate(90)"
        style="opacity:1;fill:#896400;fill-opacity:1;stroke:none;stroke-width:0.44870201;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -5269,7 +5317,7 @@
     <g
        id="g1849"
        transform="translate(-132.74138,-72.344622)"
-       inkscape:export-filename="D:\Unity_Projects\forest-maze-chaser\Assets\Sprites\ph_tractor_right.png"
+       inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\side_tractor.png"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96">
       <rect
@@ -5315,7 +5363,7 @@
     <g
        id="g1821"
        transform="translate(-237.7122,-65.144462)"
-       inkscape:export-filename="D:\Unity_Projects\forest-maze-chaser\Assets\Sprites\ph_tractor_fwd.png"
+       inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\front_tractor.png"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96">
       <rect

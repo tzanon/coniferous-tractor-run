@@ -6,11 +6,11 @@ namespace Pathfinding
 	class Graph
 	{
 		private Dictionary<Vector3Int, List<Vector3Int>> nodeNeighbours;
-
+		
 		private int _maxNumNeighbours;
-
+		
 		public int NumNodes { get => nodeNeighbours.Keys.Count; }
-
+		
 		public int MaxNumNeighbours
 		{
 			get => _maxNumNeighbours;
