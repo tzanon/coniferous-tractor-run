@@ -46,9 +46,9 @@ TagManager:
   - name: Ground
     uniqueID: 529645817
     locked: 0
-  - name: Collectibles
-    uniqueID: 1903788321
+  - name: Objects
+    uniqueID: 3934116813
     locked: 0
-  - name: Actors
-    uniqueID: 1173600139
+  - name: Debug
+    uniqueID: 3621268189
     locked: 0

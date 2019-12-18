@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 using UnityEngine.InputSystem;
+
 using Pathfinding;
 
 public class TilemapManager : MonoBehaviour
 {
 	public bool debugMode = false;
-	public bool visualDebugMode = false;
+	public bool UIDebugMode = false;
 	public bool clearHighlight = true;
 	public Color nodeHighlight;
 	public Color neighbourHighlight;
@@ -15,7 +17,7 @@ public class TilemapManager : MonoBehaviour
 	public float hoverHighlightRefreshRate = 0.15f;
 	public Vector3Int testCell;
 
-	public RectTransform visualDebugMenu;
+	public RectTransform UIDebugMenu;
 
 	private enum VisualDebugType { None, Cell, Neighbours }
 	private VisualDebugType _visualDebugtype = VisualDebugType.None;
@@ -32,10 +34,11 @@ public class TilemapManager : MonoBehaviour
 	private List<Vector3Int> highlightedCells;
 
 	[SerializeField] private Sprite nodeSprite;
+	[SerializeField] private Sprite[] nodeSprites;
 
 	public Player player;
 
-	public Vector3 PlayerCell { get => CellOfPosition(player.transform.position); }
+	public Vector3Int PlayerCell { get => CellOfPosition(player.transform.position); }
 
 	#region Unity functions
 
@@ -54,7 +57,6 @@ public class TilemapManager : MonoBehaviour
 		leftClick = controls.Debug.LeftClick;
 		mousePosAction = controls.Debug.Position;
 
-		//leftClick.started += HandleMouseClick;
 		leftClick.performed += HandleMouseClick;
 		mousePosAction.started += ctx => _mousePosition = ctx.ReadValue<Vector2>();
 		mousePosAction.performed += ctx => _mousePosition = ctx.ReadValue<Vector2>();
@@ -65,7 +67,7 @@ public class TilemapManager : MonoBehaviour
 		PrintMapInfo();
 		PrintPlayerPosition();
 
-		visualDebugMenu.gameObject.SetActive(visualDebugMode);
+		UIDebugMenu.gameObject.SetActive(UIDebugMode);
 
 		CalculateGraph();
 	}
@@ -87,6 +89,11 @@ public class TilemapManager : MonoBehaviour
 	public Vector3Int CellOfPosition(Vector3 pos)
 	{
 		return map.WorldToCell(pos);
+	}
+
+	public Vector3 CenterPositionOfCell(Vector3Int cell)
+	{
+		return map.CellToWorld(cell) + new Vector3(0.5f, 0.5f, 0f);
 	}
 
 	public bool IsCellInBounds(Vector3Int cell)
@@ -141,13 +148,12 @@ public class TilemapManager : MonoBehaviour
 		if (debugMode)
 		{
 			PrintGraphInfo();
-			HighlightAllNodes();
 		}
 	}
 
 	#endregion
 
-	#region visual debugging
+	#region Visual debugging
 
 	public void ToggleHighlightRefresh()
 	{
@@ -176,14 +182,22 @@ public class TilemapManager : MonoBehaviour
 	/// <param name="ctx"> unused callback context </param>
 	private void HandleMouseClick(InputAction.CallbackContext ctx)
 	{
+		if (EventSystem.current.IsPointerOverGameObject())
+			return;
+
 		if (_visualDebugtype == VisualDebugType.None)
 			return;
 
+		Vector3 screenMousePos = _mousePosition;
 		Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(_mousePosition);
+
 		Vector3Int mouseCell = CellOfPosition(worldMousePos);
 
 		if (debugMode)
-			Debug.Log("mouse position is " + worldMousePos);
+		{
+			Debug.Log("screen mouse position is " + screenMousePos);
+			//Debug.Log("world mouse position is " + worldMousePos);
+		}
 
 		switch (_visualDebugtype)
 		{
@@ -242,7 +256,11 @@ public class TilemapManager : MonoBehaviour
 	/// <param name="end"> end node of path </param>
 	public void HighlightPath(Vector3Int start, Vector3Int end)
 	{
-
+		if (!IsPathfindingNode(start) || !IsPathfindingNode(end))
+		{
+			Debug.LogError(string.Format("one or both of cells {0} and {1} are not nodes", start, end));
+			return;
+		}
 	}
 
 	/// <summary>
@@ -285,7 +303,7 @@ public class TilemapManager : MonoBehaviour
 
 	#endregion
 
-	#region Console debugging
+	#region Text debugging
 
 	public void PrintCellInfo(Vector3Int cell)
 	{
@@ -321,7 +339,7 @@ public class TilemapManager : MonoBehaviour
 	public void PrintPlayerPosition()
 	{
 		Vector3 playerPos = player.transform.position;
-		Debug.Log("Player at position " + playerPos + " is in cell " + PlayerCell);
+		Debug.Log("Player at position " + playerPos + " is in cell " + PlayerCell + ", cell position is " + CenterPositionOfCell(PlayerCell));
 	}
 
 	public void PrintSpriteAtCell(Vector3Int cell)
