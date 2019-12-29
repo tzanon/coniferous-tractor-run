@@ -4,6 +4,67 @@ using UnityEngine;
 
 namespace Pathfinding
 {
+	enum Directions { UP, DOWN, RIGHT, LEFT, CENTER, NULL }
+
+	struct MovementDirection
+	{
+		public static readonly MovementDirection Up = new MovementDirection(Directions.UP);
+		public static readonly MovementDirection Down = new MovementDirection(Directions.DOWN);
+		public static readonly MovementDirection Right = new MovementDirection(Directions.RIGHT);
+		public static readonly MovementDirection Left = new MovementDirection(Directions.LEFT);
+		public static readonly MovementDirection Center = new MovementDirection(Directions.CENTER);
+		public static readonly MovementDirection Null = new MovementDirection(Directions.NULL);
+
+		public readonly Vector3Int _value;
+
+		public Vector3Int Value { get => _value; }
+
+		private MovementDirection(Directions direction)
+		{
+			switch (direction)
+			{
+				case Directions.UP:
+					_value = Vector3Int.up;
+					break;
+				case Directions.DOWN:
+					_value = Vector3Int.down;
+					break;
+				case Directions.RIGHT:
+					_value = Vector3Int.right;
+					break;
+				case Directions.LEFT:
+					_value = Vector3Int.left;
+					break;
+				case Directions.CENTER:
+					_value = Vector3Int.zero;
+					break;
+				default:
+					_value = new Vector3Int(0, 0, -1);
+					break;
+			}
+		}
+
+		public static bool operator ==(MovementDirection a, MovementDirection b)
+		{
+			return a.Value == b.Value;
+		}
+
+		public static bool operator !=(MovementDirection a, MovementDirection b)
+		{
+			return a.Value != b.Value;
+		}
+
+		public override bool Equals(object obj)
+		{
+			return base.Equals(obj);
+		}
+
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
+		}
+	}
+
 	struct PriorityItem
 	{
 		public readonly int priority;
@@ -30,7 +91,7 @@ namespace Pathfinding
 			queue = new List<PriorityItem>();
 		}
 
-		public void Add(Vector3Int point, int priority)
+		public void Push(Vector3Int point, int priority)
 		{
 			PriorityItem item = new PriorityItem(point, priority);
 			queue.Add(item);
@@ -51,6 +112,11 @@ namespace Pathfinding
 					minItem = item;
 			}
 
+			if (!queue.Remove(minItem))
+			{
+				Debug.LogError("Could not remove item from queue");
+			}
+
 			return minItem.point;
 		}
 
@@ -69,6 +135,11 @@ namespace Pathfinding
 					maxItem = item;
 			}
 
+			if (!queue.Remove(maxItem))
+			{
+				Debug.LogError("Could not remove item from queue");
+			}
+
 			return maxItem.point;
 		}
 
@@ -80,6 +151,17 @@ namespace Pathfinding
 
 	class Graph
 	{
+		// for tracking paths
+		struct NodePair
+		{
+			public Vector3Int node1, node2;
+		}
+
+		enum PathfinderType { BFS, DIJKSTRA, ASTAR}
+		PathfinderType pathfinder = PathfinderType.ASTAR;
+
+		private readonly Vector3Int nullPos = new Vector3Int(0, 0, -1);
+
 		private readonly Dictionary<Vector3Int, List<Vector3Int>> nodeNeighbours;
 		
 		private int _maxNumNeighbours;
@@ -97,7 +179,7 @@ namespace Pathfinding
 		/// <summary>
 		/// 
 		/// </summary>
-		public List<Vector3Int> Nodes { get => new List<Vector3Int>(nodeNeighbours.Keys); }
+		public Vector3Int[] Nodes { get => (new List<Vector3Int>(nodeNeighbours.Keys)).ToArray(); }
 
 		/// <summary>
 		/// 
@@ -119,6 +201,36 @@ namespace Pathfinding
 			{
 				return nodeNeighbours[node].ToArray();
 			}
+		}
+
+		public MovementDirection DirectionBetweenNeighbours(Vector3Int node, Vector3Int neighbour)
+		{
+			// z must always be 0
+			if (node.z != 0 || neighbour.z != 0)
+				return MovementDirection.Null;
+
+			// direction to self is (0,0)
+			if (node == neighbour)
+				return MovementDirection.Center;
+
+			if (node.x == neighbour.x)
+			{
+				if (neighbour.y > node.y)
+					return MovementDirection.Up;
+				if (neighbour.y < node.y)
+					return MovementDirection.Down;
+			}
+
+			if (node.y == neighbour.y)
+			{
+				if (neighbour.x > node.x)
+					return MovementDirection.Right;
+				if (neighbour.x < node.x)
+					return MovementDirection.Left;
+			}
+
+			// nodes are not neighbours
+			return MovementDirection.Null;
 		}
 
 		public void AddNode(Vector3Int node, List<Vector3Int> neighbours)
@@ -174,18 +286,126 @@ namespace Pathfinding
 			nodeNeighbours.Clear();
 		}
 
-		public List<Vector3Int> ReconstructPath(Vector3Int start, Vector3Int goal, Dictionary<Vector3Int, Vector3Int> cameFrom)
+
+		#region pathfinding
+
+		public int ManhattanDistance(Vector3Int a, Vector3Int b)
 		{
-			if (!cameFrom.ContainsKey(goal) || !cameFrom.ContainsValue(start))
+			return Math.Abs(a.x - b.x) + Math.Abs(a.y - b.y);
+		}
+
+		public int EuclideanDistance(Vector3Int a, Vector3Int b)
+		{
+			return (int)(Math.Pow(b.x - a.x, 2) + Mathf.Pow(b.y - a.y, 2));
+		}
+
+		private int Cost(Vector3Int a, Vector3Int b)
+		{
+			return ManhattanDistance(a, b);
+		}
+
+		public Vector3Int[] GetPathBetweenNodes(Vector3Int start, Vector3Int end)
+		{
+			switch (pathfinder)
 			{
-				Debug.LogError("Given cameFrom does not contain the start");
+				case PathfinderType.BFS:
+					return BFSEarlyExit(start, end);
+				case PathfinderType.ASTAR:
+					return AStarSearch(start, end);
+				default:
+					return AStarSearch(start, end);
+			}
+		}
+
+		private Vector3Int[] BFSEarlyExit(Vector3Int start, Vector3Int goal)
+		{
+			Queue<Vector3Int> frontier = new Queue<Vector3Int>();
+			frontier.Enqueue(start);
+			Dictionary<Vector3Int, Vector3Int> cameFrom = new Dictionary<Vector3Int, Vector3Int>() { { start, nullPos } };
+
+			while (frontier.Count > 0)
+			{
+				Vector3Int cell = frontier.Dequeue();
+
+				if (cell == goal)
+					break;
+
+				foreach (Vector3Int next in nodeNeighbours[cell])
+				{
+					if (!cameFrom.ContainsKey(next))
+					{
+						frontier.Enqueue(next);
+						cameFrom[next] = cell;
+					}
+				}
+			}
+
+			return ReconstructPath(start, goal, cameFrom);
+		}
+
+		private Vector3Int[] Dijkstra(Vector3Int start, Vector3Int goal)
+		{
+			return null;
+		}
+
+		private Vector3Int[] AStarSearch(Vector3Int start, Vector3Int goal)
+		{
+			if (start == goal)
+			{
 				return null;
 			}
 
+			if (nodeNeighbours[start].Contains(goal))
+			{
+				return new Vector3Int[] { goal };
+			}
+
+			NaivePriorityQueue frontier = new NaivePriorityQueue();
+			frontier.Push(start, 0);
+			Dictionary<Vector3Int, Vector3Int> cameFrom = new Dictionary<Vector3Int, Vector3Int>() { { start, nullPos } };
+			Dictionary<Vector3Int, int> costSoFar = new Dictionary<Vector3Int, int>() { { start, 0 } };
+
+			Debug.Log("Starting A* Search...");
+
+			while (frontier.Count > 0)
+			{
+				Vector3Int cell = frontier.PopMin();
+
+				if (cell == goal)
+					break;
+
+				foreach (Vector3Int next in nodeNeighbours[cell])
+				{
+					int newCost = costSoFar[cell] + Cost(cell, next);
+					if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next])
+					{
+						costSoFar[next] = newCost;
+						int priority = newCost + ManhattanDistance(next, goal);
+						frontier.Push(next, priority);
+						cameFrom[next] = cell;
+					}
+				}
+			}
+
+			Debug.Log("Finished search.");
+
+			return ReconstructPath(start, goal, cameFrom);
+		}
+
+		private Vector3Int[] ReconstructPath(Vector3Int start, Vector3Int goal, Dictionary<Vector3Int, Vector3Int> cameFrom)
+		{
+			if (!cameFrom.ContainsKey(goal) || !cameFrom.ContainsValue(start))
+			{
+				Debug.LogError("Given cameFrom does not contain the goal, start, or both");
+				return null;
+			}
+
+			Debug.Log("Reconstructing path...");
+
 			List<Vector3Int> path = new List<Vector3Int>(cameFrom.Count);
 			Vector3Int cell = goal;
-			
-			while(cell != start)
+
+			while (cell != start)
 			{
 				path.Add(cell);
 				cell = cameFrom[cell];
@@ -194,8 +414,9 @@ namespace Pathfinding
 			path.Add(start);
 			path.Reverse();
 
-			return path;
+			return path.ToArray();
 		}
 
+		#endregion
 	}
 }

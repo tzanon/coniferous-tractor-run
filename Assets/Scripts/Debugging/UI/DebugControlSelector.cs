@@ -2,13 +2,13 @@
 
 public class DebugControlSelector : MonoBehaviour
 {
-	public GameObject visualControls, aiControls;
+	public GameObject visualControls, aiControls, cameraControls;
 
 	private GameObject[] controls;
 
 	private void Awake()
 	{
-		controls = new GameObject[] { visualControls, aiControls };
+		controls = new GameObject[] { visualControls, aiControls, cameraControls };
 	}
 
 	public void ShowVisualControls()
@@ -19,6 +19,11 @@ public class DebugControlSelector : MonoBehaviour
 	public void ShowAIControls()
 	{
 		ShowControl(aiControls);
+	}
+
+	public void ShowCameraControls()
+	{
+		ShowControl(cameraControls);
 	}
 
 	private void ShowControl(GameObject control)

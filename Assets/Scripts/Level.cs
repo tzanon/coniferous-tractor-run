@@ -22,14 +22,20 @@ public class Level : MonoBehaviour
 		}
 	}
 
+	public Camera playerCam, tractorCam, worldCam;
+	private Camera[] cameras;
+
 	private void Start()
 	{
 		collectibles = new List<Collectible>(FindObjectsOfType<Collectible>());
+		cameras = new Camera[] { playerCam, tractorCam, worldCam };
 
 		if (debugMode)
 		{
 			Debug.Log("Num collectibles in play:" + collectibles.Count);
 		}
+
+		SetCameraPlayer();
 	}
 
 	public Vector2 PositionOfCollectible(int i)
@@ -73,9 +79,42 @@ public class Level : MonoBehaviour
 		}
 	}
 
-	// when player exits forest after 
+	// when player exits forest
 	private void GameWon()
 	{
 
 	}
+
+	public void SetCameraPlayer()
+	{
+		EnableCamera(playerCam);
+	}
+
+	public void SetCameraTractor()
+	{
+		EnableCamera(tractorCam);
+	}
+
+	public void SetCameraWorld()
+	{
+		EnableCamera(worldCam);
+	}
+
+	private void EnableCamera(Camera cam)
+	{
+		foreach (Camera c in cameras)
+		{
+			if (c == cam)
+			{
+				c.gameObject.SetActive(true);
+				c.tag = "MainCamera";
+			}
+			else
+			{
+				c.tag = "Untagged";
+				c.gameObject.SetActive(false);
+			}
+		}
+	}
+
 }

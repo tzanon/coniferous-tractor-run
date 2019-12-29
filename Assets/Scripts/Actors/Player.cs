@@ -58,6 +58,10 @@ public class Player : MonoBehaviour
 
 			level.DeleteCollectible(coll.GetComponent<Collectible>());
 		}
+		else if (coll.CompareTag("Tractor"))
+		{
+			// game over
+		}
 	}
 
 }

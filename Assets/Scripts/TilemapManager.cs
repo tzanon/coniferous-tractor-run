@@ -19,8 +19,10 @@ public class TilemapManager : MonoBehaviour
 
 	public RectTransform UIDebugMenu;
 
-	private enum VisualDebugType { None, Cell, Neighbours }
+	private enum VisualDebugType { None, Cell, Neighbours, Path }
 	private VisualDebugType _visualDebugtype = VisualDebugType.None;
+	private Vector3Int[] visualPathPoints;
+	private int visualPathIdx;
 
 	private ChaserControls controls;
 	private InputAction leftClick;
@@ -34,7 +36,6 @@ public class TilemapManager : MonoBehaviour
 	private List<Vector3Int> highlightedCells;
 
 	[SerializeField] private Sprite nodeSprite;
-	[SerializeField] private Sprite[] nodeSprites;
 
 	public Player player;
 
@@ -52,6 +53,9 @@ public class TilemapManager : MonoBehaviour
 
 		highlightedCells = new List<Vector3Int>();
 		pathfindingGraph = new Graph(maxNeighbours: 4);
+
+		visualPathPoints = new Vector3Int[2];
+		visualPathIdx = 0;
 
 		controls = new ChaserControls();
 		leftClick = controls.Debug.LeftClick;
@@ -176,16 +180,20 @@ public class TilemapManager : MonoBehaviour
 		_visualDebugtype = VisualDebugType.Neighbours;
 	}
 
+	public void PathVisualDebug()
+	{
+		_visualDebugtype = VisualDebugType.Path;
+		visualPathIdx = 0;
+		visualPathPoints[0] = visualPathPoints[1] = Vector3Int.zero;
+	}
+
 	/// <summary>
 	/// Handle left mouse click for visual debugging
 	/// </summary>
 	/// <param name="ctx"> unused callback context </param>
 	private void HandleMouseClick(InputAction.CallbackContext ctx)
 	{
-		if (EventSystem.current.IsPointerOverGameObject())
-			return;
-
-		if (_visualDebugtype == VisualDebugType.None)
+		if (EventSystem.current.IsPointerOverGameObject() || _visualDebugtype == VisualDebugType.None)
 			return;
 
 		Vector3 screenMousePos = _mousePosition;
@@ -206,6 +214,9 @@ public class TilemapManager : MonoBehaviour
 				break;
 			case VisualDebugType.Neighbours:
 				HighlightNodeNeighbours(mouseCell);
+				break;
+			case VisualDebugType.Path:
+				AddVisualPathPoint(mouseCell);
 				break;
 			default:
 				break;
@@ -246,21 +257,58 @@ public class TilemapManager : MonoBehaviour
 	/// </summary>
 	public void HighlightAllNodes()
 	{
-		HighlightCells(pathfindingGraph.Nodes.ToArray(), nodeHighlight, clearHighlight);
+		HighlightCells(pathfindingGraph.Nodes, nodeHighlight, clearHighlight);
+	}
+
+	public void AddVisualPathPoint(Vector3Int node)
+	{
+		if (!IsPathfindingNode(node))
+		{
+			Debug.Log("Cell is not a node");
+			return;
+		}
+
+		if (debugMode)
+			Debug.Log("Adding node " + node + " to path");
+
+		visualPathPoints[visualPathIdx++] = node;
+		HighlightCells(new Vector3Int[] { node }, nodeHighlight, false);
+
+		if (visualPathIdx > 1)
+		{
+			HighlightPath();
+		}
 	}
 
 	/// <summary>
-	/// Highlights the path between the given nodes
+	/// Highlights the path between currently chosen nodes
 	/// </summary>
 	/// <param name="start"> start node of path </param>
 	/// <param name="end"> end node of path </param>
-	public void HighlightPath(Vector3Int start, Vector3Int end)
+	public void HighlightPath()
 	{
-		if (!IsPathfindingNode(start) || !IsPathfindingNode(end))
+		Vector3Int start = visualPathPoints[0];
+		Vector3Int end = visualPathPoints[1];
+
+		if (debugMode)
+			Debug.Log(string.Format("Highlighting path between {0} and {1}...", start, end));
+
+		if (!(IsPathfindingNode(start) && IsPathfindingNode(end)))
 		{
 			Debug.LogError(string.Format("one or both of cells {0} and {1} are not nodes", start, end));
 			return;
 		}
+
+		//Vector3Int[] path = pathfindingGraph.BFSEarlyExit(start, end);
+		Vector3Int[] path = pathfindingGraph.GetPathBetweenNodes(start, end);
+
+		if (debugMode)
+			Debug.Log("path calculated successfully!");
+
+		HighlightCells(path, nodeHighlight, clearHighlight);
+
+		visualPathIdx = 0;
+		visualPathPoints[0] = visualPathPoints[1] = Vector3Int.zero;
 	}
 
 	/// <summary>
