@@ -518,7 +518,7 @@ public class @ChaserControls : IInputActionCollection, IDisposable
             ]
         },
         {
-            ""name"": ""ForestChaser"",
+            ""name"": ""PlayerControls"",
             ""id"": ""6cef4030-afe0-43a1-a78d-9accba0205c0"",
             ""actions"": [
                 {
@@ -526,6 +526,38 @@ public class @ChaserControls : IInputActionCollection, IDisposable
                     ""type"": ""Value"",
                     ""id"": ""b11e804b-476f-4546-8a3b-598255aeb809"",
                     ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""MoveUp"",
+                    ""type"": ""Button"",
+                    ""id"": ""3edbfacc-2262-4cdc-8c52-502c5ad7f13d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""MoveDown"",
+                    ""type"": ""Button"",
+                    ""id"": ""a6e51c87-9b93-4c47-9bf7-7b97d3b7d00c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""MoveRight"",
+                    ""type"": ""Button"",
+                    ""id"": ""15befe0e-88c4-4ea7-9d66-dbc2cb472a33"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""MoveLeft"",
+                    ""type"": ""Button"",
+                    ""id"": ""2f0f86ea-4423-4b87-8a7d-8fdbf6cb28a6"",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
                 }
@@ -629,6 +661,94 @@ public class @ChaserControls : IInputActionCollection, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bacfffba-ebae-4fd1-991d-ced5a39d1bdd"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dd095a4e-f741-43f5-9cdb-c1aee617b930"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f12afbb2-d1b0-420c-84a6-e7c9d9757265"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveDown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b69e3882-68d5-4bad-9a3a-8730cae5b2be"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveDown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""332b9263-213f-4560-9bf1-1fb5d47b7d71"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""58fded48-4845-4b6f-9947-60bb19df0dae"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6ead9d72-9b2b-4d1f-87ca-b3850f475dc1"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dcebdc7d-c60f-47d4-97d2-846b76f12e4e"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -774,9 +894,13 @@ public class @ChaserControls : IInputActionCollection, IDisposable
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
         m_UI_TrackedDeviceSelect = m_UI.FindAction("TrackedDeviceSelect", throwIfNotFound: true);
-        // ForestChaser
-        m_ForestChaser = asset.FindActionMap("ForestChaser", throwIfNotFound: true);
-        m_ForestChaser_Move = m_ForestChaser.FindAction("Move", throwIfNotFound: true);
+        // PlayerControls
+        m_PlayerControls = asset.FindActionMap("PlayerControls", throwIfNotFound: true);
+        m_PlayerControls_Move = m_PlayerControls.FindAction("Move", throwIfNotFound: true);
+        m_PlayerControls_MoveUp = m_PlayerControls.FindAction("MoveUp", throwIfNotFound: true);
+        m_PlayerControls_MoveDown = m_PlayerControls.FindAction("MoveDown", throwIfNotFound: true);
+        m_PlayerControls_MoveRight = m_PlayerControls.FindAction("MoveRight", throwIfNotFound: true);
+        m_PlayerControls_MoveLeft = m_PlayerControls.FindAction("MoveLeft", throwIfNotFound: true);
         // Debug
         m_Debug = asset.FindActionMap("Debug", throwIfNotFound: true);
         m_Debug_CalculateGraph = m_Debug.FindAction("CalculateGraph", throwIfNotFound: true);
@@ -941,38 +1065,70 @@ public class @ChaserControls : IInputActionCollection, IDisposable
     }
     public UIActions @UI => new UIActions(this);
 
-    // ForestChaser
-    private readonly InputActionMap m_ForestChaser;
-    private IForestChaserActions m_ForestChaserActionsCallbackInterface;
-    private readonly InputAction m_ForestChaser_Move;
-    public struct ForestChaserActions
+    // PlayerControls
+    private readonly InputActionMap m_PlayerControls;
+    private IPlayerControlsActions m_PlayerControlsActionsCallbackInterface;
+    private readonly InputAction m_PlayerControls_Move;
+    private readonly InputAction m_PlayerControls_MoveUp;
+    private readonly InputAction m_PlayerControls_MoveDown;
+    private readonly InputAction m_PlayerControls_MoveRight;
+    private readonly InputAction m_PlayerControls_MoveLeft;
+    public struct PlayerControlsActions
     {
         private @ChaserControls m_Wrapper;
-        public ForestChaserActions(@ChaserControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Move => m_Wrapper.m_ForestChaser_Move;
-        public InputActionMap Get() { return m_Wrapper.m_ForestChaser; }
+        public PlayerControlsActions(@ChaserControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Move => m_Wrapper.m_PlayerControls_Move;
+        public InputAction @MoveUp => m_Wrapper.m_PlayerControls_MoveUp;
+        public InputAction @MoveDown => m_Wrapper.m_PlayerControls_MoveDown;
+        public InputAction @MoveRight => m_Wrapper.m_PlayerControls_MoveRight;
+        public InputAction @MoveLeft => m_Wrapper.m_PlayerControls_MoveLeft;
+        public InputActionMap Get() { return m_Wrapper.m_PlayerControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(ForestChaserActions set) { return set.Get(); }
-        public void SetCallbacks(IForestChaserActions instance)
+        public static implicit operator InputActionMap(PlayerControlsActions set) { return set.Get(); }
+        public void SetCallbacks(IPlayerControlsActions instance)
         {
-            if (m_Wrapper.m_ForestChaserActionsCallbackInterface != null)
+            if (m_Wrapper.m_PlayerControlsActionsCallbackInterface != null)
             {
-                @Move.started -= m_Wrapper.m_ForestChaserActionsCallbackInterface.OnMove;
-                @Move.performed -= m_Wrapper.m_ForestChaserActionsCallbackInterface.OnMove;
-                @Move.canceled -= m_Wrapper.m_ForestChaserActionsCallbackInterface.OnMove;
+                @Move.started -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnMove;
+                @Move.performed -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnMove;
+                @Move.canceled -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnMove;
+                @MoveUp.started -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnMoveUp;
+                @MoveUp.performed -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnMoveUp;
+                @MoveUp.canceled -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnMoveUp;
+                @MoveDown.started -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnMoveDown;
+                @MoveDown.performed -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnMoveDown;
+                @MoveDown.canceled -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnMoveDown;
+                @MoveRight.started -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnMoveRight;
+                @MoveRight.performed -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnMoveRight;
+                @MoveRight.canceled -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnMoveRight;
+                @MoveLeft.started -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnMoveLeft;
+                @MoveLeft.performed -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnMoveLeft;
+                @MoveLeft.canceled -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnMoveLeft;
             }
-            m_Wrapper.m_ForestChaserActionsCallbackInterface = instance;
+            m_Wrapper.m_PlayerControlsActionsCallbackInterface = instance;
             if (instance != null)
             {
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
+                @MoveUp.started += instance.OnMoveUp;
+                @MoveUp.performed += instance.OnMoveUp;
+                @MoveUp.canceled += instance.OnMoveUp;
+                @MoveDown.started += instance.OnMoveDown;
+                @MoveDown.performed += instance.OnMoveDown;
+                @MoveDown.canceled += instance.OnMoveDown;
+                @MoveRight.started += instance.OnMoveRight;
+                @MoveRight.performed += instance.OnMoveRight;
+                @MoveRight.canceled += instance.OnMoveRight;
+                @MoveLeft.started += instance.OnMoveLeft;
+                @MoveLeft.performed += instance.OnMoveLeft;
+                @MoveLeft.canceled += instance.OnMoveLeft;
             }
         }
     }
-    public ForestChaserActions @ForestChaser => new ForestChaserActions(this);
+    public PlayerControlsActions @PlayerControls => new PlayerControlsActions(this);
 
     // Debug
     private readonly InputActionMap m_Debug;
@@ -1081,9 +1237,13 @@ public class @ChaserControls : IInputActionCollection, IDisposable
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
         void OnTrackedDeviceSelect(InputAction.CallbackContext context);
     }
-    public interface IForestChaserActions
+    public interface IPlayerControlsActions
     {
         void OnMove(InputAction.CallbackContext context);
+        void OnMoveUp(InputAction.CallbackContext context);
+        void OnMoveDown(InputAction.CallbackContext context);
+        void OnMoveRight(InputAction.CallbackContext context);
+        void OnMoveLeft(InputAction.CallbackContext context);
     }
     public interface IDebugActions
     {

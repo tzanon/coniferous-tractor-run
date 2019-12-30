@@ -2,68 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using Directions;
+
 namespace Pathfinding
 {
-	enum Directions { UP, DOWN, RIGHT, LEFT, CENTER, NULL }
-
-	struct MovementDirection
-	{
-		public static readonly MovementDirection Up = new MovementDirection(Directions.UP);
-		public static readonly MovementDirection Down = new MovementDirection(Directions.DOWN);
-		public static readonly MovementDirection Right = new MovementDirection(Directions.RIGHT);
-		public static readonly MovementDirection Left = new MovementDirection(Directions.LEFT);
-		public static readonly MovementDirection Center = new MovementDirection(Directions.CENTER);
-		public static readonly MovementDirection Null = new MovementDirection(Directions.NULL);
-
-		public readonly Vector3Int _value;
-
-		public Vector3Int Value { get => _value; }
-
-		private MovementDirection(Directions direction)
-		{
-			switch (direction)
-			{
-				case Directions.UP:
-					_value = Vector3Int.up;
-					break;
-				case Directions.DOWN:
-					_value = Vector3Int.down;
-					break;
-				case Directions.RIGHT:
-					_value = Vector3Int.right;
-					break;
-				case Directions.LEFT:
-					_value = Vector3Int.left;
-					break;
-				case Directions.CENTER:
-					_value = Vector3Int.zero;
-					break;
-				default:
-					_value = new Vector3Int(0, 0, -1);
-					break;
-			}
-		}
-
-		public static bool operator ==(MovementDirection a, MovementDirection b)
-		{
-			return a.Value == b.Value;
-		}
-
-		public static bool operator !=(MovementDirection a, MovementDirection b)
-		{
-			return a.Value != b.Value;
-		}
-
-		public override bool Equals(object obj)
-		{
-			return base.Equals(obj);
-		}
-
-		public override int GetHashCode()
-		{
-			return base.GetHashCode();
-		}
-	}
+	
 
 	struct PriorityItem
 	{
@@ -203,34 +146,34 @@ namespace Pathfinding
 			}
 		}
 
-		public MovementDirection DirectionBetweenNeighbours(Vector3Int node, Vector3Int neighbour)
+		public MovementVector DirectionBetweenNeighbours(Vector3Int node, Vector3Int neighbour)
 		{
 			// z must always be 0
 			if (node.z != 0 || neighbour.z != 0)
-				return MovementDirection.Null;
+				return MovementVector.Null;
 
 			// direction to self is (0,0)
 			if (node == neighbour)
-				return MovementDirection.Center;
+				return MovementVector.Center;
 
 			if (node.x == neighbour.x)
 			{
 				if (neighbour.y > node.y)
-					return MovementDirection.Up;
+					return MovementVector.Up;
 				if (neighbour.y < node.y)
-					return MovementDirection.Down;
+					return MovementVector.Down;
 			}
 
 			if (node.y == neighbour.y)
 			{
 				if (neighbour.x > node.x)
-					return MovementDirection.Right;
+					return MovementVector.Right;
 				if (neighbour.x < node.x)
-					return MovementDirection.Left;
+					return MovementVector.Left;
 			}
 
 			// nodes are not neighbours
-			return MovementDirection.Null;
+			return MovementVector.Null;
 		}
 
 		public void AddNode(Vector3Int node, List<Vector3Int> neighbours)
