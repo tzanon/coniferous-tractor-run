@@ -61,7 +61,7 @@ public class Player : Actor
 		//moveAction.canceled += ctx => _movement = Vector2.zero;
 		moveAction.canceled += ctx => CancelMovementInput();
 
-		controls.PlayerControls.Enable();
+		//controls.PlayerControls.Enable();
 	}
 
 	private void OnEnable()

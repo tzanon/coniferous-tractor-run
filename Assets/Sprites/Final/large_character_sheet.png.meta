@@ -1,34 +1,34 @@
 fileFormatVersion: 2
-guid: d25b24feef8015a47801929e5f5bc80d
+guid: ce1f574a3ea753147889b09b1e7c3ece
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -39154935585372312
-    second: forest_maze_main_char_sheet_0
+      213: -842990268950388942
+    second: large_character_sheet_0
   - first:
-      213: -953749079386090139
-    second: forest_maze_main_char_sheet_1
+      213: -5978775465729110544
+    second: large_character_sheet_1
   - first:
-      213: -283366952803246779
-    second: forest_maze_main_char_sheet_2
+      213: -7724156266378154376
+    second: large_character_sheet_2
   - first:
-      213: -7129478343298143756
-    second: forest_maze_main_char_sheet_3
+      213: -1206589584368123669
+    second: large_character_sheet_3
   - first:
-      213: 2511568888322487613
-    second: forest_maze_main_char_sheet_4
+      213: -8722731485773732171
+    second: large_character_sheet_4
   - first:
-      213: -4793065399956640410
-    second: forest_maze_main_char_sheet_5
+      213: 1508679521878153528
+    second: large_character_sheet_5
   - first:
-      213: -6842629983015679002
-    second: forest_maze_main_char_sheet_6
+      213: -3333066005891325668
+    second: large_character_sheet_6
   - first:
-      213: -478001016991202920
-    second: forest_maze_main_char_sheet_7
+      213: 7765387172507612553
+    second: large_character_sheet_7
   - first:
-      213: 242954132869418271
-    second: forest_maze_main_char_sheet_8
+      213: 8242001274488175045
+    second: large_character_sheet_8
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -149,13 +149,181 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: forest_maze_main_char_sheet_0
+      name: large_character_sheet_0
       rect:
         serializedVersion: 2
-        x: 11
-        y: 263
+        x: 14
+        y: 329
+        width: 52
+        height: 124
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9f95e5dc2d28cbe4a8544083a7ba68f8
+      internalID: -842990268950388942
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: large_character_sheet_1
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 318
+        width: 52
+        height: 135
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d9bc0b9dd12550a43aa535b2aa2aa2ad
+      internalID: -5978775465729110544
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: large_character_sheet_2
+      rect:
+        serializedVersion: 2
+        x: 174
+        y: 318
+        width: 52
+        height: 135
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8a152bb80f598e2418daa8939432de4c
+      internalID: -7724156266378154376
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: large_character_sheet_3
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 162
+        width: 52
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2e2528cd533d2c8419cc95be73344bde
+      internalID: -1206589584368123669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: large_character_sheet_4
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 157
+        width: 52
+        height: 123
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e8173f775ca5d10418d30a0e56bbb074
+      internalID: -8722731485773732171
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: large_character_sheet_5
+      rect:
+        serializedVersion: 2
+        x: 174
+        y: 157
+        width: 52
+        height: 123
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a6263649cd958fe4a9f26172377dd6f3
+      internalID: 1508679521878153528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: large_character_sheet_6
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 6
+        width: 26
+        height: 119
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 608c6c9b588d80d4d8ff9eab360f1b4b
+      internalID: -3333066005891325668
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: large_character_sheet_7
+      rect:
+        serializedVersion: 2
+        x: 97
+        y: 6
+        width: 46
+        height: 116
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 666d42fccace5884085eed139fa12989
+      internalID: 7765387172507612553
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: large_character_sheet_8
+      rect:
+        serializedVersion: 2
+        x: 179
+        y: 6
         width: 42
-        height: 99
+        height: 116
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -163,176 +331,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f4bec1f59d5a13447b0247b860de11b5
-      internalID: -39154935585372312
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: forest_maze_main_char_sheet_1
-      rect:
-        serializedVersion: 2
-        x: 75
-        y: 254
-        width: 42
-        height: 108
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 7c3c43030dc407a4e83d08ec3cde8f83
-      internalID: -953749079386090139
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: forest_maze_main_char_sheet_2
-      rect:
-        serializedVersion: 2
-        x: 139
-        y: 254
-        width: 42
-        height: 108
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a1ca26a9f9996614aa3a8496d33f79ae
-      internalID: -283366952803246779
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: forest_maze_main_char_sheet_3
-      rect:
-        serializedVersion: 2
-        x: 11
-        y: 130
-        width: 42
-        height: 94
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 77f92797ee452d5448e2040d9901987b
-      internalID: -7129478343298143756
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: forest_maze_main_char_sheet_4
-      rect:
-        serializedVersion: 2
-        x: 75
-        y: 129
-        width: 42
-        height: 95
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c597edc8ddc24a144802ffcf1bf18d24
-      internalID: 2511568888322487613
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: forest_maze_main_char_sheet_5
-      rect:
-        serializedVersion: 2
-        x: 139
-        y: 129
-        width: 42
-        height: 95
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 04973bb976d9bb9469712fb925492842
-      internalID: -4793065399956640410
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: forest_maze_main_char_sheet_6
-      rect:
-        serializedVersion: 2
-        x: 21
-        y: 4
-        width: 22
-        height: 96
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2794f0cd7483759429cbe68f528ceccf
-      internalID: -6842629983015679002
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: forest_maze_main_char_sheet_7
-      rect:
-        serializedVersion: 2
-        x: 78
-        y: 4
-        width: 36
-        height: 94
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ebcfab105029b3149b90e415a630cf0e
-      internalID: -478001016991202920
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: forest_maze_main_char_sheet_8
-      rect:
-        serializedVersion: 2
-        x: 143
-        y: 4
-        width: 34
-        height: 94
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 065451c023f55304f9bd900593505e04
-      internalID: 242954132869418271
+      spriteID: 79750da34203b2a4484764f9fba7cd5e
+      internalID: 8242001274488175045
       vertices: []
       indices: 
       edges: []
