@@ -6,8 +6,6 @@ using Directions;
 
 namespace Pathfinding
 {
-	
-
 	struct PriorityItem
 	{
 		public readonly int priority;

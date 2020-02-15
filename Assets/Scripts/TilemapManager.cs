@@ -13,16 +13,21 @@ public class TilemapManager : MonoBehaviour
 	public bool clearHighlight = true;
 	public Color nodeHighlight;
 	public Color neighbourHighlight;
-	public Color pathHighlight;
+	public Color searchHighlight;
 	public float hoverHighlightRefreshRate = 0.15f;
 	public Vector3Int testCell;
-
 	public RectTransform UIDebugMenu;
 
-	private enum VisualDebugType { None, Cell, Neighbours, Path }
+	private enum VisualDebugType { None, Cell, Neighbours, Path, Closest }
 	private VisualDebugType _visualDebugtype = VisualDebugType.None;
 	private Vector3Int[] visualPathPoints;
 	private int visualPathIdx;
+
+
+	public int bfsLimit = 20;
+	private bool isFindingNode = false;
+	private Dictionary<Vector3Int, Vector3Int> closestNodes = new Dictionary<Vector3Int, Vector3Int>();
+
 
 	private ChaserControls controls;
 	private InputAction leftClick;
@@ -110,6 +115,75 @@ public class TilemapManager : MonoBehaviour
 		return map.HasTile(cell) && map.GetSprite(cell) == nodeSprite;
 	}
 
+	/// <summary>
+	/// Use BFS to find closest node to given cell
+	/// </summary>
+	/// <param name="startCell"> cell to start search from </param>
+	/// <returns> first node found around cell </returns>
+	public Vector3Int ClosestNodeToCell(Vector3Int startCell)
+	{
+		if (isFindingNode)
+		{
+			Debug.Log("Already searching for a node, must wait");
+			return new Vector3Int(0, 0, -1);
+		}
+
+		if (pathfindingGraph.Nodes.Length <= 0)
+		{
+			Debug.LogError("Error: either no node tiles in map or graph is uninitialized");
+			return new Vector3Int(0, 0, -1);
+		}
+
+		Queue<Vector3Int> cellsToEval = new Queue<Vector3Int>();
+		HashSet<Vector3Int> visitedCells = new HashSet<Vector3Int>();
+		cellsToEval.Enqueue(startCell);
+		visitedCells.Add(startCell);
+
+		int numCellsSoFar = 0;
+		isFindingNode = true;
+
+		while (cellsToEval.Count > 0)
+		{
+			Vector3Int cell = cellsToEval.Dequeue();
+			if (cell == startCell)
+				HighlightStandardCell(cell);
+			else
+				HighlightCell(cell, searchHighlight, false);
+
+			numCellsSoFar++;
+
+			if (IsPathfindingNode(cell))
+			{
+				isFindingNode = false;
+				closestNodes[startCell] = cell;
+				return cell;
+			}
+
+			if (numCellsSoFar >= bfsLimit)
+			{
+				Debug.LogError("Error: have searched " + numCellsSoFar + " cells");
+				break;
+			}
+
+			Vector3Int[] surroundingCells = {
+				new Vector3Int(cell.x+1, cell.y, 0),
+				new Vector3Int(cell.x-1, cell.y, 0),
+				new Vector3Int(cell.x, cell.y+1, 0),
+				new Vector3Int(cell.x, cell.y-1, 0),
+			};
+
+			foreach (Vector3Int neighbour in surroundingCells)
+			{
+				if (map.HasTile(neighbour) && !visitedCells.Contains(neighbour))
+					cellsToEval.Enqueue(neighbour);
+			}
+		}
+
+		Debug.LogError("Error: could not find any nodes");
+		isFindingNode = false;
+		return new Vector3Int(0, 0, -1);
+	}
+
 	private List<Vector3Int> CalculateNodeNeighbours(Vector3Int node)
 	{
 		if (!IsPathfindingNode(node))
@@ -157,7 +231,7 @@ public class TilemapManager : MonoBehaviour
 
 	#endregion
 
-	#region Visual debugging
+	#region Visual debug selecting
 
 	public void ToggleHighlightRefresh()
 	{
@@ -180,12 +254,21 @@ public class TilemapManager : MonoBehaviour
 		_visualDebugtype = VisualDebugType.Neighbours;
 	}
 
+	public void ClosestNodeVisualDebug()
+	{
+		_visualDebugtype = VisualDebugType.Closest;
+	}
+
 	public void PathVisualDebug()
 	{
 		_visualDebugtype = VisualDebugType.Path;
 		visualPathIdx = 0;
 		visualPathPoints[0] = visualPathPoints[1] = Vector3Int.zero;
 	}
+
+	#endregion
+
+	#region Visual debugging
 
 	/// <summary>
 	/// Handle left mouse click for visual debugging
@@ -210,7 +293,7 @@ public class TilemapManager : MonoBehaviour
 		switch (_visualDebugtype)
 		{
 			case VisualDebugType.Cell:
-				HighlightCell(mouseCell);
+				HighlightStandardCell(mouseCell);
 				break;
 			case VisualDebugType.Neighbours:
 				HighlightNodeNeighbours(mouseCell);
@@ -218,18 +301,21 @@ public class TilemapManager : MonoBehaviour
 			case VisualDebugType.Path:
 				AddVisualPathPoint(mouseCell);
 				break;
+			case VisualDebugType.Closest:
+				HighlightClosestNode(mouseCell);
+				break;
 			default:
 				break;
 		}
 	}
 
 	/// <summary>
-	/// Highlight a tile on the tilemap
+	/// Highlight a tile with default tint
 	/// </summary>
 	/// <param name="cell"> position of tile to highlight </param>
-	public void HighlightCell(Vector3Int cell)
+	public void HighlightStandardCell(Vector3Int cell)
 	{
-		HighlightCells(new Vector3Int[] { cell }, nodeHighlight, clearHighlight);
+		HighlightCell(cell, nodeHighlight, clearHighlight);
 	}
 
 	/// <summary>
@@ -242,22 +328,23 @@ public class TilemapManager : MonoBehaviour
 		{
 			if (debugMode)
 				Debug.Log("Cell " + node + " is not a node");
-			HighlightCell(node);
+			HighlightStandardCell(node);
 			return;
 		}
 
 		Vector3Int[] neighbours = pathfindingGraph.NeighboursOfNode(node);
 
-		HighlightCell(node);
+		HighlightStandardCell(node);
 		HighlightCells(neighbours, neighbourHighlight, false);
 	}
 
 	/// <summary>
-	/// Highlights all pathfinding node tiles
+	/// Highlights closest node of given cell
 	/// </summary>
-	public void HighlightAllNodes()
+	/// <param name="cell"> cell to search from </param>
+	public void HighlightClosestNode(Vector3Int cell)
 	{
-		HighlightCells(pathfindingGraph.Nodes, nodeHighlight, clearHighlight);
+		HighlightStandardCell(ClosestNodeToCell(cell));
 	}
 
 	public void AddVisualPathPoint(Vector3Int node)
@@ -312,6 +399,14 @@ public class TilemapManager : MonoBehaviour
 	}
 
 	/// <summary>
+	/// Highlights all pathfinding node tiles
+	/// </summary>
+	public void HighlightAllNodes()
+	{
+		HighlightCells(pathfindingGraph.Nodes, nodeHighlight, clearHighlight);
+	}
+
+	/// <summary>
 	/// Remove any highlighting
 	/// </summary>
 	public void RemoveHighlight()
@@ -325,27 +420,41 @@ public class TilemapManager : MonoBehaviour
 	}
 
 	/// <summary>
+	/// Highlight a single tile with the given colour
+	/// </summary>
+	/// <param name="cell"> Coordinates of tile to highlight </param>
+	/// <param name="col"> Colour to highlight tile with </param>
+	/// <param name="removeExistingHighlight"> Whether to reset currently highlighted cells </param>
+	public void HighlightCell(Vector3Int cell, Color col, bool removeExistingHighlight = true)
+	{
+		if (removeExistingHighlight)
+			RemoveHighlight();
+
+		if (!map.HasTile(cell))
+		{
+			if (debugMode)
+				Debug.Log("No tile here");
+			return;
+		}
+
+		map.SetColor(cell, col);
+		highlightedCells.Add(cell);
+	}
+
+	/// <summary>
 	/// Highlight a set of tiles with the given colour
 	/// </summary>
 	/// <param name="cells"> Cells to highlight </param>
 	/// <param name="col"> Colour to highlight tiles with </param>
-	/// <param name="removeExistingHighlight"> whether to reset currently highlighted cell </param>
-	private void HighlightCells(Vector3Int[] cells, Color col, bool removeExistingHighlight=true)
+	/// <param name="removeExistingHighlight"> Whether to reset currently highlighted cells </param>
+	private void HighlightCells(Vector3Int[] cells, Color col, bool removeExistingHighlight = true)
 	{
 		if (removeExistingHighlight)
 			RemoveHighlight();
 
 		foreach (Vector3Int cell in cells)
 		{
-			if (!map.HasTile(cell))
-			{
-				if (debugMode)
-					Debug.Log("No tile here");
-				continue;
-			}
-
-			map.SetColor(cell, col);
-			highlightedCells.Add(cell);
+			HighlightCell(cell, col, false);
 		}
 	}
 
