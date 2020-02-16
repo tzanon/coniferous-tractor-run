@@ -5,81 +5,83 @@ using Directions;
 
 public abstract class Actor : MonoBehaviour
 {
+	/// <summary>
+	/// Grouping of animation and collider characteristics based on direction
+	/// </summary>
 	struct DirectionCharacteristic
 	{
-		public readonly string idleAnimState;
-		public readonly string moveAnimState;
-		public readonly Vector2 colliderSize;
+		public string IdleAnimState { get; }
+		public string MoveAnimState { get; }
+		public Vector2 ColliderSize { get; }
 
 		public DirectionCharacteristic(string idle, string move, Vector2 collSize)
 		{
-			idleAnimState = idle;
-			moveAnimState = move;
-			colliderSize = collSize;
+			IdleAnimState = idle;
+			MoveAnimState = move;
+			ColliderSize = collSize;
 		}
 	}
 
-	public bool isAnimated = false;
-	public bool isColliderConstant = false;
+	[SerializeField] protected bool _isAnimated = false;
 
-	public Sprite idleFwd, idleBack, idleSide;
-	protected string idleAnimFwd, idleAnimBack, idleAnimRight, idleAnimLeft;
-	protected string moveAnimFwd, moveAnimBack, moveAnimRight, moveAnimLeft;
+	[SerializeField] private Sprite _idleFwd, _idleBack, _idleSide;
+	protected string _idleAnimFwd, _idleAnimBack, _idleAnimRight, _idleAnimLeft;
+	protected string _moveAnimFwd, _moveAnimBack, _moveAnimRight, _moveAnimLeft;
 
 	[Header("Collider Sizes")]
-	public Vector2 verticalCollSize;
-	public Vector2 horizontalCollSize;
-
-	protected MovementVector _currentDirection = MovementVector.Null;
+	private Vector2 _verticalCollSize;
+	private Vector2 _horizontalCollSize;
 
 	private readonly Dictionary<MovementVector, DirectionCharacteristic> _directionCharacteristics = new Dictionary<MovementVector, DirectionCharacteristic>();
 
-	protected SpriteRenderer sr;
-	protected BoxCollider2D bc;
-	protected Rigidbody2D rb;
-	private Animator animator;
+	protected SpriteRenderer _sr;
+	protected BoxCollider2D _bc;
+	protected Rigidbody2D _rb;
+	private Animator _animator;
+
+	public MovementVector CurrentDirection { get; protected set; }
 
 	protected virtual void Awake()
 	{
-		sr = GetComponent<SpriteRenderer>();
-		bc = GetComponent<BoxCollider2D>();
-		rb = GetComponent<Rigidbody2D>();
-		animator = GetComponent<Animator>();
+		_sr = GetComponent<SpriteRenderer>();
+		_bc = GetComponent<BoxCollider2D>();
+		_rb = GetComponent<Rigidbody2D>();
+		_animator = GetComponent<Animator>();
 
-		if (isColliderConstant)
-		{
-			verticalCollSize = horizontalCollSize = idleFwd.bounds.size;
-		}
-		else
-		{
-			verticalCollSize = idleFwd.bounds.size;
-			horizontalCollSize = idleSide.bounds.size;
-		}
+		
+		_verticalCollSize = _idleFwd.bounds.size;
+		_horizontalCollSize = _idleSide.bounds.size;
 	}
 
 	protected virtual void Start()
 	{
-		_directionCharacteristics[MovementVector.Down] = new DirectionCharacteristic(idleAnimFwd, moveAnimFwd, verticalCollSize);
-		_directionCharacteristics[MovementVector.Up] = new DirectionCharacteristic(idleAnimBack, moveAnimBack, verticalCollSize);
-		_directionCharacteristics[MovementVector.Right] = new DirectionCharacteristic(idleAnimRight, moveAnimRight, horizontalCollSize);
-		_directionCharacteristics[MovementVector.Left] = new DirectionCharacteristic(idleAnimLeft, moveAnimLeft, horizontalCollSize);
+		_directionCharacteristics[MovementVector.Down] = new DirectionCharacteristic(_idleAnimFwd, _moveAnimFwd, _verticalCollSize);
+		_directionCharacteristics[MovementVector.Up] = new DirectionCharacteristic(_idleAnimBack, _moveAnimBack, _verticalCollSize);
+		_directionCharacteristics[MovementVector.Right] = new DirectionCharacteristic(_idleAnimRight, _moveAnimRight, _horizontalCollSize);
+		_directionCharacteristics[MovementVector.Left] = new DirectionCharacteristic(_idleAnimLeft, _moveAnimLeft, _horizontalCollSize);
 
 		SetIdleAnimInDirection(MovementVector.Down);
 	}
 
 	protected void SetMoveAnimInDirection(MovementVector direction)
 	{
-		SetAnimation(direction, true);
+		SetDirectionalAnimation(direction, true);
 	}
 
 	protected void SetIdleAnimInDirection(MovementVector direction)
 	{
-		SetAnimation(direction, false);
+		SetDirectionalAnimation(direction, false);
 	}
 
-	private void SetAnimation(MovementVector direction, bool isMoving)
+	/// <summary>
+	/// Sets a moving or idle animation in the given direction
+	/// </summary>
+	/// <param name="direction"> Direction of the animation to be played </param>
+	/// <param name="isMoving"> Whether a moving or idle animation should be played </param>
+	private void SetDirectionalAnimation(MovementVector direction, bool isMoving)
 	{
-		if (isMoving && (_currentDirection == direction || direction == MovementVector.Center))
+		// return if desired direction is the same as the current one
+		if (isMoving && (CurrentDirection == direction || direction == MovementVector.Center))
 			return;
 
 		if (direction == MovementVector.Null)
@@ -92,27 +94,27 @@ public abstract class Actor : MonoBehaviour
 
 		// flip side animation for left movement
 		if (direction == MovementVector.Left)
-			sr.flipX = true;
+			_sr.flipX = true;
 		else
-			sr.flipX = false;
+			_sr.flipX = false;
 
 		// play walking animation if moving, idle if not
 		if (isMoving)
 		{
 			Debug.Log("Moving in direction " + direction.Value);
-			_currentDirection = direction;
-			animator.Play(dc.moveAnimState);
+			CurrentDirection = direction;
+			_animator.Play(dc.MoveAnimState);
 		}
 		else
 		{
 			Debug.Log("Stopping in direction " + direction.Value);
-			_currentDirection = MovementVector.Center;
-			animator.Play(dc.idleAnimState);
+			CurrentDirection = MovementVector.Center;
+			_animator.Play(dc.IdleAnimState);
 		}
 
-		if (!isColliderConstant)
-		{
-			bc.size = dc.colliderSize;
-		}
+		// set collider to directional size
+		_bc.size = dc.ColliderSize;
 	}
+
+
 }

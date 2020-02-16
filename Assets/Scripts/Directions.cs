@@ -6,39 +6,36 @@ namespace Directions
 
 	public struct MovementVector
 	{
-		public static readonly MovementVector Up = new MovementVector(Direction.UP);
-		public static readonly MovementVector Down = new MovementVector(Direction.DOWN);
-		public static readonly MovementVector Right = new MovementVector(Direction.RIGHT);
-		public static readonly MovementVector Left = new MovementVector(Direction.LEFT);
-		public static readonly MovementVector Center = new MovementVector(Direction.CENTER);
-		public static readonly MovementVector Null = new MovementVector(Direction.NULL);
+		public static MovementVector Up { get { return new MovementVector(Direction.UP); } }
+		public static MovementVector Down { get { return new MovementVector(Direction.DOWN); } }
+		public static MovementVector Right { get { return new MovementVector(Direction.RIGHT); } }
+		public static MovementVector Left { get { return new MovementVector(Direction.LEFT); } }
+		public static MovementVector Center { get { return new MovementVector(Direction.CENTER); } }
+		public static MovementVector Null { get { return new MovementVector(Direction.NULL); } }
 
-		public readonly Vector3 _value;
-
-		
-		public Vector3 Value { get => _value; }
+		public Vector3 Value { get; private set; }
 
 		private MovementVector(Direction direction)
 		{
 			switch (direction)
 			{
 				case Direction.UP:
-					_value = Vector3.up;
+					Value = Vector3.up;
 					break;
 				case Direction.DOWN:
-					_value = Vector3.down;
+					Value = Vector3.down;
 					break;
 				case Direction.RIGHT:
-					_value = Vector3.right;
+					Value = Vector3.right;
 					break;
 				case Direction.LEFT:
-					_value = Vector3.left;
+					Value = Vector3.left;
 					break;
 				case Direction.CENTER:
-					_value = Vector3.zero;
+					Value = Vector3.zero;
 					break;
 				default:
-					_value = new Vector3(0, 0, -1);
+					Value = new Vector3(0, 0, -1);
 					break;
 			}
 		}

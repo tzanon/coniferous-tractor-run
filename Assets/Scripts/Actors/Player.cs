@@ -5,82 +5,53 @@ using Directions;
 
 public class Player : Actor
 {
-	public bool debugMode = false;
-	public Level level;
+	[SerializeField] private bool _debugMode = false;
+	[SerializeField] private Level _level;
 
-	private ChaserControls controls;
-	private InputAction moveAction;
+	private ChaserControls _controls;
+	private InputAction _moveAction;
 
-	private InputAction moveUp;
-	private InputAction moveDown;
-	private InputAction moveRight;
-	private InputAction moveLeft;
-
-	public float speed = 6.0f;
+	[SerializeField] private float _speed = 7.0f;
 	private Vector2 _movement = Vector2.zero, _lastMovement = Vector2.zero;
 
-	private int _numCollectibles = 0;
-
-	public int NumCollectibles { get => _numCollectibles; }
+	public int NumCollectibles { get; private set; }
 
 	protected override void Awake()
 	{
 		base.Awake();
 
-		idleAnimFwd = "Player_idleForward";
-		idleAnimBack = "Player_idleBackward";
-		idleAnimRight = "Player_idleRight";
-		idleAnimLeft = "Player_idleLeft";
+		_idleAnimFwd = "Player_idleForward";
+		_idleAnimBack = "Player_idleBackward";
+		_idleAnimRight = "Player_idleRight";
+		_idleAnimLeft = "Player_idleLeft";
 
-		moveAnimFwd = "Player_walkForward";
-		moveAnimBack = "Player_walkBackward";
-		moveAnimRight = "Player_walkRight";
-		moveAnimLeft = "Player_walkLeft";
+		_moveAnimFwd = "Player_walkForward";
+		_moveAnimBack = "Player_walkBackward";
+		_moveAnimRight = "Player_walkRight";
+		_moveAnimLeft = "Player_walkLeft";
 
-		controls = new ChaserControls();
-		moveAction = controls.PlayerControls.Move;
-		/*
-		moveUp = controls.PlayerControls.MoveUp;
-		moveDown = controls.PlayerControls.MoveDown;
-		moveRight = controls.PlayerControls.MoveRight;
-		moveLeft = controls.PlayerControls.MoveLeft;
-		
-		moveUp.started += ctx => SetMoveAnimInDirection(MovementVector.Up);
-		moveDown.started += ctx => SetMoveAnimInDirection(MovementVector.Down);
-		moveRight.started += ctx => SetMoveAnimInDirection(MovementVector.Right);
-		moveLeft.started += ctx => SetMoveAnimInDirection(MovementVector.Left);
+		_controls = new ChaserControls();
+		_moveAction = _controls.PlayerControls.Move;
 
-		moveUp.canceled += ctx => SetIdleAnimInDirection(MovementVector.Up);
-		moveDown.canceled += ctx => SetIdleAnimInDirection(MovementVector.Down);
-		moveRight.canceled += ctx => SetIdleAnimInDirection(MovementVector.Right);
-		moveLeft.canceled += ctx => SetIdleAnimInDirection(MovementVector.Left);
-		/**/
-
-		//moveAction.performed += ctx => movement = ctx.ReadValue<Vector2>().normalized;
-		moveAction.performed += ctx => ReadMovementInput(ctx);
-		//moveAction.canceled += ctx => _movement = Vector2.zero;
-		moveAction.canceled += ctx => CancelMovementInput();
-
-		//controls.PlayerControls.Enable();
+		_moveAction.performed += ctx => ReadMovementInput(ctx);
+		_moveAction.canceled += ctx => CancelMovementInput();
 	}
 
 	private void OnEnable()
 	{
-		controls.PlayerControls.Enable();
+		_controls.PlayerControls.Enable();
 	}
 
 	private void OnDisable()
 	{
-		controls.PlayerControls.Disable();
+		_controls.PlayerControls.Disable();
 	}
 
 	private void FixedUpdate()
 	{
-		//if (_currentDirection != MovementVector.Center && _currentDirection != MovementVector.Null)
 		if (_movement != Vector2.zero)
 		{
-			//Vector2 directionValue = new Vector2(_currentDirection.Value.x, _currentDirection.Value.y);
-			rb.MovePosition(rb.position + speed * _movement * Time.fixedDeltaTime);
+			_rb.MovePosition(_rb.position + _speed * _movement * Time.fixedDeltaTime);
 		}
 	}
 
@@ -88,12 +59,12 @@ public class Player : Actor
 	{
 		if (coll.CompareTag("Collectible"))
 		{
-			if (debugMode)
+			if (_debugMode)
 				Debug.Log("picked up an apple!");
 
-			_numCollectibles++;
+			NumCollectibles++;
 
-			level.DeleteCollectible(coll.GetComponent<Collectible>());
+			_level.DeleteCollectible(coll.GetComponent<Collectible>());
 		}
 		else if (coll.CompareTag("Tractor"))
 		{

@@ -2,33 +2,33 @@
 
 public class DebugControlSelector : MonoBehaviour
 {
-	public GameObject visualControls, aiControls, cameraControls;
+	[SerializeField] private GameObject _visualControls, _aiControls, _cameraControls;
 
-	private GameObject[] controls;
+	private GameObject[] _controls;
 
 	private void Awake()
 	{
-		controls = new GameObject[] { visualControls, aiControls, cameraControls };
+		_controls = new GameObject[] { _visualControls, _aiControls, _cameraControls };
 	}
 
 	public void ShowVisualControls()
 	{
-		ShowControl(visualControls);
+		ShowControl(_visualControls);
 	}
 
 	public void ShowAIControls()
 	{
-		ShowControl(aiControls);
+		ShowControl(_aiControls);
 	}
 
 	public void ShowCameraControls()
 	{
-		ShowControl(cameraControls);
+		ShowControl(_cameraControls);
 	}
 
 	private void ShowControl(GameObject control)
 	{
-		foreach (GameObject ctrl in controls)
+		foreach (GameObject ctrl in _controls)
 		{
 			if (ctrl == control)
 				ctrl.SetActive(true);

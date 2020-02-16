@@ -7,17 +7,18 @@ using Pathfinding;
 
 public class Tractor : Actor
 {
-	public bool debugInfo = false;
-	public RectTransform debugDisplay; // TODO: display destination/status above tractor
-	private LineRenderer lr; // debug: for pointing to dest?
+	[SerializeField] private bool debugInfo = false;
+	[SerializeField] private RectTransform _debugDisplay; // TODO: display destination/status above tractor
+	private LineRenderer _lr; // debug: for pointing to dest?
 
 	private bool _calculatingPath; // if calculating, idle
-	private Vector3Int[] currentPath;
-	private Vector3 destPoint; // world space!
+	private Vector3Int[] _currentPath;
+	private Vector3 _destPoint; // world space!
 
-	private float _currentSpeed;
-	[SerializeField] private const float _defaultSpeed = 4f;
-	[SerializeField] private const float _chaseSpeed = 8f;
+	private const float _defaultSpeed = 4f;
+	private const float _chaseSpeed = 8f;
+
+	public float CurrentSpeed { get; private set; }
 
 	protected override void Awake()
 	{

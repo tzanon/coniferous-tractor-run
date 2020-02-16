@@ -92,5 +92,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80433165a66b5a9499a20cfebd1bc5f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  refreshRate: 0
-  marker: {fileID: 1107353318232038593, guid: 6c8566b39a8e796469870072681ceeba, type: 3}
+  _refreshRate: 0.1
+  _marker: {fileID: 1107353318232038593, guid: 6c8566b39a8e796469870072681ceeba, type: 3}
