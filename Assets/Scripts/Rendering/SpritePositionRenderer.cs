@@ -8,21 +8,21 @@
 [RequireComponent(typeof(SpriteRenderer))]
 public class SpritePositionRenderer : MonoBehaviour
 {
-	[SerializeField] private float calculationRate = 0.1f;
-	private float nextCalculation = 0f;
+	[SerializeField] private float _calculationRate = 0.1f;
+	private float _nextCalculation = 0f;
 
-	private static int sortingOrderBase = 1000;
-	[SerializeField] private int offset = 0;
-	[SerializeField] private bool runOnlyOnce = false;
+	private static int _sortingOrderBase = 1000;
+	[SerializeField] private int _offset = 0;
+	[SerializeField] private bool _runOnlyOnce = false;
 
-	private SpriteRenderer sr;
+	private SpriteRenderer _sr;
 
 	private void Awake()
 	{
-		sr = GetComponent<SpriteRenderer>();
-		sr.sortingLayerName = "Objects";
+		_sr = GetComponent<SpriteRenderer>();
+		_sr.sortingLayerName = "Objects";
 
-		if (runOnlyOnce)
+		if (_runOnlyOnce)
 		{
 			CalculateOrder();
 			Destroy(this);
@@ -31,17 +31,19 @@ public class SpritePositionRenderer : MonoBehaviour
 
 	private void LateUpdate()
 	{
-		nextCalculation -= Time.deltaTime;
+		if (_runOnlyOnce) return;
+		
+		_nextCalculation -= Time.deltaTime;
 
-		if (!runOnlyOnce && nextCalculation <= 0f)
+		if (_nextCalculation <= 0f)
 		{
 			CalculateOrder();
-			nextCalculation = calculationRate;
+			_nextCalculation = _calculationRate;
 		}
 	}
 
 	private void CalculateOrder()
 	{
-		sr.sortingOrder = (int)(sortingOrderBase - transform.position.y - offset);
+		_sr.sortingOrder = (int)(_sortingOrderBase - transform.position.y - _offset);
 	}
 }

@@ -3600,11 +3600,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcb1ea023e812ca419a9ce3badffb36b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
-  barrier: {fileID: 1177651269}
-  playerCam: {fileID: 1805789279}
-  tractorCam: {fileID: 344010914}
-  worldCam: {fileID: 1991976934}
+  _debugMode: 0
+  _barrier: {fileID: 1177651269}
+  _playerCam: {fileID: 1805789279}
+  _tractorCam: {fileID: 344010914}
+  _worldCam: {fileID: 1991976934}
 --- !u!4 &972013122
 Transform:
   m_ObjectHideFlags: 0
@@ -49983,7 +49983,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isAnimated: 1
-  _isColliderConstant: 0
   _idleFwd: {fileID: -842990268950388942, guid: ce1f574a3ea753147889b09b1e7c3ece,
     type: 3}
   _idleBack: {fileID: -1206589584368123669, guid: ce1f574a3ea753147889b09b1e7c3ece,
@@ -50031,9 +50030,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4290a18f19614184c9eda806918b6fdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  calculationRate: 0.1
-  offset: 0
-  runOnlyOnce: 0
+  _calculationRate: 0.1
+  _offset: 0
+  _runOnlyOnce: 0
 --- !u!95 &1610142655
 Animator:
   serializedVersion: 3
@@ -50572,7 +50571,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isAnimated: 0
-  _isColliderConstant: 0
   _idleFwd: {fileID: 21300000, guid: 022b3790093b315429bad97fc3b75a87, type: 3}
   _idleBack: {fileID: 21300000, guid: 6dbf3fc6ae3c0e14ca9070b3a2c373ed, type: 3}
   _idleSide: {fileID: 21300000, guid: 314012f52a2b953418beee81e408bf89, type: 3}

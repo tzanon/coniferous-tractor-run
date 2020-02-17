@@ -47,7 +47,6 @@ public abstract class Actor : MonoBehaviour
 		_bc = GetComponent<BoxCollider2D>();
 		_rb = GetComponent<Rigidbody2D>();
 		_animator = GetComponent<Animator>();
-
 		
 		_verticalCollSize = _idleFwd.bounds.size;
 		_horizontalCollSize = _idleSide.bounds.size;
@@ -62,7 +61,7 @@ public abstract class Actor : MonoBehaviour
 
 		SetIdleAnimInDirection(MovementVector.Down);
 	}
-
+	
 	protected void SetMoveAnimInDirection(MovementVector direction)
 	{
 		SetDirectionalAnimation(direction, true);

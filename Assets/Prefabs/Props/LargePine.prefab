@@ -94,6 +94,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4290a18f19614184c9eda806918b6fdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  calculationRate: 0.1
-  offset: -1
-  runOnlyOnce: 1
+  _calculationRate: 0.1
+  _offset: -1
+  _runOnlyOnce: 1

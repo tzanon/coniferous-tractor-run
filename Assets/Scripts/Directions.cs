@@ -6,6 +6,8 @@ namespace Directions
 
 	public struct MovementVector
 	{
+		// properties
+		
 		public static MovementVector Up { get { return new MovementVector(Direction.UP); } }
 		public static MovementVector Down { get { return new MovementVector(Direction.DOWN); } }
 		public static MovementVector Right { get { return new MovementVector(Direction.RIGHT); } }
@@ -15,6 +17,7 @@ namespace Directions
 
 		public Vector3 Value { get; private set; }
 
+		
 		private MovementVector(Direction direction)
 		{
 			switch (direction)

@@ -2,91 +2,96 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//using System.Math;
+
 using Directions;
 
 namespace Pathfinding
 {
 	struct PriorityItem
 	{
-		public readonly int priority;
-		public readonly Vector3Int point;
+		private readonly int _priority;
+		private readonly Vector3Int _point;
+		
+		public int Priority { get { return _priority; } }
+		public Vector3Int Point { get { return _point; } }
 
 		public PriorityItem(Vector3Int pt, int pri)
 		{
-			point = pt;
-			priority = pri;
+			_point = pt;
+			_priority = pri;
 		}
 	}
 
 	/// <summary>
-	/// Inefficient, brute force priority queue
+	/// Inefficient, brute force priority _queue
 	/// </summary>
 	class NaivePriorityQueue
 	{
-		private List<PriorityItem> queue;
+		private List<PriorityItem> _queue;
 
-		public int Count { get => queue.Count; }
+		public int Count { get => _queue.Count; }
 
 		public NaivePriorityQueue()
 		{
-			queue = new List<PriorityItem>();
+			_queue = new List<PriorityItem>();
 		}
 
 		public void Push(Vector3Int point, int priority)
 		{
 			PriorityItem item = new PriorityItem(point, priority);
-			queue.Add(item);
+			_queue.Add(item);
 		}
 
 		public Vector3Int PopMin()
 		{
-			if (queue.Count <= 0)
+			if (_queue.Count <= 0)
 			{
-				throw new Exception("Cannot pop from empty queue!");
+				throw new Exception("Cannot pop from empty _queue!");
 			}
 
-			PriorityItem minItem = queue[0];
+			PriorityItem minItem = _queue[0];
 
-			foreach (PriorityItem item in queue)
+			foreach (PriorityItem item in _queue)
 			{
-				if (item.priority < minItem.priority)
+				if (item.Priority < minItem.Priority)
 					minItem = item;
 			}
 
-			if (!queue.Remove(minItem))
+			if (!_queue.Remove(minItem))
 			{
-				Debug.LogError("Could not remove item from queue");
+				Debug.LogError("Could not remove item from _queue");
 			}
 
-			return minItem.point;
+			return minItem.Point;
 		}
 
 		public Vector3Int PopMax()
 		{
-			if (queue.Count <= 0)
+			if (_queue.Count <= 0)
 			{
-				throw new Exception("Cannot pop from empty queue!");
+				throw new Exception("Cannot pop from empty _queue!");
 			}
 
-			PriorityItem maxItem = queue[0];
+			PriorityItem maxItem = _queue[0];
 
-			foreach (PriorityItem item in queue)
+			foreach (PriorityItem item in _queue)
 			{
-				if (item.priority > maxItem.priority)
+				if (item.Priority > maxItem.Priority)
 					maxItem = item;
 			}
 
-			if (!queue.Remove(maxItem))
+			if (!_queue.Remove(maxItem))
 			{
-				Debug.LogError("Could not remove item from queue");
+				Debug.LogError("Could not remove item from _queue");
 			}
 
-			return maxItem.point;
+			return maxItem.Point;
 		}
 
 		public void Clear()
 		{
-			queue.Clear();
+			_queue.Clear();
 		}
 	}
 
@@ -95,55 +100,63 @@ namespace Pathfinding
 		// for tracking paths
 		struct NodePair
 		{
-			public Vector3Int node1, node2;
+			public Vector3Int Node1 { get; private set; }
+			public Vector3Int Node2 { get; private set; }
+			
+			public NodePair(Vector3Int n1, Vector3Int n2)
+			{
+				Node1 = n1;
+				Node2 = n2;
+			}
+			
+			// TODO: override == and !=
 		}
-
-		enum PathfinderType { BFS, DIJKSTRA, ASTAR}
-		PathfinderType pathfinder = PathfinderType.ASTAR;
-
-		private readonly Vector3Int nullPos = new Vector3Int(0, 0, -1);
-
-		private readonly Dictionary<Vector3Int, List<Vector3Int>> nodeNeighbours;
 		
-		private int _maxNumNeighbours;
-
-		private delegate void Heuristic();
-
-		public int NumNodes { get => nodeNeighbours.Keys.Count; }
+		// TODO: make separate pathfinder class (separate functionality)
+		enum PathfinderType { BFS, DIJKSTRA, ASTAR} // TODO: implement or get rid of Dijkstra
 		
-		public int MaxNumNeighbours
-		{
-			get => _maxNumNeighbours;
-			set => _maxNumNeighbours = (int)Mathf.Clamp(value, -1, Mathf.Infinity);
-		}
+		// fields
+		
+		private PathfinderType _pathfinder = PathfinderType.ASTAR;
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public Vector3Int[] Nodes { get => (new List<Vector3Int>(nodeNeighbours.Keys)).ToArray(); }
+		private readonly Vector3Int _nullPos = new Vector3Int(0, 0, -1);
+
+		private readonly Dictionary<Vector3Int, List<Vector3Int>> _nodeNeighbours;
+		
+		private readonly int _maxNumNeighbours; // TODO: look up naming conventions for constants
+
+		private delegate void Heuristic(); // TODO: look up conventions and find if this is necessary
+
+		public int NumNodes { get => _nodeNeighbours.Keys.Count; }
+		
+		// properties
+		public int MaxNumNeighbours { get => _maxNumNeighbours; }
+
+		public Vector3Int[] Nodes { get => (new List<Vector3Int>(_nodeNeighbours.Keys)).ToArray(); }
 
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="maxNeighbours"> Maximum number of neighbours that each node can have </param>
-		public Graph(int maxNeighbours=-1)
+		public Graph(int maxNeighbours = 4)
 		{
 			_maxNumNeighbours = maxNeighbours;
-			nodeNeighbours = new Dictionary<Vector3Int, List<Vector3Int>>();
+			_nodeNeighbours = new Dictionary<Vector3Int, List<Vector3Int>>(_maxNumNeighbours);
 		}
 
 		public Vector3Int[] NeighboursOfNode(Vector3Int node)
 		{
-			if (!nodeNeighbours.ContainsKey(node))
+			if (!_nodeNeighbours.ContainsKey(node))
 			{
 				return null;
 			}
 			else
 			{
-				return nodeNeighbours[node].ToArray();
+				return _nodeNeighbours[node].ToArray();
 			}
 		}
 
+		// TODO: decide whether to keep/get rid of this
 		public MovementVector DirectionBetweenNeighbours(Vector3Int node, Vector3Int neighbour)
 		{
 			// z must always be 0
@@ -176,58 +189,59 @@ namespace Pathfinding
 
 		public void AddNode(Vector3Int node, List<Vector3Int> neighbours)
 		{
-			if (MaxNumNeighbours > 0 && neighbours.Count > MaxNumNeighbours)
+			if (neighbours.Count > MaxNumNeighbours)
 			{
 				Debug.Log("Trying to add " + node + " with too many neighbours! Adding first " + MaxNumNeighbours);
 				List<Vector3Int> truncatedNeighbours = neighbours.GetRange(0, MaxNumNeighbours);
-				nodeNeighbours.Add(node, truncatedNeighbours);
+				_nodeNeighbours.Add(node, truncatedNeighbours);
 			}
 			else
 			{
-				nodeNeighbours.Add(node, neighbours);
+				_nodeNeighbours.Add(node, neighbours);
 			}
 		}
 
 		public bool AddNeighbour(Vector3Int node, Vector3Int neighbour)
 		{
-			if (!nodeNeighbours.ContainsKey(node))
+			if (!_nodeNeighbours.ContainsKey(node))
 			{
 				AddNode(node, new List<Vector3Int>() { neighbour });
 				return true;
 			}
 
-			if (nodeNeighbours[node].Count < MaxNumNeighbours)
+			if (_nodeNeighbours[node].Count < MaxNumNeighbours)
 			{
-				nodeNeighbours[node].Add(neighbour);
+				_nodeNeighbours[node].Add(neighbour);
 				return true;
 			}
 			else
 			{
+				Debug.LogError("Node " + node + " already has a maximum number of neigbours");
 				return false;
 			}
 		}
 
 		public bool RemoveNode(Vector3Int node)
 		{
-			return nodeNeighbours.Remove(node);
+			return _nodeNeighbours.Remove(node);
 		}
 
 		public bool RemoveNeighbour(Vector3Int node, Vector3Int neighbour)
 		{
-			if (!nodeNeighbours.ContainsKey(node))
+			if (!_nodeNeighbours.ContainsKey(node))
 			{
 				return false;
 			}
 
-			return nodeNeighbours[node].Remove(neighbour);
+			return _nodeNeighbours[node].Remove(neighbour);
 		}
 
 		public void Clear()
 		{
-			nodeNeighbours.Clear();
+			_nodeNeighbours.Clear();
 		}
 
-
+		// todo: refactor pathfinding into separate class?
 		#region pathfinding
 
 		public int ManhattanDistance(Vector3Int a, Vector3Int b)
@@ -247,7 +261,7 @@ namespace Pathfinding
 
 		public Vector3Int[] GetPathBetweenNodes(Vector3Int start, Vector3Int end)
 		{
-			switch (pathfinder)
+			switch (_pathfinder)
 			{
 				case PathfinderType.BFS:
 					return BFSEarlyExit(start, end);
@@ -262,7 +276,7 @@ namespace Pathfinding
 		{
 			Queue<Vector3Int> frontier = new Queue<Vector3Int>();
 			frontier.Enqueue(start);
-			Dictionary<Vector3Int, Vector3Int> cameFrom = new Dictionary<Vector3Int, Vector3Int>() { { start, nullPos } };
+			Dictionary<Vector3Int, Vector3Int> cameFrom = new Dictionary<Vector3Int, Vector3Int>() { { start, _nullPos } };
 
 			while (frontier.Count > 0)
 			{
@@ -271,7 +285,7 @@ namespace Pathfinding
 				if (cell == goal)
 					break;
 
-				foreach (Vector3Int next in nodeNeighbours[cell])
+				foreach (Vector3Int next in _nodeNeighbours[cell])
 				{
 					if (!cameFrom.ContainsKey(next))
 					{
@@ -296,14 +310,14 @@ namespace Pathfinding
 				return null;
 			}
 
-			if (nodeNeighbours[start].Contains(goal))
+			if (_nodeNeighbours[start].Contains(goal))
 			{
 				return new Vector3Int[] { goal };
 			}
 
 			NaivePriorityQueue frontier = new NaivePriorityQueue();
 			frontier.Push(start, 0);
-			Dictionary<Vector3Int, Vector3Int> cameFrom = new Dictionary<Vector3Int, Vector3Int>() { { start, nullPos } };
+			Dictionary<Vector3Int, Vector3Int> cameFrom = new Dictionary<Vector3Int, Vector3Int>() { { start, _nullPos } };
 			Dictionary<Vector3Int, int> costSoFar = new Dictionary<Vector3Int, int>() { { start, 0 } };
 
 			Debug.Log("Starting A* Search...");
@@ -315,7 +329,7 @@ namespace Pathfinding
 				if (cell == goal)
 					break;
 
-				foreach (Vector3Int next in nodeNeighbours[cell])
+				foreach (Vector3Int next in _nodeNeighbours[cell])
 				{
 					int newCost = costSoFar[cell] + Cost(cell, next);
 					if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next])

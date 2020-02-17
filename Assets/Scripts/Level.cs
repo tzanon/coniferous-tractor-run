@@ -3,36 +3,38 @@ using UnityEngine;
 
 public class Level : MonoBehaviour
 {
-	public bool debugMode = false;
+	// fields
+	[SerializeField] private bool _debugMode = false;
 
-	private List<Collectible> collectibles;
+	private List<Collectible> _collectibles;
 
-	public GameObject barrier;
+	[SerializeField] private GameObject _barrier;
 
+	[SerializeField] private Camera _playerCam, _tractorCam, _worldCam;
+	private Camera[] _cameras;
+
+	// properties
 	public Vector2[] PositionsOfCollectibles
 	{
 		get
 		{
-			Vector2[] positions = new Vector2[collectibles.Count];
-			for (int i = 0; i < collectibles.Count; i++)
+			Vector2[] positions = new Vector2[_collectibles.Count];
+			for (int i = 0; i < _collectibles.Count; i++)
 			{
-				positions[i] = collectibles[i].transform.position;
+				positions[i] = _collectibles[i].transform.position;
 			}
 			return positions;
 		}
 	}
 
-	public Camera playerCam, tractorCam, worldCam;
-	private Camera[] cameras;
-
 	private void Start()
 	{
-		collectibles = new List<Collectible>(FindObjectsOfType<Collectible>());
-		cameras = new Camera[] { playerCam, tractorCam, worldCam };
+		_collectibles = new List<Collectible>(FindObjectsOfType<Collectible>());
+		_cameras = new Camera[] { _playerCam, _tractorCam, _worldCam };
 
-		if (debugMode)
+		if (_debugMode)
 		{
-			Debug.Log("Num collectibles in play:" + collectibles.Count);
+			Debug.Log("Number of collectibles in play:" + _collectibles.Count);
 		}
 
 		SetCameraPlayer();
@@ -40,24 +42,24 @@ public class Level : MonoBehaviour
 
 	public Vector2 PositionOfCollectible(int i)
 	{
-		return collectibles[i].transform.position;
+		return _collectibles[i].transform.position;
 	}
 
 	public void DeleteCollectible(Collectible toDelete)
 	{
-		if (collectibles.Count <= 0)
+		if (_collectibles.Count <= 0)
 		{
 			Debug.LogError("No collectibles left to delete");
 			return;
 		}
 
-		if (toDelete == null || !collectibles.Contains(toDelete))
+		if (toDelete == null || !_collectibles.Contains(toDelete))
 		{
 			Debug.LogError("Trying to delete either nothing or something not originally in the list");
 			return;
 		}
 
-		if (!collectibles.Remove(toDelete))
+		if (!_collectibles.Remove(toDelete))
 		{
 			Debug.LogError("Could not delete collectible");
 			return;
@@ -65,15 +67,15 @@ public class Level : MonoBehaviour
 
 		Destroy(toDelete.gameObject);
 
-		if (collectibles.Count <= 0)
+		if (_collectibles.Count <= 0)
 		{
-			if (debugMode)
+			if (_debugMode)
 			{
 				Debug.Log("Collected all apples!");
 			}
 
-			// TODO: remove barrier preventing exit of the forest
-			Destroy(barrier);
+			// remove barrier preventing exit of the forest
+			Destroy(_barrier);
 
 			// notify tractor?
 		}
@@ -87,22 +89,22 @@ public class Level : MonoBehaviour
 
 	public void SetCameraPlayer()
 	{
-		EnableCamera(playerCam);
+		EnableCamera(_playerCam);
 	}
 
 	public void SetCameraTractor()
 	{
-		EnableCamera(tractorCam);
+		EnableCamera(_tractorCam);
 	}
 
 	public void SetCameraWorld()
 	{
-		EnableCamera(worldCam);
+		EnableCamera(_worldCam);
 	}
 
 	private void EnableCamera(Camera cam)
 	{
-		foreach (Camera c in cameras)
+		foreach (Camera c in _cameras)
 		{
 			if (c == cam)
 			{

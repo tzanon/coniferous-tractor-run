@@ -8,15 +8,16 @@ using Pathfinding;
 
 public class TilemapManager : MonoBehaviour
 {
-	public bool debugMode = false;
-	public bool UIDebugMode = false;
-	public bool clearHighlight = true;
-	public Color nodeHighlight;
-	public Color neighbourHighlight;
-	public Color searchHighlight;
-	public float hoverHighlightRefreshRate = 0.15f;
-	public Vector3Int testCell;
-	public RectTransform UIDebugMenu;
+	// fields
+	[SerializeField] private bool debugMode = false;
+	[SerializeField] private bool UIDebugMode = false;
+	[SerializeField] private bool clearHighlight = true;
+	[SerializeField] private Color nodeHighlight;
+	[SerializeField] private Color neighbourHighlight;
+	[SerializeField] private Color searchHighlight;
+	[SerializeField] private float hoverHighlightRefreshRate = 0.15f;
+	[SerializeField] private Vector3Int testCell;
+	[SerializeField] private RectTransform UIDebugMenu;
 
 	private enum VisualDebugType { None, Cell, Neighbours, Path, Closest }
 	private VisualDebugType _visualDebugtype = VisualDebugType.None;
@@ -24,10 +25,9 @@ public class TilemapManager : MonoBehaviour
 	private int visualPathIdx;
 
 
-	public int bfsLimit = 20;
+	[SerializeField] private int bfsLimit = 20;
 	private bool isFindingNode = false;
 	private Dictionary<Vector3Int, Vector3Int> closestNodes = new Dictionary<Vector3Int, Vector3Int>();
-
 
 	private ChaserControls controls;
 	private InputAction leftClick;
@@ -42,7 +42,9 @@ public class TilemapManager : MonoBehaviour
 
 	[SerializeField] private Sprite nodeSprite;
 
-	public Player player;
+	[SerializeField] private Player player;
+
+	// properties
 
 	public Vector3Int PlayerCell { get => CellOfPosition(player.transform.position); }
 
@@ -57,7 +59,7 @@ public class TilemapManager : MonoBehaviour
 		}
 
 		highlightedCells = new List<Vector3Int>();
-		pathfindingGraph = new Graph(maxNeighbours: 4);
+		pathfindingGraph = new Graph();
 
 		visualPathPoints = new Vector3Int[2];
 		visualPathIdx = 0;
