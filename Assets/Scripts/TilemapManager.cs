@@ -18,7 +18,7 @@ public class TilemapManager : MonoBehaviour
 	[SerializeField] private Color _nodeHighlight;
 	[SerializeField] private Color _neighbourHighlight;
 	[SerializeField] private Color _searchHighlight;
-	[SerializeField] private float _hoverHighlightRefreshRate = 0.15f;
+	[SerializeField] private float _hoverHighlightRefreshRate = 0.15f; // TODO: highlight tile borders on mouse hover
 	[SerializeField] private Vector3Int _testCell = new Vector3Int(4, 6, 0);
 	[SerializeField] private RectTransform _UIDebugMenu;
 

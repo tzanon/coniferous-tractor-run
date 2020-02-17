@@ -49851,9 +49851,9 @@ MonoBehaviour:
   _debugMode: 1
   _UIDebugMode: 1
   _clearHighlight: 1
-  _nodeHighlight: {r: 1, g: 0, b: 0.548224, a: 0}
-  _neighbourHighlight: {r: 1, g: 0.7465527, b: 0, a: 0}
-  _searchHighlight: {r: 0.6058817, g: 0, b: 1, a: 0}
+  _nodeHighlight: {r: 1, g: 0.14431219, b: 0, a: 1}
+  _neighbourHighlight: {r: 1, g: 0.40945286, b: 0, a: 1}
+  _searchHighlight: {r: 0, g: 0.6751381, b: 0.8392157, a: 1}
   _hoverHighlightRefreshRate: 0.15
   _testCell: {x: 4, y: 6, z: 0}
   _UIDebugMenu: {fileID: 1508038468}
@@ -51303,7 +51303,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0.9212953, g: 1, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
