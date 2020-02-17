@@ -17,7 +17,6 @@ namespace Directions
 
 		public Vector3 Value { get; private set; }
 
-		
 		private MovementVector(Direction direction)
 		{
 			switch (direction)

@@ -8,69 +8,71 @@ using Pathfinding;
 
 public class TilemapManager : MonoBehaviour
 {
-	// fields
-	[SerializeField] private bool debugMode = false;
-	[SerializeField] private bool UIDebugMode = false;
-	[SerializeField] private bool clearHighlight = true;
-	[SerializeField] private Color nodeHighlight;
-	[SerializeField] private Color neighbourHighlight;
-	[SerializeField] private Color searchHighlight;
-	[SerializeField] private float hoverHighlightRefreshRate = 0.15f;
-	[SerializeField] private Vector3Int testCell;
-	[SerializeField] private RectTransform UIDebugMenu;
+	/* fields */
+
+	[SerializeField] private bool _debugMode = false;
+
+	// visual debugging
+	[SerializeField] private bool _UIDebugMode = false;
+	[SerializeField] private bool _clearHighlight = true;
+	[SerializeField] private Color _nodeHighlight;
+	[SerializeField] private Color _neighbourHighlight;
+	[SerializeField] private Color _searchHighlight;
+	[SerializeField] private float _hoverHighlightRefreshRate = 0.15f;
+	[SerializeField] private Vector3Int _testCell = new Vector3Int(4, 6, 0);
+	[SerializeField] private RectTransform _UIDebugMenu;
+
+	private ChaserControls _controls;
+	private InputAction _leftClick;
+	private InputAction _mousePosAction;
+	private Vector2 _mousePosition;
+	private List<Vector3Int> _highlightedCells;
 
 	private enum VisualDebugType { None, Cell, Neighbours, Path, Closest }
-	private VisualDebugType _visualDebugtype = VisualDebugType.None;
-	private Vector3Int[] visualPathPoints;
-	private int visualPathIdx;
+	private VisualDebugType _visualDebugType = VisualDebugType.None;
+	private Vector3Int[] _visualPathPoints;
+	private int _visualPathIdx;
 
+    // finding node
+    [SerializeField] [Range(0, 100)] private int _bfsLimit = 20;
+	private bool _isFindingNode = false;
+	private Dictionary<Vector3Int, Vector3Int> _closestNodes = new Dictionary<Vector3Int, Vector3Int>();
 
-	[SerializeField] private int bfsLimit = 20;
-	private bool isFindingNode = false;
-	private Dictionary<Vector3Int, Vector3Int> closestNodes = new Dictionary<Vector3Int, Vector3Int>();
+	// pathfinding-related
+	private Graph _pathfindingGraph;
+	[SerializeField] private Player _player;
+	[SerializeField] private Sprite _nodeSprite;
 
-	private ChaserControls controls;
-	private InputAction leftClick;
-	private InputAction mousePosAction;
+	// components
+	private Tilemap _map;
 
-	private Vector2 _mousePosition;
+	/* properties */
 
-	private Tilemap map;
-	private Graph pathfindingGraph;
-
-	private List<Vector3Int> highlightedCells;
-
-	[SerializeField] private Sprite nodeSprite;
-
-	[SerializeField] private Player player;
-
-	// properties
-
-	public Vector3Int PlayerCell { get => CellOfPosition(player.transform.position); }
+	public Vector3Int PlayerCell { get => CellOfPosition(_player.transform.position); }
 
 	#region Unity functions
 
 	private void Awake()
 	{
-		map = GetComponent<Tilemap>();
-		foreach (Vector3Int pos in map.cellBounds.allPositionsWithin)
+		_map = GetComponent<Tilemap>();
+		foreach (Vector3Int pos in _map.cellBounds.allPositionsWithin)
 		{
-			map.SetTileFlags(pos, (TileFlags.LockTransform));
+			_map.SetTileFlags(pos, (TileFlags.LockTransform));
 		}
 
-		highlightedCells = new List<Vector3Int>();
-		pathfindingGraph = new Graph();
+		_highlightedCells = new List<Vector3Int>();
+		_pathfindingGraph = new Graph();
 
-		visualPathPoints = new Vector3Int[2];
-		visualPathIdx = 0;
+		_visualPathPoints = new Vector3Int[2];
+		_visualPathIdx = 0;
 
-		controls = new ChaserControls();
-		leftClick = controls.Debug.LeftClick;
-		mousePosAction = controls.Debug.Position;
+		_controls = new ChaserControls();
+		_leftClick = _controls.Debug.LeftClick;
+		_mousePosAction = _controls.Debug.Position;
 
-		leftClick.performed += HandleMouseClick;
-		mousePosAction.started += ctx => _mousePosition = ctx.ReadValue<Vector2>();
-		mousePosAction.performed += ctx => _mousePosition = ctx.ReadValue<Vector2>();
+		_leftClick.performed += HandleMouseClick;
+		_mousePosAction.started += ctx => _mousePosition = ctx.ReadValue<Vector2>();
+		_mousePosAction.performed += ctx => _mousePosition = ctx.ReadValue<Vector2>();
 	}
 
 	private void Start()
@@ -78,19 +80,19 @@ public class TilemapManager : MonoBehaviour
 		PrintMapInfo();
 		PrintPlayerPosition();
 
-		UIDebugMenu.gameObject.SetActive(UIDebugMode);
+		_UIDebugMenu.gameObject.SetActive(_UIDebugMode);
 
 		CalculateGraph();
 	}
 
 	private void OnEnable()
 	{
-		controls.Debug.Enable();
+		_controls.Debug.Enable();
 	}
 
 	private void OnDisable()
 	{
-		controls.Debug.Disable();
+		_controls.Debug.Disable();
 	}
 
 	#endregion
@@ -99,22 +101,22 @@ public class TilemapManager : MonoBehaviour
 
 	public Vector3Int CellOfPosition(Vector3 pos)
 	{
-		return map.WorldToCell(pos);
+		return _map.WorldToCell(pos);
 	}
 
 	public Vector3 CenterPositionOfCell(Vector3Int cell)
 	{
-		return map.CellToWorld(cell) + new Vector3(0.5f, 0.5f, 0f);
+		return _map.CellToWorld(cell) + new Vector3(0.5f, 0.5f, 0f);
 	}
 
 	public bool IsCellInBounds(Vector3Int cell)
 	{
-		return map.cellBounds.Contains(cell);
+		return _map.cellBounds.Contains(cell);
 	}
 
 	public bool IsPathfindingNode(Vector3Int cell)
 	{
-		return map.HasTile(cell) && map.GetSprite(cell) == nodeSprite;
+		return _map.HasTile(cell) && _map.GetSprite(cell) == _nodeSprite;
 	}
 
 	/// <summary>
@@ -124,13 +126,13 @@ public class TilemapManager : MonoBehaviour
 	/// <returns> first node found around cell </returns>
 	public Vector3Int ClosestNodeToCell(Vector3Int startCell)
 	{
-		if (isFindingNode)
+		if (_isFindingNode)
 		{
 			Debug.Log("Already searching for a node, must wait");
 			return new Vector3Int(0, 0, -1);
 		}
 
-		if (pathfindingGraph.Nodes.Length <= 0)
+		if (_pathfindingGraph.Nodes.Length <= 0)
 		{
 			Debug.LogError("Error: either no node tiles in map or graph is uninitialized");
 			return new Vector3Int(0, 0, -1);
@@ -142,7 +144,7 @@ public class TilemapManager : MonoBehaviour
 		visitedCells.Add(startCell);
 
 		int numCellsSoFar = 0;
-		isFindingNode = true;
+		_isFindingNode = true;
 
 		while (cellsToEval.Count > 0)
 		{
@@ -150,18 +152,18 @@ public class TilemapManager : MonoBehaviour
 			if (cell == startCell)
 				HighlightStandardCell(cell);
 			else
-				HighlightCell(cell, searchHighlight, false);
+				HighlightCell(cell, _searchHighlight, false);
 
 			numCellsSoFar++;
 
 			if (IsPathfindingNode(cell))
 			{
-				isFindingNode = false;
-				closestNodes[startCell] = cell;
+				_isFindingNode = false;
+				_closestNodes[startCell] = cell;
 				return cell;
 			}
 
-			if (numCellsSoFar >= bfsLimit)
+			if (numCellsSoFar >= _bfsLimit)
 			{
 				Debug.LogError("Error: have searched " + numCellsSoFar + " cells");
 				break;
@@ -176,13 +178,13 @@ public class TilemapManager : MonoBehaviour
 
 			foreach (Vector3Int neighbour in surroundingCells)
 			{
-				if (map.HasTile(neighbour) && !visitedCells.Contains(neighbour))
+				if (_map.HasTile(neighbour) && !visitedCells.Contains(neighbour))
 					cellsToEval.Enqueue(neighbour);
 			}
 		}
 
 		Debug.LogError("Error: could not find any nodes");
-		isFindingNode = false;
+		_isFindingNode = false;
 		return new Vector3Int(0, 0, -1);
 	}
 
@@ -216,16 +218,16 @@ public class TilemapManager : MonoBehaviour
 
 	public void CalculateGraph()
 	{
-		foreach (Vector3Int pos in map.cellBounds.allPositionsWithin)
+		foreach (Vector3Int pos in _map.cellBounds.allPositionsWithin)
 		{
 			if (IsPathfindingNode(pos))
 			{
 				List<Vector3Int> neighbours = CalculateNodeNeighbours(pos);
-				pathfindingGraph.AddNode(pos, neighbours);
+				_pathfindingGraph.AddNode(pos, neighbours);
 			}
 		}
 
-		if (debugMode)
+		if (_debugMode)
 		{
 			PrintGraphInfo();
 		}
@@ -237,35 +239,35 @@ public class TilemapManager : MonoBehaviour
 
 	public void ToggleHighlightRefresh()
 	{
-		clearHighlight = !clearHighlight;
+		_clearHighlight = !_clearHighlight;
 	}
 
 	public void NoVisualDebug()
 	{
 		RemoveHighlight();
-		_visualDebugtype = VisualDebugType.None;
+		_visualDebugType = VisualDebugType.None;
 	}
 
 	public void CellVisualDebug()
 	{
-		_visualDebugtype = VisualDebugType.Cell;
+		_visualDebugType = VisualDebugType.Cell;
 	}
 
 	public void NeighbourVisualDebug()
 	{
-		_visualDebugtype = VisualDebugType.Neighbours;
+		_visualDebugType = VisualDebugType.Neighbours;
 	}
 
 	public void ClosestNodeVisualDebug()
 	{
-		_visualDebugtype = VisualDebugType.Closest;
+		_visualDebugType = VisualDebugType.Closest;
 	}
 
 	public void PathVisualDebug()
 	{
-		_visualDebugtype = VisualDebugType.Path;
-		visualPathIdx = 0;
-		visualPathPoints[0] = visualPathPoints[1] = Vector3Int.zero;
+		_visualDebugType = VisualDebugType.Path;
+		_visualPathIdx = 0;
+		_visualPathPoints[0] = _visualPathPoints[1] = Vector3Int.zero;
 	}
 
 	#endregion
@@ -278,7 +280,7 @@ public class TilemapManager : MonoBehaviour
 	/// <param name="ctx"> unused callback context </param>
 	private void HandleMouseClick(InputAction.CallbackContext ctx)
 	{
-		if (EventSystem.current.IsPointerOverGameObject() || _visualDebugtype == VisualDebugType.None)
+		if (EventSystem.current.IsPointerOverGameObject() || _visualDebugType == VisualDebugType.None)
 			return;
 
 		Vector3 screenMousePos = _mousePosition;
@@ -286,13 +288,13 @@ public class TilemapManager : MonoBehaviour
 
 		Vector3Int mouseCell = CellOfPosition(worldMousePos);
 
-		if (debugMode)
+		if (_debugMode)
 		{
 			Debug.Log("screen mouse position is " + screenMousePos);
 			//Debug.Log("world mouse position is " + worldMousePos);
 		}
 
-		switch (_visualDebugtype)
+		switch (_visualDebugType)
 		{
 			case VisualDebugType.Cell:
 				HighlightStandardCell(mouseCell);
@@ -317,7 +319,7 @@ public class TilemapManager : MonoBehaviour
 	/// <param name="cell"> position of tile to highlight </param>
 	public void HighlightStandardCell(Vector3Int cell)
 	{
-		HighlightCell(cell, nodeHighlight, clearHighlight);
+		HighlightCell(cell, _nodeHighlight, _clearHighlight);
 	}
 
 	/// <summary>
@@ -328,16 +330,16 @@ public class TilemapManager : MonoBehaviour
 	{
 		if (!IsPathfindingNode(node))
 		{
-			if (debugMode)
+			if (_debugMode)
 				Debug.Log("Cell " + node + " is not a node");
 			HighlightStandardCell(node);
 			return;
 		}
 
-		Vector3Int[] neighbours = pathfindingGraph.NeighboursOfNode(node);
+		Vector3Int[] neighbours = _pathfindingGraph.NeighboursOfNode(node);
 
 		HighlightStandardCell(node);
-		HighlightCells(neighbours, neighbourHighlight, false);
+		HighlightCells(neighbours, _neighbourHighlight, false);
 	}
 
 	/// <summary>
@@ -349,6 +351,10 @@ public class TilemapManager : MonoBehaviour
 		HighlightStandardCell(ClosestNodeToCell(cell));
 	}
 
+    /// <summary>
+    /// adds node to use for highlighting a path
+    /// </summary>
+    /// <param name="node"> node to add </param>
 	public void AddVisualPathPoint(Vector3Int node)
 	{
 		if (!IsPathfindingNode(node))
@@ -357,13 +363,13 @@ public class TilemapManager : MonoBehaviour
 			return;
 		}
 
-		if (debugMode)
+		if (_debugMode)
 			Debug.Log("Adding node " + node + " to path");
 
-		visualPathPoints[visualPathIdx++] = node;
-		HighlightCells(new Vector3Int[] { node }, nodeHighlight, false);
+		_visualPathPoints[_visualPathIdx++] = node;
+		HighlightCells(new Vector3Int[] { node }, _nodeHighlight, false);
 
-		if (visualPathIdx > 1)
+		if (_visualPathIdx > 1)
 		{
 			HighlightPath();
 		}
@@ -376,10 +382,10 @@ public class TilemapManager : MonoBehaviour
 	/// <param name="end"> end node of path </param>
 	public void HighlightPath()
 	{
-		Vector3Int start = visualPathPoints[0];
-		Vector3Int end = visualPathPoints[1];
+		Vector3Int start = _visualPathPoints[0];
+		Vector3Int end = _visualPathPoints[1];
 
-		if (debugMode)
+		if (_debugMode)
 			Debug.Log(string.Format("Highlighting path between {0} and {1}...", start, end));
 
 		if (!(IsPathfindingNode(start) && IsPathfindingNode(end)))
@@ -389,15 +395,15 @@ public class TilemapManager : MonoBehaviour
 		}
 
 		//Vector3Int[] path = pathfindingGraph.BFSEarlyExit(start, end);
-		Vector3Int[] path = pathfindingGraph.GetPathBetweenNodes(start, end);
+		Vector3Int[] path = _pathfindingGraph.GetPathBetweenNodes(start, end);
 
-		if (debugMode)
+		if (_debugMode)
 			Debug.Log("path calculated successfully!");
 
-		HighlightCells(path, nodeHighlight, clearHighlight);
+		HighlightCells(path, _nodeHighlight, _clearHighlight);
 
-		visualPathIdx = 0;
-		visualPathPoints[0] = visualPathPoints[1] = Vector3Int.zero;
+		_visualPathIdx = 0;
+		_visualPathPoints[0] = _visualPathPoints[1] = Vector3Int.zero;
 	}
 
 	/// <summary>
@@ -405,7 +411,7 @@ public class TilemapManager : MonoBehaviour
 	/// </summary>
 	public void HighlightAllNodes()
 	{
-		HighlightCells(pathfindingGraph.Nodes, nodeHighlight, clearHighlight);
+		HighlightCells(_pathfindingGraph.Nodes, _nodeHighlight, _clearHighlight);
 	}
 
 	/// <summary>
@@ -413,12 +419,12 @@ public class TilemapManager : MonoBehaviour
 	/// </summary>
 	public void RemoveHighlight()
 	{
-		foreach (Vector3Int cell in highlightedCells)
+		foreach (Vector3Int cell in _highlightedCells)
 		{
-			map.SetColor(cell, Color.white);
+			_map.SetColor(cell, Color.white);
 		}
 
-		highlightedCells.Clear();
+		_highlightedCells.Clear();
 	}
 
 	/// <summary>
@@ -432,15 +438,15 @@ public class TilemapManager : MonoBehaviour
 		if (removeExistingHighlight)
 			RemoveHighlight();
 
-		if (!map.HasTile(cell))
+		if (!_map.HasTile(cell))
 		{
-			if (debugMode)
+			if (_debugMode)
 				Debug.Log("No tile here");
 			return;
 		}
 
-		map.SetColor(cell, col);
-		highlightedCells.Add(cell);
+		_map.SetColor(cell, col);
+		_highlightedCells.Add(cell);
 	}
 
 	/// <summary>
@@ -475,7 +481,7 @@ public class TilemapManager : MonoBehaviour
 		if (IsPathfindingNode(cell))
 		{
 			Debug.Log("Cell " + cell + " is in bounds and is a node");
-			Debug.Log("Neighbours: " + pathfindingGraph.NeighboursOfNode(cell).ToString());
+			Debug.Log("Neighbours: " + _pathfindingGraph.NeighboursOfNode(cell).ToString());
 		}
 		else
 		{
@@ -485,25 +491,25 @@ public class TilemapManager : MonoBehaviour
 
 	public void PrintMapInfo()
 	{
-		BoundsInt mapBounds = map.cellBounds;
+		BoundsInt mapBounds = _map.cellBounds;
 		Debug.Log("bounds and size of tilemap are " + mapBounds);
 		Debug.Log("bound min is " + mapBounds.min + ", bound max is " + mapBounds.max);
 	}
 
 	public void PrintGraphInfo()
 	{
-		Debug.Log("Total pathfinding nodes: " + pathfindingGraph.NumNodes);
+		Debug.Log("Total pathfinding nodes: " + _pathfindingGraph.NumNodes);
 	}
 
 	public void PrintPlayerPosition()
 	{
-		Vector3 playerPos = player.transform.position;
+		Vector3 playerPos = _player.transform.position;
 		Debug.Log("Player at position " + playerPos + " is in cell " + PlayerCell + ", cell position is " + CenterPositionOfCell(PlayerCell));
 	}
 
 	public void PrintSpriteAtCell(Vector3Int cell)
 	{
-		Sprite spr = map.GetSprite(cell);
+		Sprite spr = _map.GetSprite(cell);
 		if (spr == null)
 			Debug.Log("No sprite at " + cell);
 		else

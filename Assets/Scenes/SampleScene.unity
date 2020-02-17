@@ -49848,19 +49848,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e9b04c19560905469bfad4a8b9088e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 1
-  UIDebugMode: 1
-  clearHighlight: 1
-  nodeHighlight: {r: 0.9204781, g: 0.28773582, b: 1, a: 1}
-  neighbourHighlight: {r: 0.9433962, g: 0.73121065, b: 0.084549636, a: 1}
-  searchHighlight: {r: 0.9450981, g: 0.7294118, b: 0.08627451, a: 0}
-  hoverHighlightRefreshRate: 0.15
-  testCell: {x: 4, y: 6, z: 0}
-  UIDebugMenu: {fileID: 1508038468}
-  bfsLimit: 20
-  nodeSprite: {fileID: 3893196527913282908, guid: 2e9ed3412ee38fc45a545a97f4d64fad,
+  _debugMode: 1
+  _UIDebugMode: 1
+  _clearHighlight: 1
+  _nodeHighlight: {r: 1, g: 0, b: 0.548224, a: 0}
+  _neighbourHighlight: {r: 1, g: 0.7465527, b: 0, a: 0}
+  _searchHighlight: {r: 0.6058817, g: 0, b: 1, a: 0}
+  _hoverHighlightRefreshRate: 0.15
+  _testCell: {x: 4, y: 6, z: 0}
+  _UIDebugMenu: {fileID: 1508038468}
+  _bfsLimit: 20
+  _player: {fileID: 1610142652}
+  _nodeSprite: {fileID: 3893196527913282908, guid: 2e9ed3412ee38fc45a545a97f4d64fad,
     type: 3}
-  player: {fileID: 1610142652}
 --- !u!1 &1610142648
 GameObject:
   m_ObjectHideFlags: 0
