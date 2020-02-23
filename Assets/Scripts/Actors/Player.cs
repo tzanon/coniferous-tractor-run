@@ -6,7 +6,7 @@ using Directions;
 public class Player : Actor
 {
 	[SerializeField] private bool _debugMode = false;
-	[SerializeField] private Level _level;
+	[SerializeField] private GameplayManager _level;
 
 	private ChaserControls _controls;
 	private InputAction _moveAction;
@@ -64,7 +64,9 @@ public class Player : Actor
 
 			NumCollectibles++;
 
-			_level.DeleteCollectible(coll.GetComponent<Collectible>());
+			Collectible collectible = coll.GetComponent<Collectible>();
+
+			_level.DeleteCollectible(collectible);
 		}
 		else if (coll.CompareTag("Tractor"))
 		{

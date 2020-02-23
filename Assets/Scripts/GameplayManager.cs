@@ -1,17 +1,13 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Level : MonoBehaviour
+public class GameplayManager : MonoBehaviour
 {
 	// fields
 	[SerializeField] private bool _debugMode = false;
 
 	private List<Collectible> _collectibles;
-
 	[SerializeField] private GameObject _barrier;
-
-	[SerializeField] private Camera _playerCam, _tractorCam, _worldCam;
-	private Camera[] _cameras;
 
 	// properties
 	public Vector2[] PositionsOfCollectibles
@@ -27,17 +23,16 @@ public class Level : MonoBehaviour
 		}
 	}
 
+	public int NumCollectibles { get => _collectibles.Count; }
+
 	private void Start()
 	{
 		_collectibles = new List<Collectible>(FindObjectsOfType<Collectible>());
-		_cameras = new Camera[] { _playerCam, _tractorCam, _worldCam };
 
 		if (_debugMode)
 		{
 			Debug.Log("Number of collectibles in play:" + _collectibles.Count);
 		}
-
-		SetCameraPlayer();
 	}
 
 	public Vector2 PositionOfCollectible(int i)
@@ -45,8 +40,18 @@ public class Level : MonoBehaviour
 		return _collectibles[i].transform.position;
 	}
 
+	private bool RemoveCollectibleFromList(Collectible collectible)
+	{
+		bool status = true;
+
+
+
+		return status;
+	}
+
 	public void DeleteCollectible(Collectible toDelete)
 	{
+		// check if collectible exists
 		if (_collectibles.Count <= 0)
 		{
 			Debug.LogError("No collectibles left to delete");
@@ -85,38 +90,6 @@ public class Level : MonoBehaviour
 	private void GameWon()
 	{
 
-	}
-
-	public void SetCameraPlayer()
-	{
-		EnableCamera(_playerCam);
-	}
-
-	public void SetCameraTractor()
-	{
-		EnableCamera(_tractorCam);
-	}
-
-	public void SetCameraWorld()
-	{
-		EnableCamera(_worldCam);
-	}
-
-	private void EnableCamera(Camera cam)
-	{
-		foreach (Camera c in _cameras)
-		{
-			if (c == cam)
-			{
-				c.gameObject.SetActive(true);
-				c.tag = "MainCamera";
-			}
-			else
-			{
-				c.tag = "Untagged";
-				c.gameObject.SetActive(false);
-			}
-		}
 	}
 
 }

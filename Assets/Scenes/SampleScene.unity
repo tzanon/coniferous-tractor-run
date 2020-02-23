@@ -1351,7 +1351,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 972013121}
+      - m_Target: {fileID: 972013123}
         m_MethodName: SetCameraTractor
         m_Mode: 1
         m_Arguments:
@@ -3581,6 +3581,7 @@ GameObject:
   m_Component:
   - component: {fileID: 972013122}
   - component: {fileID: 972013121}
+  - component: {fileID: 972013123}
   m_Layer: 0
   m_Name: LevelManager
   m_TagString: Untagged
@@ -3597,14 +3598,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 972013120}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bcb1ea023e812ca419a9ce3badffb36b, type: 3}
+  m_Script: {fileID: 11500000, guid: bfb9eb18cd4748c40a4c75db9ef8fb15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _debugMode: 0
   _barrier: {fileID: 1177651269}
-  _playerCam: {fileID: 1805789279}
-  _tractorCam: {fileID: 344010914}
-  _worldCam: {fileID: 1991976934}
 --- !u!4 &972013122
 Transform:
   m_ObjectHideFlags: 0
@@ -3619,8 +3617,24 @@ Transform:
   - {fileID: 1991976932}
   - {fileID: 1177651268}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &972013123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 972013120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 854c818eab11f0b498a775c56b728d57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugMode: 0
+  _playerCam: {fileID: 1805789279}
+  _tractorCam: {fileID: 344010914}
+  _worldCam: {fileID: 1991976934}
 --- !u!1001 &983856751
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4950,7 +4964,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 972013121}
+      - m_Target: {fileID: 972013123}
         m_MethodName: SetCameraPlayer
         m_Mode: 1
         m_Arguments:
@@ -5079,7 +5093,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 972013121}
+      - m_Target: {fileID: 972013123}
         m_MethodName: SetCameraWorld
         m_Mode: 1
         m_Arguments:
@@ -49968,7 +49982,7 @@ Transform:
   m_Children:
   - {fileID: 1805789277}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1610142652
 MonoBehaviour:
@@ -50504,12 +50518,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1733062915}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.5, y: 13.04, z: 0}
+  m_LocalPosition: {x: 11.5, y: 13, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 344010912}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &1733062918
 Rigidbody2D:
@@ -51303,7 +51317,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.9212953, g: 1, b: 0, a: 0}
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -51740,7 +51754,7 @@ Transform:
   - {fileID: 867132284}
   - {fileID: 1741511797}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1885161738
 PrefabInstance:

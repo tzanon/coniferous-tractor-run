@@ -2,18 +2,18 @@
 
 namespace Directions
 {
-	enum Direction { NULL = -1, CENTER, UP, RIGHT, DOWN, LEFT }
+	enum Direction { Null = -1, Center, Up, Right, Down, Left }
 
 	public struct MovementVector
 	{
 		// properties
 		
-		public static MovementVector Up { get { return new MovementVector(Direction.UP); } }
-		public static MovementVector Down { get { return new MovementVector(Direction.DOWN); } }
-		public static MovementVector Right { get { return new MovementVector(Direction.RIGHT); } }
-		public static MovementVector Left { get { return new MovementVector(Direction.LEFT); } }
-		public static MovementVector Center { get { return new MovementVector(Direction.CENTER); } }
-		public static MovementVector Null { get { return new MovementVector(Direction.NULL); } }
+		public static MovementVector Up { get { return new MovementVector(Direction.Up); } }
+		public static MovementVector Down { get { return new MovementVector(Direction.Down); } }
+		public static MovementVector Right { get { return new MovementVector(Direction.Right); } }
+		public static MovementVector Left { get { return new MovementVector(Direction.Left); } }
+		public static MovementVector Center { get { return new MovementVector(Direction.Center); } }
+		public static MovementVector Null { get { return new MovementVector(Direction.Null); } }
 
 		public Vector3 Value { get; private set; }
 
@@ -21,19 +21,19 @@ namespace Directions
 		{
 			switch (direction)
 			{
-				case Direction.UP:
+				case Direction.Up:
 					Value = Vector3.up;
 					break;
-				case Direction.DOWN:
+				case Direction.Down:
 					Value = Vector3.down;
 					break;
-				case Direction.RIGHT:
+				case Direction.Right:
 					Value = Vector3.right;
 					break;
-				case Direction.LEFT:
+				case Direction.Left:
 					Value = Vector3.left;
 					break;
-				case Direction.CENTER:
+				case Direction.Center:
 					Value = Vector3.zero;
 					break;
 				default:

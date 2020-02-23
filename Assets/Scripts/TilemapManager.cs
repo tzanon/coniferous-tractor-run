@@ -33,13 +33,14 @@ public class TilemapManager : MonoBehaviour
 	private Vector3Int[] _visualPathPoints;
 	private int _visualPathIdx;
 
-    // finding node
-    [SerializeField] [Range(0, 100)] private int _bfsLimit = 20;
+	// finding node
+	[SerializeField] [Range(0, 100)] private int _bfsLimit = 20;
 	private bool _isFindingNode = false;
 	private Dictionary<Vector3Int, Vector3Int> _closestNodes = new Dictionary<Vector3Int, Vector3Int>();
 
 	// pathfinding-related
-	private Graph _pathfindingGraph;
+	private Graph _graph;
+	private Pathfinder _pathfinder;
 	[SerializeField] private Player _player;
 	[SerializeField] private Sprite _nodeSprite;
 
@@ -61,7 +62,8 @@ public class TilemapManager : MonoBehaviour
 		}
 
 		_highlightedCells = new List<Vector3Int>();
-		_pathfindingGraph = new Graph();
+		_graph = new Graph();
+		_pathfinder = new Pathfinder(_graph);
 
 		_visualPathPoints = new Vector3Int[2];
 		_visualPathIdx = 0;
@@ -132,7 +134,7 @@ public class TilemapManager : MonoBehaviour
 			return new Vector3Int(0, 0, -1);
 		}
 
-		if (_pathfindingGraph.Nodes.Length <= 0)
+		if (_graph.Nodes.Length <= 0)
 		{
 			Debug.LogError("Error: either no node tiles in map or graph is uninitialized");
 			return new Vector3Int(0, 0, -1);
@@ -223,7 +225,7 @@ public class TilemapManager : MonoBehaviour
 			if (IsPathfindingNode(pos))
 			{
 				List<Vector3Int> neighbours = CalculateNodeNeighbours(pos);
-				_pathfindingGraph.AddNode(pos, neighbours);
+				_graph.AddNode(pos, neighbours);
 			}
 		}
 
@@ -336,7 +338,7 @@ public class TilemapManager : MonoBehaviour
 			return;
 		}
 
-		Vector3Int[] neighbours = _pathfindingGraph.NeighboursOfNode(node);
+		Vector3Int[] neighbours = _graph.NeighboursOfNode(node);
 
 		HighlightStandardCell(node);
 		HighlightCells(neighbours, _neighbourHighlight, false);
@@ -395,7 +397,7 @@ public class TilemapManager : MonoBehaviour
 		}
 
 		//Vector3Int[] path = pathfindingGraph.BFSEarlyExit(start, end);
-		Vector3Int[] path = _pathfindingGraph.GetPathBetweenNodes(start, end);
+		Vector3Int[] path = _pathfinder.GetPathBetweenNodes(start, end);
 
 		if (_debugMode)
 			Debug.Log("path calculated successfully!");
@@ -411,7 +413,7 @@ public class TilemapManager : MonoBehaviour
 	/// </summary>
 	public void HighlightAllNodes()
 	{
-		HighlightCells(_pathfindingGraph.Nodes, _nodeHighlight, _clearHighlight);
+		HighlightCells(_graph.Nodes, _nodeHighlight, _clearHighlight);
 	}
 
 	/// <summary>
@@ -481,7 +483,7 @@ public class TilemapManager : MonoBehaviour
 		if (IsPathfindingNode(cell))
 		{
 			Debug.Log("Cell " + cell + " is in bounds and is a node");
-			Debug.Log("Neighbours: " + _pathfindingGraph.NeighboursOfNode(cell).ToString());
+			Debug.Log("Neighbours: " + _graph.NeighboursOfNode(cell).ToString());
 		}
 		else
 		{
@@ -498,7 +500,7 @@ public class TilemapManager : MonoBehaviour
 
 	public void PrintGraphInfo()
 	{
-		Debug.Log("Total pathfinding nodes: " + _pathfindingGraph.NumNodes);
+		Debug.Log("Total pathfinding nodes: " + _graph.NumNodes);
 	}
 
 	public void PrintPlayerPosition()

@@ -95,44 +95,69 @@ namespace Pathfinding
 		}
 	}
 
+	/// <summary>
+	/// Pair of coordinates
+	/// </summary>
+	struct CoordinatePair
+	{
+		public Vector3Int Coord1 { get; private set; }
+		public Vector3Int Coord2 { get; private set; }
+
+		public CoordinatePair(Vector3Int n1, Vector3Int n2)
+		{
+			Coord1 = n1;
+			Coord2 = n2;
+		}
+
+		public static bool operator ==(CoordinatePair a, CoordinatePair b)
+		{
+			return (a.Coord1 == b.Coord1 && a.Coord2 == b.Coord2) || (a.Coord1 == b.Coord2 && a.Coord2 == b.Coord1);
+		}
+
+		public static bool operator !=(CoordinatePair a, CoordinatePair b)
+		{
+			return !(a == b);
+		}
+
+		public override bool Equals(object obj)
+		{
+			return base.Equals(obj);
+		}
+
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
+		}
+
+		public override string ToString()
+		{
+			return "Coord pair (" + Coord1 + ", " + Coord2 + ")";
+		}
+	}
+
 	class Graph
 	{
-		// for tracking paths
-		struct NodePair
-		{
-			public Vector3Int Node1 { get; private set; }
-			public Vector3Int Node2 { get; private set; }
-			
-			public NodePair(Vector3Int n1, Vector3Int n2)
-			{
-				Node1 = n1;
-				Node2 = n2;
-			}
-			
-			// TODO: override == and !=
-		}
+		//enum PathfinderType { BFS, DIJKSTRA, ASTAR} // TODO: implement or get rid of Dijkstra
 		
-		// TODO: make separate pathfinder class (separate functionality)
-		enum PathfinderType { BFS, DIJKSTRA, ASTAR} // TODO: implement or get rid of Dijkstra
+		/* fields */
 		
-		// fields
-		
-		private PathfinderType _pathfinder = PathfinderType.ASTAR;
+		//private PathfinderType _pathfinder = PathfinderType.ASTAR;
 
 		private readonly Vector3Int _nullPos = new Vector3Int(0, 0, -1);
 
 		private readonly Dictionary<Vector3Int, List<Vector3Int>> _nodeNeighbours;
-		
-		private readonly int _maxNumNeighbours; // TODO: look up naming conventions for constants
 
-		private delegate void Heuristic(); // TODO: look up conventions and find if this is necessary
+		//private delegate void Heuristic(); // TODO: look up conventions and find if this is necessary
+
+		/* properties */
+
+		public int MaxNumNeighbours { get; }
 
 		public int NumNodes { get => _nodeNeighbours.Keys.Count; }
-		
-		// properties
-		public int MaxNumNeighbours { get => _maxNumNeighbours; }
 
 		public Vector3Int[] Nodes { get => (new List<Vector3Int>(_nodeNeighbours.Keys)).ToArray(); }
+
+		public static Vector3Int NullPos { get => new Vector3Int(0, 0, -1); }
 
 		/// <summary>
 		/// 
@@ -140,14 +165,20 @@ namespace Pathfinding
 		/// <param name="maxNeighbours"> Maximum number of neighbours that each node can have </param>
 		public Graph(int maxNeighbours = 4)
 		{
-			_maxNumNeighbours = maxNeighbours;
-			_nodeNeighbours = new Dictionary<Vector3Int, List<Vector3Int>>(_maxNumNeighbours);
+			MaxNumNeighbours = maxNeighbours;
+			_nodeNeighbours = new Dictionary<Vector3Int, List<Vector3Int>>(MaxNumNeighbours);
+		}
+
+		public bool ContainsNode(Vector3Int node)
+		{
+			return _nodeNeighbours.ContainsKey(node);
 		}
 
 		public Vector3Int[] NeighboursOfNode(Vector3Int node)
 		{
 			if (!_nodeNeighbours.ContainsKey(node))
 			{
+				Debug.LogError("Error: node " + node + " is not in the graph");
 				return null;
 			}
 			else
@@ -156,35 +187,22 @@ namespace Pathfinding
 			}
 		}
 
-		// TODO: decide whether to keep/get rid of this
-		public MovementVector DirectionBetweenNeighbours(Vector3Int node, Vector3Int neighbour)
+		public bool NodeHasNeighbour(Vector3Int node, Vector3Int neighbour)
 		{
-			// z must always be 0
-			if (node.z != 0 || neighbour.z != 0)
-				return MovementVector.Null;
+			Vector3Int[] neighbours = NeighboursOfNode(node);
 
-			// direction to self is (0,0)
-			if (node == neighbour)
-				return MovementVector.Center;
-
-			if (node.x == neighbour.x)
+			if (neighbours == null)
 			{
-				if (neighbour.y > node.y)
-					return MovementVector.Up;
-				if (neighbour.y < node.y)
-					return MovementVector.Down;
+				Debug.LogError("Error: trying to check neighbours of nonexistant node");
+				return false;
 			}
 
-			if (node.y == neighbour.y)
+			foreach (Vector3Int nbr in neighbours)
 			{
-				if (neighbour.x > node.x)
-					return MovementVector.Right;
-				if (neighbour.x < node.x)
-					return MovementVector.Left;
+				if (neighbour == nbr) return true;
 			}
 
-			// nodes are not neighbours
-			return MovementVector.Null;
+			return false;
 		}
 
 		public void AddNode(Vector3Int node, List<Vector3Int> neighbours)
@@ -241,6 +259,7 @@ namespace Pathfinding
 			_nodeNeighbours.Clear();
 		}
 
+		/*
 		// todo: refactor pathfinding into separate class?
 		#region pathfinding
 
@@ -373,5 +392,154 @@ namespace Pathfinding
 		}
 
 		#endregion
+		/**/
+	}
+
+	class Pathfinder
+	{
+		public enum PathfinderType { Astar, Bfs, Dijkstra } // TODO: implement or get rid of Dijkstra
+		private PathfinderType _pathfinder = PathfinderType.Astar;
+
+		private Graph _graph;
+
+		private delegate void Heuristic(); // TODO: look up conventions and find if this is necessary
+
+		public Pathfinder(Graph graph)
+		{
+			_graph = graph;
+		}
+
+		// methods
+		public int ManhattanDistance(Vector3Int a, Vector3Int b)
+		{
+			return Math.Abs(a.x - b.x) + Math.Abs(a.y - b.y);
+		}
+
+		public int EuclideanDistanceSquared(Vector3Int a, Vector3Int b)
+		{
+			return (int)(Math.Pow(b.x - a.x, 2) + Mathf.Pow(b.y - a.y, 2));
+		}
+
+		private int Cost(Vector3Int a, Vector3Int b)
+		{
+			return ManhattanDistance(a, b);
+		}
+
+		public Vector3Int[] GetPathBetweenNodes(Vector3Int start, Vector3Int end)
+		{
+			switch (_pathfinder)
+			{
+				case PathfinderType.Bfs:
+					return BFSEarlyExit(start, end);
+				case PathfinderType.Astar:
+					return AStarSearch(start, end);
+				default:
+					return AStarSearch(start, end);
+			}
+		}
+
+		private Vector3Int[] BFSEarlyExit(Vector3Int start, Vector3Int goal)
+		{
+			Queue<Vector3Int> frontier = new Queue<Vector3Int>();
+			frontier.Enqueue(start);
+			Dictionary<Vector3Int, Vector3Int> cameFrom = new Dictionary<Vector3Int, Vector3Int>() { { start, Graph.NullPos } };
+
+			while (frontier.Count > 0)
+			{
+				Vector3Int cell = frontier.Dequeue();
+
+				if (cell == goal)
+					break;
+
+				Vector3Int[] neighbours = _graph.NeighboursOfNode(cell);
+
+				foreach (Vector3Int next in neighbours)
+				{
+					if (!cameFrom.ContainsKey(next))
+					{
+						frontier.Enqueue(next);
+						cameFrom[next] = cell;
+					}
+				}
+			}
+
+			return ReconstructPath(start, goal, cameFrom);
+		}
+
+		private Vector3Int[] Dijkstra(Vector3Int start, Vector3Int goal)
+		{
+			return null;
+		}
+
+		private Vector3Int[] AStarSearch(Vector3Int start, Vector3Int goal)
+		{
+			if (start == goal)
+			{
+				return null;
+			}
+			
+			if (_graph.NodeHasNeighbour(start, goal))
+			{
+				return new Vector3Int[] { start, goal };
+			}
+
+			NaivePriorityQueue frontier = new NaivePriorityQueue();
+			frontier.Push(start, 0);
+			Dictionary<Vector3Int, Vector3Int> cameFrom = new Dictionary<Vector3Int, Vector3Int>() { { start, Graph.NullPos } };
+			Dictionary<Vector3Int, int> costSoFar = new Dictionary<Vector3Int, int>() { { start, 0 } };
+
+			Debug.Log("Starting A* Search...");
+
+			while (frontier.Count > 0)
+			{
+				Vector3Int cell = frontier.PopMin();
+
+				if (cell == goal)
+					break;
+
+				Vector3Int[] neighbours = _graph.NeighboursOfNode(cell);
+
+				foreach (Vector3Int next in neighbours)
+				{
+					int newCost = costSoFar[cell] + Cost(cell, next);
+					if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next])
+					{
+						costSoFar[next] = newCost;
+						int priority = newCost + ManhattanDistance(next, goal);
+						frontier.Push(next, priority);
+						cameFrom[next] = cell;
+					}
+				}
+			}
+
+			Debug.Log("Finished search.");
+
+			return ReconstructPath(start, goal, cameFrom);
+		}
+
+		private Vector3Int[] ReconstructPath(Vector3Int start, Vector3Int goal, Dictionary<Vector3Int, Vector3Int> cameFrom)
+		{
+			if (!cameFrom.ContainsKey(goal) || !cameFrom.ContainsValue(start))
+			{
+				Debug.LogError("Given cameFrom does not contain the goal, start, or both");
+				return null;
+			}
+
+			Debug.Log("Reconstructing path...");
+
+			List<Vector3Int> path = new List<Vector3Int>(cameFrom.Count);
+			Vector3Int cell = goal;
+
+			while (cell != start)
+			{
+				path.Add(cell);
+				cell = cameFrom[cell];
+			}
+
+			path.Add(start);
+			path.Reverse();
+
+			return path.ToArray();
+		}
 	}
 }
