@@ -282,7 +282,7 @@ RectTransform:
   m_Children:
   - {fileID: 1830983509}
   m_Father: {fileID: 911422581}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -332,7 +332,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1565289089}
+      - m_Target: {fileID: 1565289090}
         m_MethodName: ClosestNodeVisualDebug
         m_Mode: 1
         m_Arguments:
@@ -590,7 +590,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1565289089}
+      - m_Target: {fileID: 1565289090}
         m_MethodName: NeighbourVisualDebug
         m_Mode: 1
         m_Arguments:
@@ -998,7 +998,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1565289089}
+      - m_Target: {fileID: 1565289090}
         m_MethodName: RemoveHighlight
         m_Mode: 1
         m_Arguments:
@@ -3329,8 +3329,8 @@ RectTransform:
   - {fileID: 2137536011}
   - {fileID: 116415852}
   - {fileID: 1809472525}
-  - {fileID: 1555225997}
   - {fileID: 52603680}
+  - {fileID: 1555225997}
   - {fileID: 232416120}
   - {fileID: 1061514461}
   m_Father: {fileID: 1508038468}
@@ -4254,7 +4254,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1565289089}
+      - m_Target: {fileID: 1565289090}
         m_MethodName: ToggleHighlightRefresh
         m_Mode: 1
         m_Arguments:
@@ -5711,7 +5711,7 @@ RectTransform:
   m_Children:
   - {fileID: 1782524383}
   m_Father: {fileID: 911422581}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -5761,7 +5761,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1565289089}
+      - m_Target: {fileID: 1565289090}
         m_MethodName: HighlightAllNodes
         m_Mode: 1
         m_Arguments:
@@ -5820,6 +5820,8 @@ GameObject:
   - component: {fileID: 1565289088}
   - component: {fileID: 1565289087}
   - component: {fileID: 1565289089}
+  - component: {fileID: 1565289091}
+  - component: {fileID: 1565289090}
   m_Layer: 0
   m_Name: GroundMap
   m_TagString: Untagged
@@ -49863,18 +49865,44 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _debugMode: 1
+  _player: {fileID: 1610142652}
+--- !u!114 &1565289090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1565289085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d4ad23e3593f014e8fc439a41ee9ffc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _debugMode: 0
   _UIDebugMode: 1
   _clearHighlight: 1
-  _nodeHighlight: {r: 1, g: 0.14431219, b: 0, a: 1}
-  _neighbourHighlight: {r: 1, g: 0.40945286, b: 0, a: 1}
-  _searchHighlight: {r: 0, g: 0.6751381, b: 0.8392157, a: 1}
+  _nodeHighlight: {r: 0.8207547, g: 0, b: 0.015291465, a: 1}
+  _neighbourHighlight: {r: 0.8773585, g: 0.3512001, b: 0, a: 1}
+  _searchHighlight: {r: 0, g: 0.682787, b: 0.8113208, a: 1}
   _hoverHighlightRefreshRate: 0.15
   _testCell: {x: 4, y: 6, z: 0}
   _UIDebugMenu: {fileID: 1508038468}
-  _bfsLimit: 20
-  _player: {fileID: 1610142652}
+--- !u!114 &1565289091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1565289085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b1e1ab9e7293314d980e47c9213c89c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _debugMode: 0
   _nodeSprite: {fileID: 3893196527913282908, guid: 2e9ed3412ee38fc45a545a97f4d64fad,
     type: 3}
+  _bfsLimit: 20
 --- !u!1 &1610142648
 GameObject:
   m_ObjectHideFlags: 0
@@ -51432,7 +51460,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1565289089}
+      - m_Target: {fileID: 1565289090}
         m_MethodName: PathVisualDebug
         m_Mode: 1
         m_Arguments:
@@ -52146,7 +52174,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1565289089}
+      - m_Target: {fileID: 1565289090}
         m_MethodName: CellVisualDebug
         m_Mode: 1
         m_Arguments:

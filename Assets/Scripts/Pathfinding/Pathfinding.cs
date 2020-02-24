@@ -174,7 +174,12 @@ namespace Pathfinding
 			return _nodeNeighbours.ContainsKey(node);
 		}
 
-		public Vector3Int[] NeighboursOfNode(Vector3Int node)
+		/// <summary>
+		/// Gets the neighbours of the given node
+		/// </summary>
+		/// <param name="node">The node to find neighbours of</param>
+		/// <returns>an array of each of the neighbours' tile positions</returns>
+		public Vector3Int[] Neighbours(Vector3Int node)
 		{
 			if (!_nodeNeighbours.ContainsKey(node))
 			{
@@ -189,7 +194,7 @@ namespace Pathfinding
 
 		public bool NodeHasNeighbour(Vector3Int node, Vector3Int neighbour)
 		{
-			Vector3Int[] neighbours = NeighboursOfNode(node);
+			Vector3Int[] neighbours = Neighbours(node);
 
 			if (neighbours == null)
 			{
@@ -259,9 +264,8 @@ namespace Pathfinding
 			_nodeNeighbours.Clear();
 		}
 
-		/*
+		/* pathfinding
 		// todo: refactor pathfinding into separate class?
-		#region pathfinding
 
 		public int ManhattanDistance(Vector3Int a, Vector3Int b)
 		{
@@ -390,8 +394,6 @@ namespace Pathfinding
 
 			return path.ToArray();
 		}
-
-		#endregion
 		/**/
 	}
 
@@ -425,7 +427,7 @@ namespace Pathfinding
 			return ManhattanDistance(a, b);
 		}
 
-		public Vector3Int[] GetPathBetweenNodes(Vector3Int start, Vector3Int end)
+		public Vector3Int[] CalculatePath(Vector3Int start, Vector3Int end)
 		{
 			switch (_pathfinder)
 			{
@@ -451,7 +453,7 @@ namespace Pathfinding
 				if (cell == goal)
 					break;
 
-				Vector3Int[] neighbours = _graph.NeighboursOfNode(cell);
+				Vector3Int[] neighbours = _graph.Neighbours(cell);
 
 				foreach (Vector3Int next in neighbours)
 				{
@@ -497,7 +499,7 @@ namespace Pathfinding
 				if (cell == goal)
 					break;
 
-				Vector3Int[] neighbours = _graph.NeighboursOfNode(cell);
+				Vector3Int[] neighbours = _graph.Neighbours(cell);
 
 				foreach (Vector3Int next in neighbours)
 				{
