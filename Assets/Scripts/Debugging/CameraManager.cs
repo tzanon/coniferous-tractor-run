@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 
-public class CameraManager : MonoBehaviour
+/// <summary>
+/// 
+/// </summary>
+public class CameraManager : ScriptBase
 {
-	public bool debugMode;
-
 	[SerializeField] private Camera _playerCam, _tractorCam, _worldCam;
 	private Camera[] _cameras;
 

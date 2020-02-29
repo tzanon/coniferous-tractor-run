@@ -7,7 +7,6 @@ using Pathfinding;
 
 public class Tractor : Actor
 {
-	[SerializeField] private bool debugInfo = false;
 	[SerializeField] private RectTransform _debugDisplay; // TODO: display destination/status above tractor
 	private LineRenderer _lr; // debug: for pointing to dest?
 

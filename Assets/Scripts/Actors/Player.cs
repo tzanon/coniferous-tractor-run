@@ -5,7 +5,6 @@ using Directions;
 
 public class Player : Actor
 {
-	[SerializeField] private bool _debugMode = false;
 	[SerializeField] private GameplayManager _level;
 
 	private ChaserControls _controls;
@@ -59,8 +58,7 @@ public class Player : Actor
 	{
 		if (coll.CompareTag("Collectible"))
 		{
-			if (_debugMode)
-				Debug.Log("picked up an apple!");
+			LogDebugMessage("picked up an apple!");
 
 			NumCollectibles++;
 

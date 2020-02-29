@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Collectible : MonoBehaviour
+public class Collectible : ScriptBase
 {
 	void Awake()
 	{

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class DebugControlSelector : MonoBehaviour
+public class DebugControlSelector : ScriptBase
 {
 	[SerializeField] private GameObject _visualControls, _aiControls, _cameraControls;
 

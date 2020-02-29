@@ -1,16 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 using Pathfinding;
 
-public class NavigationMap : MonoBehaviour
+public class NavigationMap : ScriptBase
 {
 	/* fields */
-
-	[SerializeField] private bool _debugMode;
-
 	[SerializeField] private Sprite _nodeSprite;
 
 	private Graph _graph;
@@ -23,6 +19,7 @@ public class NavigationMap : MonoBehaviour
 
 	// components
 	private Tilemap _map;
+	private TilemapManager _tileManager;
 
 	/* properties */
 	public int PathfindingNodeCount { get => _graph.NumNodes; }
@@ -33,6 +30,7 @@ public class NavigationMap : MonoBehaviour
 	private void Awake()
 	{
 		_map = GetComponent<Tilemap>();
+		_tileManager = GetComponent<TilemapManager>();
 
 		_graph = new Graph();
 		_pathfinder = new Pathfinder(_graph);
@@ -172,10 +170,8 @@ public class NavigationMap : MonoBehaviour
 			}
 		}
 
-		if (_debugMode)
-		{
-			//PrintGraphInfo();
-		}
+		if (DebugMode)
+			_tileManager.PrintGraphInfo();
 	}
 
 }

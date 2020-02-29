@@ -3,7 +3,7 @@ using UnityEngine;
 
 using Directions;
 
-public abstract class Actor : MonoBehaviour
+public abstract class Actor : ScriptBase
 {
 	/// <summary>
 	/// Grouping of animation and collider characteristics based on direction

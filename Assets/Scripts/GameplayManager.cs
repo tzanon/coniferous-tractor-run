@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class GameplayManager : MonoBehaviour
+public class GameplayManager : ScriptBase
 {
 	// fields
-	[SerializeField] private bool _debugMode = false;
-
 	private List<Collectible> _collectibles;
 	[SerializeField] private GameObject _barrier;
 
@@ -25,71 +23,93 @@ public class GameplayManager : MonoBehaviour
 
 	public int NumCollectibles { get => _collectibles.Count; }
 
+	public bool CollectiblesEmpty { get => _collectibles.Count <= 0; }
+
 	private void Start()
 	{
 		_collectibles = new List<Collectible>(FindObjectsOfType<Collectible>());
+		LogDebugMessage("Number of collectibles in play:" + _collectibles.Count);
+	}
 
-		if (_debugMode)
+	private void GetListsOfCollectibles()
+	{
+
+	}
+
+	/// <summary>
+	/// Returns position of collectible at the given index
+	/// </summary>
+	/// <param name="i">Index of collectible</param>
+	/// <returns>Vector3 representing collectible's position</returns>
+	public Vector3 PositionOfCollectible(int i) => _collectibles[i].transform.position;
+
+	/// <summary>
+	/// Checks if a collectible can be removed from the level's collectible list
+	/// </summary>
+	/// <param name="collectible">collectible to check</param>
+	/// <returns>True if collectible can be removed from the list, false if not</returns>
+	private bool CanDelete(Collectible collectible)
+	{
+		if (_collectibles.Count <= 0)
 		{
-			Debug.Log("Number of collectibles in play:" + _collectibles.Count);
+			Debug.LogError("Trying to delete collectible from empty list");
+			return false;
 		}
+
+		if (collectible == null || !_collectibles.Contains(collectible))
+		{
+			Debug.LogError("Trying to delete either nothing or something not originally in the list");
+			return false;
+		}
+
+		return true;
 	}
 
-	public Vector2 PositionOfCollectible(int i)
+	/// <summary>
+	/// 
+	/// </summary>
+	public void RemoveBarrier()
 	{
-		return _collectibles[i].transform.position;
-	}
-
-	private bool RemoveCollectibleFromList(Collectible collectible)
-	{
-		bool status = true;
-
-
-
-		return status;
+		if (_barrier)
+		{
+			Destroy(_barrier);
+			LogDebugMessage("Barrier removed");
+		}
+		else
+		{
+			LogErrorMessage("Already deleted barrier");
+		}
 	}
 
 	public void DeleteCollectible(Collectible toDelete)
 	{
-		// check if collectible exists
-		if (_collectibles.Count <= 0)
-		{
-			Debug.LogError("No collectibles left to delete");
-			return;
-		}
+		if (!CanDelete(toDelete)) return;
 
-		if (toDelete == null || !_collectibles.Contains(toDelete))
-		{
-			Debug.LogError("Trying to delete either nothing or something not originally in the list");
-			return;
-		}
-
+		// remove
 		if (!_collectibles.Remove(toDelete))
 		{
-			Debug.LogError("Could not delete collectible");
+			LogErrorMessage("Could not delete collectible");
 			return;
 		}
 
 		Destroy(toDelete.gameObject);
 
-		if (_collectibles.Count <= 0)
-		{
-			if (_debugMode)
-			{
-				Debug.Log("Collected all apples!");
-			}
-
-			// remove barrier preventing exit of the forest
-			Destroy(_barrier);
-
-			// notify tractor?
-		}
+		if (CollectiblesEmpty) RemoveBarrier();
 	}
 
-	// when player exits forest
-	private void GameWon()
+	/// <summary>
+	/// Ends game and displays winning text
+	/// </summary>
+	public void GameWon()
 	{
 
 	}
 
+	/// <summary>
+	/// Ends game and displays losing text
+	/// </summary>
+	public void GameLost()
+	{
+
+	}
 }

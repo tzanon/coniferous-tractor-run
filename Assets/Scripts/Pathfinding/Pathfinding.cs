@@ -2,29 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//using System.Math;
-
-using Directions;
-
 namespace Pathfinding
 {
 	struct PriorityItem
 	{
-		private readonly int _priority;
-		private readonly Vector3Int _point;
-		
-		public int Priority { get { return _priority; } }
-		public Vector3Int Point { get { return _point; } }
+		public int Priority { get; }
+		public Vector3Int Point { get; }
 
 		public PriorityItem(Vector3Int pt, int pri)
 		{
-			_point = pt;
-			_priority = pri;
+			Point = pt;
+			Priority = pri;
 		}
 	}
 
 	/// <summary>
-	/// Inefficient, brute force priority _queue
+	/// Inefficient, brute force priority queue
 	/// </summary>
 	class NaivePriorityQueue
 	{
@@ -47,7 +40,10 @@ namespace Pathfinding
 		{
 			if (_queue.Count <= 0)
 			{
-				throw new Exception("Cannot pop from empty _queue!");
+				//Debug.LogError("Cannot pop from empty queue!");
+				//Logger.LogPathError("Cannot pop from empty queue!");
+				MessageLogger.LogPathMessage("Cannot pop from empty queue!", MessageLogger.Level.Error);
+				return Graph.NullPos;
 			}
 
 			PriorityItem minItem = _queue[0];
@@ -60,7 +56,10 @@ namespace Pathfinding
 
 			if (!_queue.Remove(minItem))
 			{
-				Debug.LogError("Could not remove item from _queue");
+				//Debug.LogError("Could not remove item from queue");
+				//Logger.LogPathError("Could not remove item from queue");
+				MessageLogger.LogPathMessage("Could not remove item from queue", MessageLogger.Level.Error);
+				return Graph.NullPos;
 			}
 
 			return minItem.Point;
@@ -70,7 +69,10 @@ namespace Pathfinding
 		{
 			if (_queue.Count <= 0)
 			{
-				throw new Exception("Cannot pop from empty _queue!");
+				//Debug.LogError("Cannot pop from empty queue!");
+				//Logger.LogPathError("Cannot pop from empty queue!");
+				MessageLogger.LogPathMessage("Cannot pop from empty queue!", MessageLogger.Level.Error);
+				return Graph.NullPos;
 			}
 
 			PriorityItem maxItem = _queue[0];
@@ -83,16 +85,16 @@ namespace Pathfinding
 
 			if (!_queue.Remove(maxItem))
 			{
-				Debug.LogError("Could not remove item from _queue");
+				//Debug.LogError("Could not remove item from queue");
+				//Logger.LogPathError("Could not remove item from queue");
+				MessageLogger.LogPathMessage("Could not remove item from queue", MessageLogger.Level.Error);
+				return Graph.NullPos;
 			}
 
 			return maxItem.Point;
 		}
 
-		public void Clear()
-		{
-			_queue.Clear();
-		}
+		public void Clear() => _queue.Clear();
 	}
 
 	/// <summary>
