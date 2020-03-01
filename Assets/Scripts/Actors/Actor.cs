@@ -3,7 +3,7 @@ using UnityEngine;
 
 using Directions;
 
-public abstract class Actor : ScriptBase
+public abstract class Actor : MonoBehaviour
 {
 	/// <summary>
 	/// Grouping of animation and collider characteristics based on direction
@@ -85,7 +85,8 @@ public abstract class Actor : ScriptBase
 
 		if (direction == MovementVector.Null)
 		{
-			Debug.LogError("Trying to start animation in null direction on " + this.name);
+			//Debug.LogError("Trying to start animation in null direction on " + this.name);
+			MessageLogger.LogActorMessage("", MessageLogger.Level.Error);
 			return;
 		}
 
@@ -100,13 +101,15 @@ public abstract class Actor : ScriptBase
 		// play walking animation if moving, idle if not
 		if (isMoving)
 		{
-			Debug.Log("Moving in direction " + direction.Value);
+			//Debug.Log("Moving in direction " + direction.Value);
+			MessageLogger.LogActorMessage("Moving in direction {0}", MessageLogger.Level.Debug, direction.Value);
 			CurrentDirection = direction;
 			_animator.Play(dc.MoveAnimState);
 		}
 		else
 		{
-			Debug.Log("Stopping in direction " + direction.Value);
+			//Debug.Log("Stopping in direction " + direction.Value);
+			MessageLogger.LogActorMessage("Stopping in direction {0}", MessageLogger.Level.Debug, direction.Value);
 			CurrentDirection = MovementVector.Center;
 			_animator.Play(dc.IdleAnimState);
 		}

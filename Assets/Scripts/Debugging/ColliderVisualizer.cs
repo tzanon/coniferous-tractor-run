@@ -5,7 +5,7 @@ using UnityEngine;
 /// Visualizes boundaries of box collider of gameobject
 /// </summary>
 [RequireComponent(typeof(BoxCollider2D), typeof(Rigidbody2D))]
-public class ColliderVisualizer : ScriptBase
+public class ColliderVisualizer : MonoBehaviour
 {
 	[SerializeField] private float _refreshRate = 0.1f;
 	private float _nextRefresh = 0f;

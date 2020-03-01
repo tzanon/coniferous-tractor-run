@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Streamlined logger
+/// Streamlined console logger
 /// TERMINOLOGY:
 /// -Type: What category of code that is being logged (i.e. related to pathfinding logic, tilemap, etc.)
 /// -Level: Severity of message e.g. 'debug' for info, 'error' for incorrect output/failure
@@ -12,20 +12,24 @@ public static class MessageLogger
 {
 	[Flags]
 	public enum Level { None = 0, Debug = 1, Verbose = 2, Warning = 4, Error = 8 }
-	public enum Type { Tile, Actor, Path, Game }
+	public enum Type { Tile, Highlight, Actor, Graph, Path, Game }
 
 	private static readonly Dictionary<Type, Level> _modeLevels = new Dictionary<Type, Level>
 	{
-		{ Type.Tile, Level.None },
-		{ Type.Actor, Level.None },
-		{ Type.Path, Level.None },
-		{ Type.Game, Level.None }
+		{ Type.Tile,		Level.Debug | Level.Error },
+		{ Type.Highlight,	Level.Debug | Level.Error },
+		{ Type.Actor,		Level.Debug | Level.Error },
+		{ Type.Graph,		Level.Debug | Level.Error },
+		{ Type.Path,		Level.Debug | Level.Error },
+		{ Type.Game,		Level.Debug | Level.Error },
 	};
 
 	/* Properties */
 
 	public static Level TileLevels { get => _modeLevels[Type.Tile]; private set => _modeLevels[Type.Tile] = value; }
+	public static Level HighlightLevels { get => _modeLevels[Type.Highlight]; private set => _modeLevels[Type.Highlight] = value; }
 	public static Level ActorLevels { get => _modeLevels[Type.Actor]; private set => _modeLevels[Type.Actor] = value; }
+	public static Level GraphLevels { get => _modeLevels[Type.Graph]; private set => _modeLevels[Type.Graph] = value; }
 	public static Level PathLevels { get => _modeLevels[Type.Path]; private set => _modeLevels[Type.Path] = value; }
 	public static Level GameLevels { get => _modeLevels[Type.Game]; private set => _modeLevels[Type.Game] = value; }
 
@@ -33,8 +37,15 @@ public static class MessageLogger
 
 	#region Debug flag enabling
 
+	/// <summary>
+	/// Clear the debug levels of one of the logger's types
+	/// </summary>
+	/// <param name="type">Type to clear levels of</param>
 	public static void ClearLevel(Type type) => _modeLevels[type] = Level.None;
 
+	/// <summary>
+	/// Clear all levels for all types
+	/// </summary>
 	public static void ClearAll()
 	{
 		List<Type> types = new List<Type>(_modeLevels.Keys);
@@ -87,9 +98,15 @@ public static class MessageLogger
 
 	public static void LogTileMessage(string msg, Level level, params object[] args) => LogMessage(msg, Type.Tile, level, args);
 
+	public static void LogHighlightMessage(string msg, Level level, params object[] args) => LogMessage(msg, Type.Highlight, level, args);
+
 	public static void LogActorMessage(string msg, Level level, params object[] args) => LogMessage(msg, Type.Actor, level, args);
 
+	public static void LogGraphMessage(string msg, Level level, params object[] args) => LogMessage(msg, Type.Graph, level, args);
+
 	public static void LogPathMessage(string msg, Level level, params object[] args) => LogMessage(msg, Type.Path, level, args);
+
+	public static void LogGameplayMessage(string msg, Level level, params object[] args) => LogMessage(msg, Type.Game, level, args);
 
 	private static void LogMessage(string msg, Type type, Level level, params object[] args)
 	{

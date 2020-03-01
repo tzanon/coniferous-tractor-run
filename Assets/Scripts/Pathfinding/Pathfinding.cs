@@ -41,7 +41,6 @@ namespace Pathfinding
 			if (_queue.Count <= 0)
 			{
 				//Debug.LogError("Cannot pop from empty queue!");
-				//Logger.LogPathError("Cannot pop from empty queue!");
 				MessageLogger.LogPathMessage("Cannot pop from empty queue!", MessageLogger.Level.Error);
 				return Graph.NullPos;
 			}
@@ -57,7 +56,6 @@ namespace Pathfinding
 			if (!_queue.Remove(minItem))
 			{
 				//Debug.LogError("Could not remove item from queue");
-				//Logger.LogPathError("Could not remove item from queue");
 				MessageLogger.LogPathMessage("Could not remove item from queue", MessageLogger.Level.Error);
 				return Graph.NullPos;
 			}
@@ -70,7 +68,6 @@ namespace Pathfinding
 			if (_queue.Count <= 0)
 			{
 				//Debug.LogError("Cannot pop from empty queue!");
-				//Logger.LogPathError("Cannot pop from empty queue!");
 				MessageLogger.LogPathMessage("Cannot pop from empty queue!", MessageLogger.Level.Error);
 				return Graph.NullPos;
 			}
@@ -86,7 +83,6 @@ namespace Pathfinding
 			if (!_queue.Remove(maxItem))
 			{
 				//Debug.LogError("Could not remove item from queue");
-				//Logger.LogPathError("Could not remove item from queue");
 				MessageLogger.LogPathMessage("Could not remove item from queue", MessageLogger.Level.Error);
 				return Graph.NullPos;
 			}

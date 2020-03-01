@@ -4,7 +4,7 @@ using UnityEngine.Tilemaps;
 
 using Pathfinding;
 
-public class NavigationMap : ScriptBase
+public class NavigationMap : MonoBehaviour
 {
 	/* fields */
 	[SerializeField] private Sprite _nodeSprite;
@@ -170,8 +170,8 @@ public class NavigationMap : ScriptBase
 			}
 		}
 
-		if (DebugMode)
-			_tileManager.PrintGraphInfo();
+		// print graph info (if debug enabled)
+		_tileManager.PrintGraphInfo();
 	}
 
 }

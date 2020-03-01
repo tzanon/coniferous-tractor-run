@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-public class Collectible : ScriptBase
+public class Collectible : MonoBehaviour
 {
-	void Awake()
+	private void Awake()
 	{
 		this.tag = "Collectible";
 	}

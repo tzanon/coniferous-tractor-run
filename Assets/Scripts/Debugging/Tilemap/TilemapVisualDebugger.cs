@@ -4,7 +4,7 @@ using UnityEngine.Tilemaps;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-public class TilemapVisualDebugger : ScriptBase
+public class TilemapVisualDebugger : MonoBehaviour
 {
 	/* fields */
 
@@ -74,6 +74,8 @@ public class TilemapVisualDebugger : ScriptBase
 		_controls.Debug.Disable();
 	}
 
+	// TODO: split debug selecting and highlighting
+	// into separate classes (Controller and Painter)
 
 	#region Visual debug selecting
 
@@ -128,7 +130,8 @@ public class TilemapVisualDebugger : ScriptBase
 
 		Vector3Int mouseCell = _tileManager.CellOfPosition(worldMousePos);
 
-		LogDebugMessage("screen mouse position is " + screenMousePos);
+		MessageLogger.LogHighlightMessage("screen mouse position is {0}", MessageLogger.Level.Debug, screenMousePos);
+		//LogDebugMessage("screen mouse position is " + screenMousePos);
 
 		switch (_visualDebugType)
 		{
@@ -189,7 +192,8 @@ public class TilemapVisualDebugger : ScriptBase
 
 		if (!_navMap.IsPathfindingNode(node))
 		{
-			LogDebugMessage("Cell " + node + " is not a node");
+			MessageLogger.LogHighlightMessage("Cell {0} is not a node", MessageLogger.Level.Debug, node);
+			//LogDebugMessage("Cell " + node + " is not a node");
 			return;
 		}
 
@@ -218,7 +222,8 @@ public class TilemapVisualDebugger : ScriptBase
 			return;
 		}
 
-		LogDebugMessage("Adding node " + node + " to path");
+		MessageLogger.LogHighlightMessage("Adding node {0} to path", MessageLogger.Level.Debug, node);
+		//LogDebugMessage("Adding node " + node + " to path");
 
 		_visualPathPoints[_visualPathIdx++] = node;
 		HighlightCells(new Vector3Int[] { node }, _nodeHighlight, false);
@@ -239,18 +244,21 @@ public class TilemapVisualDebugger : ScriptBase
 		Vector3Int start = _visualPathPoints[0];
 		Vector3Int end = _visualPathPoints[1];
 
-		LogDebugMessage(string.Format("Highlighting path between {0} and {1}...", start, end));
+		MessageLogger.LogHighlightMessage("Highlighting path between {0} and {1}...", MessageLogger.Level.Debug, start, end);
+		//LogDebugMessage(string.Format("Highlighting path between {0} and {1}...", start, end));
 
 		if (!(_navMap.IsPathfindingNode(start) && _navMap.IsPathfindingNode(end)))
 		{
-			LogErrorMessage(string.Format("one or both of cells {0} and {1} are not nodes", start, end));
+			MessageLogger.LogHighlightMessage("one or both of cells {0} and {1} are not nodes", MessageLogger.Level.Error, start, end);
+			//LogErrorMessage(string.Format("one or both of cells {0} and {1} are not nodes", start, end));
 			return;
 		}
 
 		Vector3Int[] path = _navMap.FindPathBetweenNodes(start, end);
 		HighlightCells(path, _nodeHighlight, _clearHighlight);
 
-		LogDebugMessage("path calculated successfully!");
+		MessageLogger.LogHighlightMessage("path calculated successfully!", MessageLogger.Level.Debug);
+		//LogDebugMessage("path calculated successfully!");
 
 		// reset path points and index for next
 		_visualPathIdx = 0;
@@ -270,7 +278,8 @@ public class TilemapVisualDebugger : ScriptBase
 
 		if (!_map.HasTile(cell))
 		{
-			LogDebugMessage("No tile here");
+			MessageLogger.LogHighlightMessage("No tile here", MessageLogger.Level.Debug);
+			//LogDebugMessage("No tile here");
 			return;
 		}
 

@@ -58,7 +58,8 @@ public class Player : Actor
 	{
 		if (coll.CompareTag("Collectible"))
 		{
-			LogDebugMessage("picked up an apple!");
+			//LogDebugMessage("picked up an apple!");
+			MessageLogger.LogActorMessage("Picked up a collectible!", MessageLogger.Level.Debug);
 
 			NumCollectibles++;
 
@@ -69,6 +70,7 @@ public class Player : Actor
 		else if (coll.CompareTag("Tractor"))
 		{
 			// game over
+			MessageLogger.LogActorMessage("Game over...", MessageLogger.Level.Debug);
 		}
 	}
 

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class GameplayManager : ScriptBase
+public class GameplayManager : MonoBehaviour
 {
 	// fields
 	private List<Collectible> _collectibles;
@@ -28,7 +28,8 @@ public class GameplayManager : ScriptBase
 	private void Start()
 	{
 		_collectibles = new List<Collectible>(FindObjectsOfType<Collectible>());
-		LogDebugMessage("Number of collectibles in play:" + _collectibles.Count);
+		//LogDebugMessage("Number of collectibles in play:" + _collectibles.Count);
+		MessageLogger.LogGameplayMessage("Number of collectibles in play: ", MessageLogger.Level.Debug, _collectibles.Count);
 	}
 
 	private void GetListsOfCollectibles()
@@ -73,11 +74,13 @@ public class GameplayManager : ScriptBase
 		if (_barrier)
 		{
 			Destroy(_barrier);
-			LogDebugMessage("Barrier removed");
+			//LogDebugMessage("Barrier removed");
+			MessageLogger.LogGameplayMessage("Barrier removed", MessageLogger.Level.Debug);
 		}
 		else
 		{
-			LogErrorMessage("Already deleted barrier");
+			//LogErrorMessage("Already deleted barrier");
+			MessageLogger.LogGameplayMessage("Already deleted barrier", MessageLogger.Level.Error);
 		}
 	}
 
@@ -88,12 +91,12 @@ public class GameplayManager : ScriptBase
 		// remove
 		if (!_collectibles.Remove(toDelete))
 		{
-			LogErrorMessage("Could not delete collectible");
+			//LogErrorMessage("Could not delete collectible");
+			MessageLogger.LogGameplayMessage("Could not delete collectible", MessageLogger.Level.Error);
 			return;
 		}
 
 		Destroy(toDelete.gameObject);
-
 		if (CollectiblesEmpty) RemoveBarrier();
 	}
 

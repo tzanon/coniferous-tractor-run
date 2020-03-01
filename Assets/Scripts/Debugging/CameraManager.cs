@@ -3,7 +3,7 @@
 /// <summary>
 /// 
 /// </summary>
-public class CameraManager : ScriptBase
+public class CameraManager : MonoBehaviour
 {
 	[SerializeField] private Camera _playerCam, _tractorCam, _worldCam;
 	private Camera[] _cameras;

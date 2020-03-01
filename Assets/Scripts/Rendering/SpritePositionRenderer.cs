@@ -6,7 +6,7 @@
 /// </summary>
 
 [RequireComponent(typeof(SpriteRenderer))]
-public class SpritePositionRenderer : ScriptBase
+public class SpritePositionRenderer : MonoBehaviour
 {
 	[SerializeField] private float _calculationRate = 0.1f;
 	private float _nextCalculation = 0f;
