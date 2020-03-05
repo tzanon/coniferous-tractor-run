@@ -29,12 +29,7 @@ public class GameplayManager : MonoBehaviour
 	{
 		_collectibles = new List<Collectible>(FindObjectsOfType<Collectible>());
 		//LogDebugMessage("Number of collectibles in play:" + _collectibles.Count);
-		MessageLogger.LogGameplayMessage("Number of collectibles in play: ", MessageLogger.Level.Debug, _collectibles.Count);
-	}
-
-	private void GetListsOfCollectibles()
-	{
-
+		MessageLogger.LogGameplayMessage("Number of collectibles in play: ", LogLevel.Debug, _collectibles.Count);
 	}
 
 	/// <summary>
@@ -67,7 +62,7 @@ public class GameplayManager : MonoBehaviour
 	}
 
 	/// <summary>
-	/// 
+	/// Removes the invisible barrier at the forest entrance, allowing the player to exit
 	/// </summary>
 	public void RemoveBarrier()
 	{
@@ -75,15 +70,19 @@ public class GameplayManager : MonoBehaviour
 		{
 			Destroy(_barrier);
 			//LogDebugMessage("Barrier removed");
-			MessageLogger.LogGameplayMessage("Barrier removed", MessageLogger.Level.Debug);
+			MessageLogger.LogGameplayMessage("Barrier removed", LogLevel.Debug);
 		}
 		else
 		{
 			//LogErrorMessage("Already deleted barrier");
-			MessageLogger.LogGameplayMessage("Already deleted barrier", MessageLogger.Level.Error);
+			MessageLogger.LogGameplayMessage("Already deleted barrier", LogLevel.Error);
 		}
 	}
 
+	/// <summary>
+	/// Removes a collectible from the level and the tracking list
+	/// </summary>
+	/// <param name="toDelete">Collectible to remove</param>
 	public void DeleteCollectible(Collectible toDelete)
 	{
 		if (!CanDelete(toDelete)) return;
@@ -92,7 +91,7 @@ public class GameplayManager : MonoBehaviour
 		if (!_collectibles.Remove(toDelete))
 		{
 			//LogErrorMessage("Could not delete collectible");
-			MessageLogger.LogGameplayMessage("Could not delete collectible", MessageLogger.Level.Error);
+			MessageLogger.LogGameplayMessage("Could not delete collectible", LogLevel.Error);
 			return;
 		}
 

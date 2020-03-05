@@ -24,10 +24,10 @@ namespace Tests
 		public void AddFlag()
 		{
 			// debug level for path is currently none; add error
-			MessageLogger.EnableLevel(MessageLogger.Type.Path, MessageLogger.Level.Error);
+			MessageLogger.EnableLevel(LogType.Path, LogLevel.Error);
 
 			// logger's path level should be exactly just the error
-			Assert.AreEqual(MessageLogger.Level.Error, MessageLogger.PathLevels);
+			Assert.AreEqual(LogLevel.Error, MessageLogger.PathLevels);
 		}
 
 		/// <summary>
@@ -37,12 +37,12 @@ namespace Tests
 		public void AddMultipleFlags()
 		{
 			// add error, debug, and warning levels to path level
-			MessageLogger.EnableLevel(MessageLogger.Type.Path, MessageLogger.Level.Error);
-			MessageLogger.EnableLevel(MessageLogger.Type.Path, MessageLogger.Level.Debug);
-			MessageLogger.EnableLevel(MessageLogger.Type.Path, MessageLogger.Level.Warning);
+			MessageLogger.EnableLevel(LogType.Path, LogLevel.Error);
+			MessageLogger.EnableLevel(LogType.Path, LogLevel.Debug);
+			MessageLogger.EnableLevel(LogType.Path, LogLevel.Warning);
 
 			// logger's current path level should be exactly error, debug, and warning
-			var enabledLevels = MessageLogger.Level.Error | MessageLogger.Level.Debug | MessageLogger.Level.Warning;
+			var enabledLevels = LogLevel.Error | LogLevel.Debug | LogLevel.Warning;
 			Assert.AreEqual(enabledLevels, MessageLogger.PathLevels);
 		}
 
@@ -53,8 +53,8 @@ namespace Tests
 		public void IsEnabled()
 		{
 			// set error level; it should be enabled
-			MessageLogger.EnableLevel(MessageLogger.Type.Path, MessageLogger.Level.Error);
-			Assert.IsTrue(MessageLogger.TypeHasLevelEnabled(MessageLogger.Type.Path, MessageLogger.Level.Error));
+			MessageLogger.EnableLevel(LogType.Path, LogLevel.Error);
+			Assert.IsTrue(MessageLogger.TypeHasLevelEnabled(LogType.Path, LogLevel.Error));
 		}
 
 		/// <summary>
@@ -64,14 +64,14 @@ namespace Tests
 		public void MultipleFlagsAreEnabled()
 		{
 			// set error, debug, and warning levels for path
-			MessageLogger.EnableLevel(MessageLogger.Type.Path, MessageLogger.Level.Error);
-			MessageLogger.EnableLevel(MessageLogger.Type.Path, MessageLogger.Level.Debug);
-			MessageLogger.EnableLevel(MessageLogger.Type.Path, MessageLogger.Level.Warning);
+			MessageLogger.EnableLevel(LogType.Path, LogLevel.Error);
+			MessageLogger.EnableLevel(LogType.Path, LogLevel.Debug);
+			MessageLogger.EnableLevel(LogType.Path, LogLevel.Warning);
 
 			// the three set levels should be enabled
-			Assert.IsTrue(MessageLogger.TypeHasLevelEnabled(MessageLogger.Type.Path, MessageLogger.Level.Error) &&
-				MessageLogger.TypeHasLevelEnabled(MessageLogger.Type.Path, MessageLogger.Level.Debug) &&
-				MessageLogger.TypeHasLevelEnabled(MessageLogger.Type.Path, MessageLogger.Level.Warning));
+			Assert.IsTrue(MessageLogger.TypeHasLevelEnabled(LogType.Path, LogLevel.Error) &&
+				MessageLogger.TypeHasLevelEnabled(LogType.Path, LogLevel.Debug) &&
+				MessageLogger.TypeHasLevelEnabled(LogType.Path, LogLevel.Warning));
 		}
 
 		/// <summary>
@@ -81,11 +81,11 @@ namespace Tests
 		public void IsDisabled()
 		{
 			// set warning and debug levels for game
-			MessageLogger.EnableLevel(MessageLogger.Type.Tile, MessageLogger.Level.Warning);
-			MessageLogger.EnableLevel(MessageLogger.Type.Tile, MessageLogger.Level.Debug);
+			MessageLogger.EnableLevel(LogType.Tile, LogLevel.Warning);
+			MessageLogger.EnableLevel(LogType.Tile, LogLevel.Debug);
 
 			// Verbose should be disabled
-			Assert.IsTrue(MessageLogger.TypeHasLevelDisabled(MessageLogger.Type.Tile, MessageLogger.Level.Verbose));
+			Assert.IsTrue(MessageLogger.TypeHasLevelDisabled(LogType.Tile, LogLevel.Verbose));
 		}
 
 		/// <summary>
@@ -95,13 +95,13 @@ namespace Tests
 		public void MultipleFlagsAreDisabled()
 		{
 			// set warning and debug levels for game
-			MessageLogger.EnableLevel(MessageLogger.Type.Game, MessageLogger.Level.Warning);
-			MessageLogger.EnableLevel(MessageLogger.Type.Game, MessageLogger.Level.Debug);
+			MessageLogger.EnableLevel(LogType.Game, LogLevel.Warning);
+			MessageLogger.EnableLevel(LogType.Game, LogLevel.Debug);
 
 			// verbose, error, and (especially!) none should be disabled
-			Assert.IsTrue(MessageLogger.TypeHasLevelDisabled(MessageLogger.Type.Game, MessageLogger.Level.Verbose) &&
-				MessageLogger.TypeHasLevelDisabled(MessageLogger.Type.Game, MessageLogger.Level.Error) &&
-				MessageLogger.TypeHasLevelDisabled(MessageLogger.Type.Game, MessageLogger.Level.None));
+			Assert.IsTrue(MessageLogger.TypeHasLevelDisabled(LogType.Game, LogLevel.Verbose) &&
+				MessageLogger.TypeHasLevelDisabled(LogType.Game, LogLevel.Error) &&
+				MessageLogger.TypeHasLevelDisabled(LogType.Game, LogLevel.None));
 		}
 
 	}

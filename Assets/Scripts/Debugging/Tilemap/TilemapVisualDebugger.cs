@@ -130,7 +130,7 @@ public class TilemapVisualDebugger : MonoBehaviour
 
 		Vector3Int mouseCell = _tileManager.CellOfPosition(worldMousePos);
 
-		MessageLogger.LogHighlightMessage("screen mouse position is {0}", MessageLogger.Level.Debug, screenMousePos);
+		MessageLogger.LogHighlightMessage("screen mouse position is {0}", LogLevel.Debug, screenMousePos);
 		//LogDebugMessage("screen mouse position is " + screenMousePos);
 
 		switch (_visualDebugType)
@@ -192,7 +192,7 @@ public class TilemapVisualDebugger : MonoBehaviour
 
 		if (!_navMap.IsPathfindingNode(node))
 		{
-			MessageLogger.LogHighlightMessage("Cell {0} is not a node", MessageLogger.Level.Debug, node);
+			MessageLogger.LogHighlightMessage("Cell {0} is not a node", LogLevel.Debug, node);
 			//LogDebugMessage("Cell " + node + " is not a node");
 			return;
 		}
@@ -222,7 +222,7 @@ public class TilemapVisualDebugger : MonoBehaviour
 			return;
 		}
 
-		MessageLogger.LogHighlightMessage("Adding node {0} to path", MessageLogger.Level.Debug, node);
+		MessageLogger.LogHighlightMessage("Adding node {0} to path", LogLevel.Debug, node);
 		//LogDebugMessage("Adding node " + node + " to path");
 
 		_visualPathPoints[_visualPathIdx++] = node;
@@ -244,12 +244,12 @@ public class TilemapVisualDebugger : MonoBehaviour
 		Vector3Int start = _visualPathPoints[0];
 		Vector3Int end = _visualPathPoints[1];
 
-		MessageLogger.LogHighlightMessage("Highlighting path between {0} and {1}...", MessageLogger.Level.Debug, start, end);
+		MessageLogger.LogHighlightMessage("Highlighting path between {0} and {1}...", LogLevel.Debug, start, end);
 		//LogDebugMessage(string.Format("Highlighting path between {0} and {1}...", start, end));
 
 		if (!(_navMap.IsPathfindingNode(start) && _navMap.IsPathfindingNode(end)))
 		{
-			MessageLogger.LogHighlightMessage("one or both of cells {0} and {1} are not nodes", MessageLogger.Level.Error, start, end);
+			MessageLogger.LogHighlightMessage("one or both of cells {0} and {1} are not nodes", LogLevel.Error, start, end);
 			//LogErrorMessage(string.Format("one or both of cells {0} and {1} are not nodes", start, end));
 			return;
 		}
@@ -257,7 +257,7 @@ public class TilemapVisualDebugger : MonoBehaviour
 		Vector3Int[] path = _navMap.FindPathBetweenNodes(start, end);
 		HighlightCells(path, _nodeHighlight, _clearHighlight);
 
-		MessageLogger.LogHighlightMessage("path calculated successfully!", MessageLogger.Level.Debug);
+		MessageLogger.LogHighlightMessage("path calculated successfully!", LogLevel.Debug);
 		//LogDebugMessage("path calculated successfully!");
 
 		// reset path points and index for next
@@ -278,7 +278,7 @@ public class TilemapVisualDebugger : MonoBehaviour
 
 		if (!_map.HasTile(cell))
 		{
-			MessageLogger.LogHighlightMessage("No tile here", MessageLogger.Level.Debug);
+			MessageLogger.LogHighlightMessage("No tile here", LogLevel.Debug);
 			//LogDebugMessage("No tile here");
 			return;
 		}

@@ -58,7 +58,7 @@ public class TilemapManager : MonoBehaviour
 		{
 			//Debug.Log("Cell " + cell + " is not within bounds of this tilemap");
 			MessageLogger.LogGraphMessage("Cell {0} is not within bounds of this tilemap",
-				MessageLogger.Level.Debug, cell);
+				LogLevel.Debug, cell);
 			return;
 		}
 
@@ -68,13 +68,13 @@ public class TilemapManager : MonoBehaviour
 
 			//Debug.Log("Cell " + cell + " is in bounds and is a node");
 			//Debug.Log("Neighbours: " +  _navMap.GetNeighboursOfNode(cell).ToString());
-			MessageLogger.LogGraphMessage("Cell {0} is in bounds and is a node", MessageLogger.Level.Debug, cell);
-			MessageLogger.LogGraphMessage("Neighbours: {0}", MessageLogger.Level.Debug, neighbourStr);
+			MessageLogger.LogGraphMessage("Cell {0} is in bounds and is a node", LogLevel.Debug, cell);
+			MessageLogger.LogGraphMessage("Neighbours: {0}", LogLevel.Debug, neighbourStr);
 		}
 		else
 		{
 			Debug.Log("Cell " + cell + " is in bounds");
-			MessageLogger.LogGraphMessage("", MessageLogger.Level.Debug);
+			MessageLogger.LogGraphMessage("", LogLevel.Debug);
 		}
 	}
 
@@ -87,9 +87,9 @@ public class TilemapManager : MonoBehaviour
 		//Debug.Log("bounds and size of tilemap are " + mapBounds);
 		//Debug.Log("bound min is " + mapBounds.min + ", bound max is " + mapBounds.max);
 
-		MessageLogger.LogTileMessage("bounds and size of tilemap: {0}", MessageLogger.Level.Debug, mapBounds);
+		MessageLogger.LogTileMessage("bounds and size of tilemap: {0}", LogLevel.Debug, mapBounds);
 		MessageLogger.LogTileMessage("bound min is {0}, bound max is {1}",
-			MessageLogger.Level.Verbose, mapBounds.min, mapBounds.max);
+			LogLevel.Verbose, mapBounds.min, mapBounds.max);
 	}
 
 	/// <summary>
@@ -99,7 +99,7 @@ public class TilemapManager : MonoBehaviour
 	{
 		int nodeCount = _navMap.PathfindingNodeCount;
 		//Debug.Log("Total pathfinding nodes: " + _navMap.PathfindingNodeCount);
-		MessageLogger.LogGraphMessage("Total pathfinding nodes: {0}", MessageLogger.Level.Debug, nodeCount);
+		MessageLogger.LogGraphMessage("Total pathfinding nodes: {0}", LogLevel.Debug, nodeCount);
 	}
 
 	/// <summary>
@@ -111,7 +111,7 @@ public class TilemapManager : MonoBehaviour
 
 		//Debug.Log("Player at position " + PlayerPosition + " is in cell " + PlayerCell + ", cell position is " + cellCenter);
 		MessageLogger.LogTileMessage("Player has position {0} is in cell {1}, position {2}",
-			MessageLogger.Level.Debug, PlayerPosition, PlayerCell, cellCenter);
+			LogLevel.Debug, PlayerPosition, PlayerCell, cellCenter);
 	}
 
 	/// <summary>
@@ -137,7 +137,7 @@ public class TilemapManager : MonoBehaviour
 			//Debug.Log("sprite at " + cell + " is: " + spr.ToString());
 		}
 
-		MessageLogger.LogTileMessage(msg, MessageLogger.Level.Debug, args);
+		MessageLogger.LogTileMessage(msg, LogLevel.Debug, args);
 	}
 
 	#endregion
