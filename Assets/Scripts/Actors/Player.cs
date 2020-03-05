@@ -58,7 +58,6 @@ public class Player : Actor
 	{
 		if (coll.CompareTag("Collectible"))
 		{
-			//LogDebugMessage("picked up an apple!");
 			MessageLogger.LogActorMessage("Picked up a collectible!", LogLevel.Debug);
 
 			NumCollectibles++;

@@ -10,11 +10,16 @@ public class TilemapVisualDebugger : MonoBehaviour
 
 	// visual debugging
 	[SerializeField] private bool _UIDebugMode = false;
+
+	/*
 	[SerializeField] private bool _clearHighlight = true;
 	[SerializeField] private Color _nodeHighlight;
 	[SerializeField] private Color _neighbourHighlight;
 	[SerializeField] private Color _searchHighlight;
+	/**/
+
 	[SerializeField] private float _hoverHighlightRefreshRate = 0.15f; // TODO: highlight tile borders on mouse hover
+
 	[SerializeField] private Vector3Int _testCell = new Vector3Int(4, 6, 0);
 	[SerializeField] private RectTransform _UIDebugMenu;
 
@@ -22,32 +27,33 @@ public class TilemapVisualDebugger : MonoBehaviour
 	private InputAction _leftClick;
 	private InputAction _mousePosAction;
 	private Vector2 _mousePosition;
-	private List<Vector3Int> _highlightedCells;
+
+	//private List<Vector3Int> _highlightedCells;
 
 	private enum VisualDebugType { None, Cell, Neighbours, Path, Closest }
 	private VisualDebugType _visualDebugType = VisualDebugType.None;
-	private Vector3Int[] _visualPathPoints;
+
+	private readonly Vector3Int[] _visualPathPoints = new Vector3Int[2];
 	private int _visualPathIdx;
 
 	// components
-	private Tilemap _map;
 	private TilemapManager _tileManager;
 	private NavigationMap _navMap;
+	private TilemapHighlighter _highlighter;
 
 	private void Awake()
 	{
 		// get components
-		_map = GetComponent<Tilemap>();
 		_tileManager = GetComponent<TilemapManager>();
 		_navMap = GetComponent<NavigationMap>();
+		_highlighter = GetComponent<TilemapHighlighter>();
 
 		// track all cells currently highlighted
 		// TODO: change to a set?
-		_highlightedCells = new List<Vector3Int>();
+		//_highlightedCells = new List<Vector3Int>();
 
 		// init visual path debugging
-		_visualPathPoints = new Vector3Int[2];
-		_visualPathIdx = 0;
+		InitPathPoints();
 
 		// init mouse interaction
 		_controls = new ChaserControls();
@@ -74,52 +80,43 @@ public class TilemapVisualDebugger : MonoBehaviour
 		_controls.Debug.Disable();
 	}
 
-	// TODO: split debug selecting and highlighting
-	// into separate classes (Controller and Painter)
+	// TODO: split debug selecting and highlighting into separate classes (Controller and Highlighter)
 
 	#region Visual debug selecting
 
-	public void ToggleHighlightRefresh()
-	{
-		_clearHighlight = !_clearHighlight;
-	}
+	//public void ToggleHighlightRefresh() => _clearHighlight = !_clearHighlight;
+
+	private void SetVisualDebugType(VisualDebugType type) => _visualDebugType = type;
+
+	// selectors
 
 	public void NoVisualDebug()
 	{
-		RemoveHighlight();
-		_visualDebugType = VisualDebugType.None;
+		_highlighter.RemoveHighlight();
+		SetVisualDebugType(VisualDebugType.None);
 	}
 
-	public void CellVisualDebug()
-	{
-		_visualDebugType = VisualDebugType.Cell;
-	}
-
-	public void NeighbourVisualDebug()
-	{
-		_visualDebugType = VisualDebugType.Neighbours;
-	}
-
-	public void ClosestNodeVisualDebug()
-	{
-		_visualDebugType = VisualDebugType.Closest;
-	}
+	public void CellVisualDebug() => SetVisualDebugType(VisualDebugType.Cell);
+	public void NeighbourVisualDebug() => SetVisualDebugType(VisualDebugType.Neighbours);
+	public void ClosestNodeVisualDebug() => SetVisualDebugType(VisualDebugType.Closest);
 
 	public void PathVisualDebug()
 	{
-		_visualDebugType = VisualDebugType.Path;
-		_visualPathIdx = 0;
-		_visualPathPoints[0] = _visualPathPoints[1] = Vector3Int.zero;
+		SetVisualDebugType(VisualDebugType.Path);
+
+		// reset path
+		InitPathPoints();
 	}
 
 	#endregion
 
-	#region Visual debugging
+
+	#region Input reading
 
 	/// <summary>
 	/// Handle left mouse click for visual debugging
 	/// </summary>
-	/// <param name="ctx"> unused callback context </param>
+	/// <param name="ctx">Unused callback context</param>
 	private void HandleMouseClick(InputAction.CallbackContext ctx)
 	{
 		if (EventSystem.current.IsPointerOverGameObject() || _visualDebugType == VisualDebugType.None)
@@ -130,28 +127,34 @@ public class TilemapVisualDebugger : MonoBehaviour
 
 		Vector3Int mouseCell = _tileManager.CellOfPosition(worldMousePos);
 
-		MessageLogger.LogHighlightMessage("screen mouse position is {0}", LogLevel.Debug, screenMousePos);
-		//LogDebugMessage("screen mouse position is " + screenMousePos);
+		MessageLogger.LogHighlightMessage("Screen mouse position is {0}", LogLevel.Debug, screenMousePos);
 
 		switch (_visualDebugType)
 		{
 			case VisualDebugType.Cell:
-				HighlightStandardCell(mouseCell);
+				_highlighter.HighlightStandardCell(mouseCell);
 				break;
 			case VisualDebugType.Neighbours:
-				HighlightNodeNeighbours(mouseCell);
+				_highlighter.HighlightNodeNeighbours(mouseCell);
 				break;
 			case VisualDebugType.Path:
 				AddVisualPathPoint(mouseCell);
 				break;
 			case VisualDebugType.Closest:
-				HighlightClosestNode(mouseCell);
+				_highlighter.HighlightClosestNode(mouseCell);
 				break;
 			default:
 				break;
 		}
 	}
 
+	private void InitPathPoints()
+	{
+		_visualPathIdx = 0;
+		_visualPathPoints[0] = _visualPathPoints[1] = Vector3Int.zero;
+	}
+
+	/**
 	/// <summary>
 	/// Highlights all pathfinding node tiles
 	/// </summary>
@@ -176,7 +179,7 @@ public class TilemapVisualDebugger : MonoBehaviour
 	/// <summary>
 	/// Highlight a tile with default tint
 	/// </summary>
-	/// <param name="cell"> position of tile to highlight </param>
+	/// <param name="cell">Position of tile to highlight</param>
 	private void HighlightStandardCell(Vector3Int cell)
 	{
 		HighlightCell(cell, _nodeHighlight, _clearHighlight);
@@ -185,7 +188,7 @@ public class TilemapVisualDebugger : MonoBehaviour
 	/// <summary>
 	/// Highlights the given node and its neighbours
 	/// </summary>
-	/// <param name="node"> node to highlight neighbours of </param>
+	/// <param name="node">Node to highlight neighbours of</param>
 	private void HighlightNodeNeighbours(Vector3Int node)
 	{
 		HighlightStandardCell(node);
@@ -193,7 +196,6 @@ public class TilemapVisualDebugger : MonoBehaviour
 		if (!_navMap.IsPathfindingNode(node))
 		{
 			MessageLogger.LogHighlightMessage("Cell {0} is not a node", LogLevel.Debug, node);
-			//LogDebugMessage("Cell " + node + " is not a node");
 			return;
 		}
 
@@ -204,16 +206,17 @@ public class TilemapVisualDebugger : MonoBehaviour
 	/// <summary>
 	/// Highlights closest node of given cell
 	/// </summary>
-	/// <param name="cell"> cell to search from </param>
+	/// <param name="cell">Cell to search from</param>
 	private void HighlightClosestNode(Vector3Int cell)
 	{
 		HighlightStandardCell(_navMap.ClosestNodeToCell(cell));
 	}
+	/**/
 
 	/// <summary>
-	/// adds node to use for highlighting a path
+	/// Adds node to use for highlighting a path
 	/// </summary>
-	/// <param name="node"> node to add </param>
+	/// <param name="node">Node to add</param>
 	private void AddVisualPathPoint(Vector3Int node)
 	{
 		if (!_navMap.IsPathfindingNode(node))
@@ -223,34 +226,35 @@ public class TilemapVisualDebugger : MonoBehaviour
 		}
 
 		MessageLogger.LogHighlightMessage("Adding node {0} to path", LogLevel.Debug, node);
-		//LogDebugMessage("Adding node " + node + " to path");
 
 		_visualPathPoints[_visualPathIdx++] = node;
-		HighlightCells(new Vector3Int[] { node }, _nodeHighlight, false);
+		_highlighter.HighlightStandardCell(node);
+		//_highlighter.HighlightCells(new Vector3Int[] { node }, _nodeHighlight, false);
 
 		if (_visualPathIdx > 1)
 		{
-			HighlightPath();
+			_highlighter.HighlightPath(_visualPathPoints[0], _visualPathPoints[1]);
+			InitPathPoints();
 		}
 	}
 
+
+	/**
 	/// <summary>
 	/// Highlights the path between currently chosen nodes
 	/// </summary>
-	/// <param name="start"> start node of path </param>
-	/// <param name="end"> end node of path </param>
-	private void HighlightPath()
+	/// <param name="start">Start node of path</param>
+	/// <param name="end">End node of path</param>
+	private void HighlightPath(Vector3Int start, Vector3Int end)
 	{
-		Vector3Int start = _visualPathPoints[0];
-		Vector3Int end = _visualPathPoints[1];
+		//Vector3Int start = ;
+		//Vector3Int end = _visualPathPoints[1];
 
 		MessageLogger.LogHighlightMessage("Highlighting path between {0} and {1}...", LogLevel.Debug, start, end);
-		//LogDebugMessage(string.Format("Highlighting path between {0} and {1}...", start, end));
 
 		if (!(_navMap.IsPathfindingNode(start) && _navMap.IsPathfindingNode(end)))
 		{
 			MessageLogger.LogHighlightMessage("one or both of cells {0} and {1} are not nodes", LogLevel.Error, start, end);
-			//LogErrorMessage(string.Format("one or both of cells {0} and {1} are not nodes", start, end));
 			return;
 		}
 
@@ -258,19 +262,14 @@ public class TilemapVisualDebugger : MonoBehaviour
 		HighlightCells(path, _nodeHighlight, _clearHighlight);
 
 		MessageLogger.LogHighlightMessage("path calculated successfully!", LogLevel.Debug);
-		//LogDebugMessage("path calculated successfully!");
-
-		// reset path points and index for next
-		_visualPathIdx = 0;
-		_visualPathPoints[0] = _visualPathPoints[1] = Vector3Int.zero;
 	}
 
 	/// <summary>
 	/// Highlight a single tile with the given colour
 	/// </summary>
-	/// <param name="cell"> Coordinates of tile to highlight </param>
-	/// <param name="col"> Colour to highlight tile with </param>
-	/// <param name="removeExistingHighlight"> Whether to reset currently highlighted cells </param>
+	/// <param name="cell">Coordinates of tile to highlight</param>
+	/// <param name="col">Colour to highlight tile with</param>
+	/// <param name="removeExistingHighlight">Whether to reset currently highlighted cells</param>
 	private void HighlightCell(Vector3Int cell, Color col, bool removeExistingHighlight = true)
 	{
 		if (removeExistingHighlight)
@@ -279,7 +278,6 @@ public class TilemapVisualDebugger : MonoBehaviour
 		if (!_map.HasTile(cell))
 		{
 			MessageLogger.LogHighlightMessage("No tile here", LogLevel.Debug);
-			//LogDebugMessage("No tile here");
 			return;
 		}
 
@@ -290,9 +288,9 @@ public class TilemapVisualDebugger : MonoBehaviour
 	/// <summary>
 	/// Highlight a set of tiles with the given colour
 	/// </summary>
-	/// <param name="cells"> Cells to highlight </param>
-	/// <param name="col"> Colour to highlight tiles with </param>
-	/// <param name="removeExistingHighlight"> Whether to reset currently highlighted cells </param>
+	/// <param name="cells">Cells to highlight</param>
+	/// <param name="col">Colour to highlight tiles with</param>
+	/// <param name="removeExistingHighlight">Whether to reset currently highlighted cells</param>
 	private void HighlightCells(Vector3Int[] cells, Color col, bool removeExistingHighlight = true)
 	{
 		if (removeExistingHighlight)
@@ -303,6 +301,7 @@ public class TilemapVisualDebugger : MonoBehaviour
 			HighlightCell(cell, col, false);
 		}
 	}
+	/**/
 
 	#endregion
 

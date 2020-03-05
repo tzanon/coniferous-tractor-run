@@ -3,11 +3,16 @@ using UnityEngine;
 
 public class GameplayManager : MonoBehaviour
 {
-	// fields
+	/* fields */
+
 	private List<Collectible> _collectibles;
 	[SerializeField] private GameObject _barrier;
 
-	// properties
+	/* properties */
+
+	/// <summary>
+	/// Returns array of positions of all existing collectibles
+	/// </summary>
 	public Vector2[] PositionsOfCollectibles
 	{
 		get
@@ -21,15 +26,20 @@ public class GameplayManager : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// Number of collectibles currently in the level
+	/// </summary>
 	public int NumCollectibles { get => _collectibles.Count; }
 
+	/// <summary>
+	/// Whether the level has no collectibles left or not
+	/// </summary>
 	public bool CollectiblesEmpty { get => _collectibles.Count <= 0; }
 
 	private void Start()
 	{
 		_collectibles = new List<Collectible>(FindObjectsOfType<Collectible>());
-		//LogDebugMessage("Number of collectibles in play:" + _collectibles.Count);
-		MessageLogger.LogGameplayMessage("Number of collectibles in play: ", LogLevel.Debug, _collectibles.Count);
+		MessageLogger.LogGameplayMessage("Number of collectibles in level: ", LogLevel.Debug, _collectibles.Count);
 	}
 
 	/// <summary>
@@ -48,13 +58,15 @@ public class GameplayManager : MonoBehaviour
 	{
 		if (_collectibles.Count <= 0)
 		{
-			Debug.LogError("Trying to delete collectible from empty list");
+			MessageLogger.LogGameplayMessage("Trying to delete collectible from empty list", LogLevel.Error);
 			return false;
 		}
 
 		if (collectible == null || !_collectibles.Contains(collectible))
 		{
-			Debug.LogError("Trying to delete either nothing or something not originally in the list");
+			MessageLogger.LogGameplayMessage(
+				"Trying to delete either nothing or something not in the list",
+				LogLevel.Error);
 			return false;
 		}
 
@@ -69,12 +81,10 @@ public class GameplayManager : MonoBehaviour
 		if (_barrier)
 		{
 			Destroy(_barrier);
-			//LogDebugMessage("Barrier removed");
 			MessageLogger.LogGameplayMessage("Barrier removed", LogLevel.Debug);
 		}
 		else
 		{
-			//LogErrorMessage("Already deleted barrier");
 			MessageLogger.LogGameplayMessage("Already deleted barrier", LogLevel.Error);
 		}
 	}
@@ -90,7 +100,6 @@ public class GameplayManager : MonoBehaviour
 		// remove
 		if (!_collectibles.Remove(toDelete))
 		{
-			//LogErrorMessage("Could not delete collectible");
 			MessageLogger.LogGameplayMessage("Could not delete collectible", LogLevel.Error);
 			return;
 		}

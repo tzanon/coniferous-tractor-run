@@ -28,16 +28,31 @@ public class TilemapManager : MonoBehaviour
 
 	#region Tilemap functions
 
+	/// <summary>
+	/// Gets the tilemap cell that contains the given position
+	/// </summary>
+	/// <param name="pos">Position in world space</param>
+	/// <returns>Coordinates of corresponding cell</returns>
 	public Vector3Int CellOfPosition(Vector3 pos)
 	{
 		return _map.WorldToCell(pos);
 	}
 
+	/// <summary>
+	/// Gets the position of the middle of the given cell
+	/// </summary>
+	/// <param name="cell">Cell to get center of</param>
+	/// <returns>World space position at center of cell</returns>
 	public Vector3 CenterPositionOfCell(Vector3Int cell)
 	{
 		return _map.CellToWorld(cell) + new Vector3(0.5f, 0.5f, 0f);
 	}
 
+	/// <summary>
+	/// Checks if cell is within bounds of tilemap
+	/// </summary>
+	/// <param name="cell">Cell to check</param>
+	/// <returns>True if the cell is in bounds, false if not</returns>
 	public bool IsCellInBounds(Vector3Int cell)
 	{
 		return _map.cellBounds.Contains(cell);
@@ -53,10 +68,8 @@ public class TilemapManager : MonoBehaviour
 	/// <param name="cell">Cell to describe</param>
 	public void PrintCellInfo(Vector3Int cell)
 	{
-		// TODO: messagelogger
 		if (!IsCellInBounds(cell))
 		{
-			//Debug.Log("Cell " + cell + " is not within bounds of this tilemap");
 			MessageLogger.LogGraphMessage("Cell {0} is not within bounds of this tilemap",
 				LogLevel.Debug, cell);
 			return;
@@ -66,15 +79,12 @@ public class TilemapManager : MonoBehaviour
 		{
 			string neighbourStr = _navMap.GetNeighboursOfNode(cell).ToString();
 
-			//Debug.Log("Cell " + cell + " is in bounds and is a node");
-			//Debug.Log("Neighbours: " +  _navMap.GetNeighboursOfNode(cell).ToString());
 			MessageLogger.LogGraphMessage("Cell {0} is in bounds and is a node", LogLevel.Debug, cell);
-			MessageLogger.LogGraphMessage("Neighbours: {0}", LogLevel.Debug, neighbourStr);
+			MessageLogger.LogGraphMessage("Neighbours: {0}", LogLevel.Verbose, neighbourStr);
 		}
 		else
 		{
-			Debug.Log("Cell " + cell + " is in bounds");
-			MessageLogger.LogGraphMessage("", LogLevel.Debug);
+			MessageLogger.LogGraphMessage("Cell {0} is in bounds", LogLevel.Debug, cell);
 		}
 	}
 
@@ -84,8 +94,6 @@ public class TilemapManager : MonoBehaviour
 	public void PrintMapInfo()
 	{
 		BoundsInt mapBounds = _map.cellBounds;
-		//Debug.Log("bounds and size of tilemap are " + mapBounds);
-		//Debug.Log("bound min is " + mapBounds.min + ", bound max is " + mapBounds.max);
 
 		MessageLogger.LogTileMessage("bounds and size of tilemap: {0}", LogLevel.Debug, mapBounds);
 		MessageLogger.LogTileMessage("bound min is {0}, bound max is {1}",
@@ -98,7 +106,6 @@ public class TilemapManager : MonoBehaviour
 	public void PrintGraphInfo()
 	{
 		int nodeCount = _navMap.PathfindingNodeCount;
-		//Debug.Log("Total pathfinding nodes: " + _navMap.PathfindingNodeCount);
 		MessageLogger.LogGraphMessage("Total pathfinding nodes: {0}", LogLevel.Debug, nodeCount);
 	}
 
@@ -109,8 +116,7 @@ public class TilemapManager : MonoBehaviour
 	{
 		Vector3 cellCenter = CenterPositionOfCell(PlayerCell);
 
-		//Debug.Log("Player at position " + PlayerPosition + " is in cell " + PlayerCell + ", cell position is " + cellCenter);
-		MessageLogger.LogTileMessage("Player has position {0} is in cell {1}, position {2}",
+		MessageLogger.LogTileMessage("Player has position {0}; is in cell {1}, position {2}",
 			LogLevel.Debug, PlayerPosition, PlayerCell, cellCenter);
 	}
 
@@ -128,13 +134,11 @@ public class TilemapManager : MonoBehaviour
 		{
 			msg = "No sprite at {0}";
 			args = new object[] { cell };
-			//Debug.Log("No sprite at " + cell);
 		}
 		else
 		{
 			msg = "Sprite at {0} is {1}";
 			args = new object[] { cell, spr.ToString()};
-			//Debug.Log("sprite at " + cell + " is: " + spr.ToString());
 		}
 
 		MessageLogger.LogTileMessage(msg, LogLevel.Debug, args);
