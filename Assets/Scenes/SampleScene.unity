@@ -1034,7 +1034,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1565289090}
+      - m_Target: {fileID: 1565289092}
         m_MethodName: RemoveHighlight
         m_Mode: 1
         m_Arguments:
@@ -3821,7 +3821,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &911422581
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4886,7 +4886,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1565289090}
+      - m_Target: {fileID: 1565289092}
         m_MethodName: ToggleHighlightRefresh
         m_Mode: 1
         m_Arguments:
@@ -5652,7 +5652,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1348745790
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6751,7 +6751,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1565289090}
+      - m_Target: {fileID: 1565289092}
         m_MethodName: HighlightAllNodes
         m_Mode: 1
         m_Arguments:
@@ -6812,6 +6812,7 @@ GameObject:
   - component: {fileID: 1565289089}
   - component: {fileID: 1565289091}
   - component: {fileID: 1565289090}
+  - component: {fileID: 1565289092}
   m_Layer: 0
   m_Name: GroundMap
   m_TagString: Untagged
@@ -50868,12 +50869,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _UIDebugMode: 1
-  _clearHighlight: 1
-  _nodeHighlight: {r: 0.8207547, g: 0, b: 0.015291465, a: 1}
-  _neighbourHighlight: {r: 0.8773585, g: 0.3512001, b: 0, a: 1}
-  _searchHighlight: {r: 0, g: 0.682787, b: 0.8113208, a: 1}
   _hoverHighlightRefreshRate: 0.15
-  _testCell: {x: 4, y: 6, z: 0}
   _UIDebugMenu: {fileID: 1508038468}
 --- !u!114 &1565289091
 MonoBehaviour:
@@ -50890,6 +50886,22 @@ MonoBehaviour:
   _nodeSprite: {fileID: 3893196527913282908, guid: 2e9ed3412ee38fc45a545a97f4d64fad,
     type: 3}
   _bfsLimit: 20
+--- !u!114 &1565289092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1565289085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ec128b4364a69d48a96aaecc582a1ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _clearHighlight: 1
+  _nodeHighlight: {r: 0.6981132, g: 0.040151246, b: 0, a: 1}
+  _neighbourHighlight: {r: 0.9056604, g: 0.2874495, b: 0, a: 1}
+  _searchHighlight: {r: 0.08018869, g: 0.46450204, b: 1, a: 0}
 --- !u!1 &1610142648
 GameObject:
   m_ObjectHideFlags: 0
@@ -52524,7 +52536,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 8
+  orthographic size: 6
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
