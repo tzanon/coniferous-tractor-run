@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -11,7 +10,6 @@ public class TilemapHighlighter : MonoBehaviour
 	[SerializeField] private Color _neighbourHighlight;
 	[SerializeField] private Color _searchHighlight;
 
-
 	private readonly HashSet<Vector3Int> _highlightedCells = new HashSet<Vector3Int>();
 
 	// components
@@ -22,8 +20,6 @@ public class TilemapHighlighter : MonoBehaviour
 	{
 		_map = GetComponent<Tilemap>();
 		_navMap = GetComponent<NavigationMap>();
-
-
 	}
 
 	public void ToggleHighlightRefresh() => _clearHighlight = !_clearHighlight;

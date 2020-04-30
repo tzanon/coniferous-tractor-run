@@ -27,7 +27,8 @@ public class TilemapVisualDebugger : MonoBehaviour
 	private readonly Vector3Int[] _visualPathPoints = new Vector3Int[2];
 	private int _visualPathIdx;
 
-	// components
+	/* components */
+
 	private TilemapManager _tileManager;
 	private NavigationMap _navMap;
 	private TilemapHighlighter _highlighter;
@@ -96,7 +97,6 @@ public class TilemapVisualDebugger : MonoBehaviour
 	public void CellVisualDebug() => SetVisualDebugType(VisualDebugType.Cell);
 	public void NeighbourVisualDebug() => SetVisualDebugType(VisualDebugType.Neighbours);
 	public void ClosestNodeVisualDebug() => SetVisualDebugType(VisualDebugType.Closest);
-
 	public void PathVisualDebug()
 	{
 		SetVisualDebugType(VisualDebugType.Path);
