@@ -13,7 +13,7 @@ public class NavigationMap : MonoBehaviour
 	private Pathfinder _pathfinder;
 
 	// finding node from cell
-	[SerializeField] [Range(0, 100)] private int _bfsLimit = 20;
+	[SerializeField] [Range(4, 100)] private int _bfsLimit = 20;
 	private bool _isFindingNode = false;
 	private Dictionary<Vector3Int, Vector3Int> _closestNodes = new Dictionary<Vector3Int, Vector3Int>();
 
@@ -59,46 +59,45 @@ public class NavigationMap : MonoBehaviour
 	/// <summary>
 	/// Use BFS to find closest node to given cell
 	/// </summary>
-	/// <param name="startCell"> cell to start search from </param>
-	/// <param name="searched"> nodes that were searched </param>
-	/// <returns> first node found around cell </returns>
-	public Vector3Int ClosestNodeToCell(Vector3Int startCell /*, out List<Vector3Int> searched */)
+	/// <param name="startCell">cell to start search from</param>
+	/// <param name="searchedCells">nodes that were searched</param>
+	/// <returns>The first node found around cell</returns>
+	public Vector3Int ClosestNodeToCell(Vector3Int startCell , out Queue<Vector3Int> evaluatedCells)
 	{
-		//searched = new List<Vector3Int>();
-
+		// return if already searching
 		if (_isFindingNode)
 		{
-			Debug.Log("Already searching for a node, must wait");
+			MessageLogger.LogGraphMessage("Already searching for a node, must wait", LogLevel.Debug);
+			evaluatedCells = null;
 			return new Vector3Int(0, 0, -1);
 		}
 
+		_isFindingNode = true;
+
+		// return if graph not initialized
 		if (_graph.Nodes.Length <= 0)
 		{
-			Debug.LogError("Error: either no node tiles in map or graph is uninitialized");
+			MessageLogger.LogGraphMessage("Error: either no node tiles in map or graph is uninitialized", LogLevel.Error);
+			evaluatedCells = null;
+			_isFindingNode = false;
 			return new Vector3Int(0, 0, -1);
 		}
 
-		Queue<Vector3Int> cellsToEval = new Queue<Vector3Int>();
-		HashSet<Vector3Int> visitedCells = new HashSet<Vector3Int>();
-		cellsToEval.Enqueue(startCell);
-		visitedCells.Add(startCell);
+		HashSet<Vector3Int> searchedCells = new HashSet<Vector3Int>();
+		searchedCells.Add(startCell);
 
+		Queue<Vector3Int> cellsToEval = new Queue<Vector3Int>();
+		cellsToEval.Enqueue(startCell);
+
+		evaluatedCells = new Queue<Vector3Int>();
 		int numCellsSoFar = 0;
-		_isFindingNode = true;
 
 		while (cellsToEval.Count > 0)
 		{
 			Vector3Int cell = cellsToEval.Dequeue();
+			evaluatedCells.Enqueue(cell);
 
-			/* TODO: refactor visualization out
-			if (cell == startCell)
-				HighlightStandardCell(cell);
-			else
-				HighlightCell(cell, _searchHighlight, false);
-			/**/
-
-			numCellsSoFar++;
-
+			// break and return first cell that is found to be a node
 			if (IsPathfindingNode(cell))
 			{
 				_isFindingNode = false;
@@ -106,47 +105,47 @@ public class NavigationMap : MonoBehaviour
 				return cell;
 			}
 
-			if (numCellsSoFar >= _bfsLimit)
+			if (++numCellsSoFar >= _bfsLimit)
 			{
-				Debug.LogError("Error: have searched " + numCellsSoFar + " cells");
+				MessageLogger.LogGraphMessage("Error: have exceeded search limit of {0} cells", LogLevel.Error, numCellsSoFar);
 				break;
 			}
 
-			Vector3Int[] surroundingCells = {
-				new Vector3Int(cell.x+1, cell.y, 0),
-				new Vector3Int(cell.x-1, cell.y, 0),
-				new Vector3Int(cell.x, cell.y+1, 0),
-				new Vector3Int(cell.x, cell.y-1, 0),
-			};
+			Vector3Int[] surroundingCells = GetSurroundingCells(cell);
 
 			foreach (Vector3Int neighbour in surroundingCells)
 			{
-				if (_map.HasTile(neighbour) && !visitedCells.Contains(neighbour))
+				if (_map.HasTile(neighbour) && !searchedCells.Contains(neighbour))
+				{
 					cellsToEval.Enqueue(neighbour);
+					searchedCells.Add(neighbour);
+				}
 			}
 		}
 
-		Debug.LogError("Error: could not find any nodes");
+		MessageLogger.LogGraphMessage("Error: could not find any nodes", LogLevel.Error);
+
 		_isFindingNode = false;
 		return new Vector3Int(0, 0, -1);
 	}
 
+	/// <summary>
+	/// Calculates the adjacent nodes of the given node
+	/// </summary>
+	/// <param name="node">Node to calculate neighbours of</param>
+	/// <returns>List of the nieghbours</returns>
 	private List<Vector3Int> CalculateNodeNeighbours(Vector3Int node)
 	{
 		if (!IsPathfindingNode(node))
 		{
-			Debug.LogError("Given cell is either not in the map or not a node");
+			//Debug.LogError("Given cell is either not in the map or not a node");
+			MessageLogger.LogGraphMessage("Given cell is either not in the map or not a node", LogLevel.Error);
 			return null;
 		}
 
 		List<Vector3Int> neighbours = new List<Vector3Int>();
 
-		Vector3Int[] possibleNeighbours = {
-			new Vector3Int(node.x + 1, node.y, node.z),
-			new Vector3Int(node.x - 1, node.y, node.z),
-			new Vector3Int(node.x, node.y + 1, node.z),
-			new Vector3Int(node.x, node.y - 1, node.z),
-		};
+		Vector3Int[] possibleNeighbours = GetSurroundingCells(node);
 
 		foreach (Vector3Int cell in possibleNeighbours)
 		{
@@ -157,6 +156,24 @@ public class NavigationMap : MonoBehaviour
 		}
 
 		return neighbours;
+	}
+
+	/// <summary>
+	/// Returns the cardinal cells surrounding the given one
+	/// </summary>
+	/// <param name="cell">Cell to get surrounding cells of</param>
+	/// <returns>Array of coordinates of the surrounding cells</returns>
+	private Vector3Int[] GetSurroundingCells(Vector3Int cell)
+	{
+		Vector3Int[] surroundingCells =
+		{
+			new Vector3Int(cell.x+1, cell.y, 0),
+			new Vector3Int(cell.x-1, cell.y, 0),
+			new Vector3Int(cell.x, cell.y+1, 0),
+			new Vector3Int(cell.x, cell.y-1, 0),
+		};
+
+		return surroundingCells;
 	}
 
 	public void CalculateGraph()
