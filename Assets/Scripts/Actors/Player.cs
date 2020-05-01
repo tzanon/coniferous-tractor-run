@@ -5,19 +5,33 @@ using Directions;
 
 public class Player : Actor
 {
+	/* fields */
+
 	[SerializeField] private GameplayManager _level;
 
 	private ChaserControls _controls;
 	private InputAction _moveAction;
 
-	[SerializeField] private float _speed = 7.0f;
-	private Vector2 _movement = Vector2.zero, _lastMovement = Vector2.zero;
+	[SerializeField] private float _playerSpeed = 5.0f;
+
+	// TODO: delete this?
+	private MovementVector _currentMovement;
+
+	/* properties */
+
+	public bool InputBlocked { get; set; }
 
 	public int NumCollectibles { get; private set; }
+
+
+	/* methods */
 
 	protected override void Awake()
 	{
 		base.Awake();
+
+		CurrentSpeed = _playerSpeed;
+		InputBlocked = false;
 
 		_idleAnimFwd = "Player_idleForward";
 		_idleAnimBack = "Player_idleBackward";
@@ -46,14 +60,10 @@ public class Player : Actor
 		_controls.PlayerControls.Disable();
 	}
 
-	private void FixedUpdate()
-	{
-		if (_movement != Vector2.zero)
-		{
-			_rb.MovePosition(_rb.position + _speed * _movement * Time.fixedDeltaTime);
-		}
-	}
-
+	/// <summary>
+	/// Handle collisions with triggers
+	/// </summary>
+	/// <param name="coll">Collider of other object</param>
 	private void OnTriggerEnter2D(Collider2D coll)
 	{
 		if (coll.CompareTag("Collectible"))
@@ -73,8 +83,20 @@ public class Player : Actor
 		}
 	}
 
+
+
+	/// <summary>
+	/// Sets player movement according to input
+	/// </summary>
+	/// <param name="ctx">Context from pressed keys</param>
 	private void ReadMovementInput(InputAction.CallbackContext ctx)
 	{
+		if (InputBlocked)
+		{
+			MessageLogger.LogActorMessage("Player input blocked; Cannot move", LogLevel.Verbose);
+			return;
+		}
+
 		_movement = ctx.ReadValue<Vector2>().normalized;
 
 		if (_movement.x > 0f) // moving right
@@ -95,8 +117,17 @@ public class Player : Actor
 		}
 	}
 
+	/// <summary>
+	/// Stops movement when input stops
+	/// </summary>
 	private void CancelMovementInput()
 	{
+		if (InputBlocked)
+		{
+			MessageLogger.LogActorMessage("Player input blocked; Cannot stop", LogLevel.Verbose);
+			return;
+		}
+
 		if (_movement.x > 0f) // stopping right
 		{
 			SetIdleAnimInDirection(MovementVector.Right);

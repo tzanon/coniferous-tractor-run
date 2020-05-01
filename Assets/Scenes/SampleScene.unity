@@ -5359,6 +5359,11 @@ PrefabInstance:
       propertyPath: m_Size.x
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 3488151474865707233, guid: 277b802fb873ad345b7b55c35e8f98fb,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3488151474865707234, guid: 277b802fb873ad345b7b55c35e8f98fb,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5433,6 +5438,20 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1177651267}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1177651270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1177651269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 560baab5a8237d34e91367a820ee8e58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameManager: {fileID: 972013121}
+  rejectionDestNode: {x: 0, y: 0, z: 0}
 --- !u!1001 &1218676438
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -51215,7 +51234,7 @@ GameObject:
   - component: {fileID: 1610142654}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -51319,7 +51338,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9dbc569a0f7eeb64cae140b85cbce5aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isAnimated: 1
+  _isAnimated: 0
   _idleFwd: {fileID: -842990268950388942, guid: ce1f574a3ea753147889b09b1e7c3ece,
     type: 3}
   _idleBack: {fileID: -1206589584368123669, guid: ce1f574a3ea753147889b09b1e7c3ece,

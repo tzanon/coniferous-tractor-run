@@ -23,12 +23,13 @@ public class Tractor : Actor
 	{
 		base.Awake();
 
+		CurrentSpeed = _defaultSpeed;
 		// TODO: set animation state names
 	}
 
-	private void FixedUpdate()
+	protected override void FixedUpdate()
 	{
-		// TODO: path following and handling
+		// TODO: path following and handling (or not...?)
 	}
 
 	

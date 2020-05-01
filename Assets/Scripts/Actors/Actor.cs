@@ -22,13 +22,17 @@ public abstract class Actor : MonoBehaviour
 		}
 	}
 
+	/* fields */
+
 	[SerializeField] protected bool _isAnimated = false;
 
+	protected Vector2 _movement = Vector2.zero, _lastMovement = Vector2.zero;
+
+	// animation sprites and names
 	[SerializeField] private Sprite _idleFwd, _idleBack, _idleSide;
 	protected string _idleAnimFwd, _idleAnimBack, _idleAnimRight, _idleAnimLeft;
 	protected string _moveAnimFwd, _moveAnimBack, _moveAnimRight, _moveAnimLeft;
 
-	[Header("Collider Sizes")]
 	private Vector2 _verticalCollSize;
 	private Vector2 _horizontalCollSize;
 
@@ -39,7 +43,15 @@ public abstract class Actor : MonoBehaviour
 	protected Rigidbody2D _rb;
 	private Animator _animator;
 
+	/* properties */
+
+	public float CurrentSpeed { get; protected set; }
+
 	public MovementVector CurrentDirection { get; protected set; }
+
+	public bool IsIdle { get => _movement == Vector2.zero; }
+
+	/* methods */
 
 	protected virtual void Awake()
 	{
@@ -61,7 +73,35 @@ public abstract class Actor : MonoBehaviour
 
 		SetIdleAnimInDirection(MovementVector.Down);
 	}
-	
+
+	protected virtual void FixedUpdate()
+	{
+		if (_movement != Vector2.zero)
+		{
+			_rb.MovePosition(_rb.position + CurrentSpeed * _movement * Time.fixedDeltaTime);
+		}
+	}
+
+	/// <summary>
+	/// Externally-accessible way of setting movement
+	/// </summary>
+	/// <param name="movementDirection">Direction to move in</param>
+	public void SetMovementDirection(MovementVector movementDirection)
+	{
+		_movement = movementDirection.Value;
+		SetMoveAnimInDirection(movementDirection);
+	}
+
+	/// <summary>
+	/// Externally-accessible way of stopping movement
+	/// </summary>
+	/// <param name="stopDirection">Movement direction being stopped in</param>
+	public void StopMovement(MovementVector stopDirection)
+	{
+		_movement = MovementVector.Center.Value;
+		SetIdleAnimInDirection(stopDirection);
+	}
+
 	protected void SetMoveAnimInDirection(MovementVector direction)
 	{
 		SetDirectionalAnimation(direction, true);

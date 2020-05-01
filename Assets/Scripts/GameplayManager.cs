@@ -36,6 +36,8 @@ public class GameplayManager : MonoBehaviour
 	/// </summary>
 	public bool CollectiblesEmpty { get => _collectibles.Count <= 0; }
 
+	/* Methods */
+
 	private void Start()
 	{
 		_collectibles = new List<Collectible>(FindObjectsOfType<Collectible>());
@@ -73,6 +75,7 @@ public class GameplayManager : MonoBehaviour
 		return true;
 	}
 
+	// TODO: get rid of this, have barrier trigger auto player movement out of level
 	/// <summary>
 	/// Removes the invisible barrier at the forest entrance, allowing the player to exit
 	/// </summary>
@@ -97,7 +100,7 @@ public class GameplayManager : MonoBehaviour
 	{
 		if (!CanDelete(toDelete)) return;
 
-		// remove
+		// remove the collectible from tracking list
 		if (!_collectibles.Remove(toDelete))
 		{
 			MessageLogger.LogGameplayMessage("Could not delete collectible", LogLevel.Error);
