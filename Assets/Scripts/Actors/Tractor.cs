@@ -17,8 +17,6 @@ public class Tractor : Actor
 	private const float _defaultSpeed = 4f;
 	private const float _chaseSpeed = 8f;
 
-	public float CurrentSpeed { get; private set; }
-
 	protected override void Awake()
 	{
 		base.Awake();

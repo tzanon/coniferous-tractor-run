@@ -51,6 +51,8 @@ public abstract class Actor : MonoBehaviour
 
 	public bool IsIdle { get => _movement == Vector2.zero; }
 
+	public Vector3 Position { get => transform.position; set => transform.position = value; }
+
 	/* methods */
 
 	protected virtual void Awake()

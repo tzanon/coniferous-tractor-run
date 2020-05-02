@@ -42,6 +42,36 @@ namespace Directions
 			}
 		}
 
+		public static MovementVector Vec3IntToMV(Vector3Int vec3I)
+		{
+			// invalid if a diagonal or on nonzero z plane
+			if ((vec3I.x != 0 && vec3I.y != 0) || vec3I.z != 0)
+			{
+				return MovementVector.Null;
+			}
+
+			// right
+			if (vec3I.x > 0)
+			{
+				return MovementVector.Right;
+			}
+			else if (vec3I.x < 0) // left
+			{
+				return MovementVector.Left;
+			}
+			if (vec3I.y > 0) // up
+			{
+				return MovementVector.Up;
+			}
+			else if (vec3I.y < 0) // down
+			{
+				return MovementVector.Down;
+			}
+
+			// must be (0,0)
+			return MovementVector.Center;
+		}
+
 		public static bool operator ==(MovementVector a, MovementVector b)
 		{
 			return a.Value == b.Value;

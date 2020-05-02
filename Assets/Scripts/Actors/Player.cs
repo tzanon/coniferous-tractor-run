@@ -50,6 +50,13 @@ public class Player : Actor
 		_moveAction.canceled += ctx => CancelMovementInput();
 	}
 
+	protected override void FixedUpdate()
+	{
+		base.FixedUpdate();
+
+
+	}
+
 	private void OnEnable()
 	{
 		_controls.PlayerControls.Enable();
@@ -82,8 +89,6 @@ public class Player : Actor
 			MessageLogger.LogActorMessage("Game over...", LogLevel.Debug);
 		}
 	}
-
-
 
 	/// <summary>
 	/// Sets player movement according to input

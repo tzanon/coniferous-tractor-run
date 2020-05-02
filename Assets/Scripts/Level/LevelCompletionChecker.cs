@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class LevelCompletionChecker : MonoBehaviour
 {
-	[SerializeField] private GameplayManager gameManager;
+	[SerializeField] private GameplayManager _gameManager;
+	[SerializeField] private TilemapManager _tilemapManager;
+	[SerializeField] private NavigationMap _navMap;
+	[SerializeField] private MovementDriver _driver;
+
+	[SerializeField] private Transform _rejectionDestination;
 
 	/// <summary>
 	/// Node player will be sent to if he doesn't have all the collectibles
 	/// </summary>
-	[SerializeField] private Vector3Int rejectionDestNode;
-
+	public Vector3Int RejectionDestNode { get => _tilemapManager.CellOfPosition(_rejectionDestination.position); }
 
 	private void OnTriggerEnter2D(Collider2D coll)
 	{
@@ -23,13 +27,12 @@ public class LevelCompletionChecker : MonoBehaviour
 	private void CheckIfLevelComplete(Player player)
 	{
 		// if game not done, force player back into level
-		if (gameManager.NumCollectibles > 0)
+		if (_gameManager.NumCollectibles > 0)
 		{
 			// TODO: display "must get all items" text
 			MessageLogger.LogGameplayMessage("Must collect all items before leaving!", LogLevel.Debug);
 
-
-			// MovementDriver.MoveToDest(player, rejectionDestNode);
+			_driver.MovePlayerToNode(player, RejectionDestNode);
 		}
 		else // game done, move player out of level
 		{
@@ -37,7 +40,6 @@ public class LevelCompletionChecker : MonoBehaviour
 			MessageLogger.LogGameplayMessage("You're winner!!", LogLevel.Debug);
 
 		}
-
 	}
 
 }

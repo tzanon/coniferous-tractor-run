@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+using Directions;
 using Pathfinding;
 
 public class NavigationMap : MonoBehaviour
@@ -46,6 +47,25 @@ public class NavigationMap : MonoBehaviour
 		return _map.HasTile(cell) && _map.GetSprite(cell) == _nodeSprite;
 	}
 
+	/// <summary>
+	/// Calculates the direction vector between a node and its neighbour
+	/// </summary>
+	/// <param name="from">Node starting from</param>
+	/// <param name="to">Neighbour to get direction to</param>
+	/// <returns>MovementVector corresponding to the direction, Null MV if to is not a neighbour</returns>
+	public MovementVector DirectionToNode(Vector3Int from, Vector3Int to)
+	{
+		Vector3Int difference = to - from;
+		MovementVector mv = MovementVector.Vec3IntToMV(difference);
+
+		if (mv == MovementVector.Null)
+		{
+			MessageLogger.LogGraphMessage("Null direction to node", LogLevel.Error);
+		}
+
+		return mv;
+	}
+
 	public Vector3Int[] GetNeighboursOfNode(Vector3Int node)
 	{
 		return _graph.Neighbours(node);
@@ -59,10 +79,10 @@ public class NavigationMap : MonoBehaviour
 	/// <summary>
 	/// Use BFS to find closest node to given cell
 	/// </summary>
-	/// <param name="startCell">cell to start search from</param>
-	/// <param name="searchedCells">nodes that were searched</param>
+	/// <param name="startCell">Cell to start search from</param>
+	/// <param name="searchedCells">Nodes that were searched</param>
 	/// <returns>The first node found around cell</returns>
-	public Vector3Int ClosestNodeToCell(Vector3Int startCell , out Queue<Vector3Int> evaluatedCells)
+	public Vector3Int ClosestNodeToCell(Vector3Int startCell, out Queue<Vector3Int> evaluatedCells)
 	{
 		// return if already searching
 		if (_isFindingNode)
@@ -127,6 +147,17 @@ public class NavigationMap : MonoBehaviour
 
 		_isFindingNode = false;
 		return new Vector3Int(0, 0, -1);
+	}
+
+	/// <summary>
+	/// Find closest node without returning the searched cells
+	/// </summary>
+	/// <param name="startCell">Cell to start search from</param>
+	/// <returns>The first node found around cell</returns>
+	public Vector3Int ClosestNodeToCell(Vector3Int startCell)
+	{
+		Queue<Vector3Int> unusedCells;
+		return ClosestNodeToCell(startCell, out unusedCells);
 	}
 
 	/// <summary>

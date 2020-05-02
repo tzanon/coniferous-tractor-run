@@ -133,6 +133,16 @@ namespace Pathfinding
 		}
 	}
 
+	class Path
+	{
+
+		public Path()
+		{
+
+		}
+
+	}
+
 	class Graph
 	{
 		//enum PathfinderType { BFS, DIJKSTRA, ASTAR} // TODO: implement or get rid of Dijkstra
@@ -261,138 +271,6 @@ namespace Pathfinding
 		{
 			_nodeNeighbours.Clear();
 		}
-
-		/* pathfinding
-		// todo: refactor pathfinding into separate class?
-
-		public int ManhattanDistance(Vector3Int a, Vector3Int b)
-		{
-			return Math.Abs(a.x - b.x) + Math.Abs(a.y - b.y);
-		}
-
-		public int EuclideanDistance(Vector3Int a, Vector3Int b)
-		{
-			return (int)(Math.Pow(b.x - a.x, 2) + Mathf.Pow(b.y - a.y, 2));
-		}
-
-		private int Cost(Vector3Int a, Vector3Int b)
-		{
-			return ManhattanDistance(a, b);
-		}
-
-		public Vector3Int[] GetPathBetweenNodes(Vector3Int start, Vector3Int end)
-		{
-			switch (_pathfinder)
-			{
-				case PathfinderType.BFS:
-					return BFSEarlyExit(start, end);
-				case PathfinderType.ASTAR:
-					return AStarSearch(start, end);
-				default:
-					return AStarSearch(start, end);
-			}
-		}
-
-		private Vector3Int[] BFSEarlyExit(Vector3Int start, Vector3Int goal)
-		{
-			Queue<Vector3Int> frontier = new Queue<Vector3Int>();
-			frontier.Enqueue(start);
-			Dictionary<Vector3Int, Vector3Int> cameFrom = new Dictionary<Vector3Int, Vector3Int>() { { start, _nullPos } };
-
-			while (frontier.Count > 0)
-			{
-				Vector3Int cell = frontier.Dequeue();
-
-				if (cell == goal)
-					break;
-
-				foreach (Vector3Int next in _nodeNeighbours[cell])
-				{
-					if (!cameFrom.ContainsKey(next))
-					{
-						frontier.Enqueue(next);
-						cameFrom[next] = cell;
-					}
-				}
-			}
-
-			return ReconstructPath(start, goal, cameFrom);
-		}
-
-		private Vector3Int[] Dijkstra(Vector3Int start, Vector3Int goal)
-		{
-			return null;
-		}
-
-		private Vector3Int[] AStarSearch(Vector3Int start, Vector3Int goal)
-		{
-			if (start == goal)
-			{
-				return null;
-			}
-
-			if (_nodeNeighbours[start].Contains(goal))
-			{
-				return new Vector3Int[] { goal };
-			}
-
-			NaivePriorityQueue frontier = new NaivePriorityQueue();
-			frontier.Push(start, 0);
-			Dictionary<Vector3Int, Vector3Int> cameFrom = new Dictionary<Vector3Int, Vector3Int>() { { start, _nullPos } };
-			Dictionary<Vector3Int, int> costSoFar = new Dictionary<Vector3Int, int>() { { start, 0 } };
-
-			Debug.Log("Starting A* Search...");
-
-			while (frontier.Count > 0)
-			{
-				Vector3Int cell = frontier.PopMin();
-
-				if (cell == goal)
-					break;
-
-				foreach (Vector3Int next in _nodeNeighbours[cell])
-				{
-					int newCost = costSoFar[cell] + Cost(cell, next);
-					if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next])
-					{
-						costSoFar[next] = newCost;
-						int priority = newCost + ManhattanDistance(next, goal);
-						frontier.Push(next, priority);
-						cameFrom[next] = cell;
-					}
-				}
-			}
-
-			Debug.Log("Finished search.");
-
-			return ReconstructPath(start, goal, cameFrom);
-		}
-
-		private Vector3Int[] ReconstructPath(Vector3Int start, Vector3Int goal, Dictionary<Vector3Int, Vector3Int> cameFrom)
-		{
-			if (!cameFrom.ContainsKey(goal) || !cameFrom.ContainsValue(start))
-			{
-				Debug.LogError("Given cameFrom does not contain the goal, start, or both");
-				return null;
-			}
-
-			Debug.Log("Reconstructing path...");
-
-			List<Vector3Int> path = new List<Vector3Int>(cameFrom.Count);
-			Vector3Int cell = goal;
-
-			while (cell != start)
-			{
-				path.Add(cell);
-				cell = cameFrom[cell];
-			}
-
-			path.Add(start);
-			path.Reverse();
-
-			return path.ToArray();
-		}
-		/**/
 	}
 
 	class Pathfinder
@@ -521,7 +399,8 @@ namespace Pathfinding
 		{
 			if (!cameFrom.ContainsKey(goal) || !cameFrom.ContainsValue(start))
 			{
-				Debug.LogError("Given cameFrom does not contain the goal, start, or both");
+				//Debug.LogError("Given cameFrom does not contain the goal, start, or both");
+				MessageLogger.LogPathMessage("Given cameFrom does not contain the goal, start, or both", LogLevel.Error);
 				return null;
 			}
 
