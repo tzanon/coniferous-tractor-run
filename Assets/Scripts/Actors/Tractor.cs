@@ -25,6 +25,16 @@ public class Tractor : Actor
 		// TODO: set animation state names
 	}
 
+	protected override void AssignAnimationStateNames()
+	{
+		
+	}
+
+	protected override void SetUpStateMachine()
+	{
+
+	}
+
 	protected override void FixedUpdate()
 	{
 		// TODO: path following and handling (or not...?)

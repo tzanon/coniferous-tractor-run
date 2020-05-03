@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
@@ -57,7 +58,11 @@ public class LoggerController : MonoBehaviour
 	/// </summary>
 	private void InitListeners()
 	{
+		foreach (string modeName in Enum.GetNames(typeof(LogType)))
+			_typeSelector.options.Add(new TMP_Dropdown.OptionData(modeName));
+
 		_typeSelector.onValueChanged.AddListener(delegate { UpdateToggles(); });
+
 		EnableToggleListeners();
 	}
 

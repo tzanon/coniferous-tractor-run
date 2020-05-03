@@ -14,6 +14,8 @@ public class TilemapManager : MonoBehaviour
 	public Vector3 PlayerPosition { get => _player.transform.position; }
 	public Vector3Int PlayerCell { get => CellOfPosition(_player.transform.position); }
 
+	public static Vector3Int UndefinedCell { get => new Vector3Int(0, 0, -1); }
+
 	private void Awake()
 	{
 		// get ref to tilemap and lock tiles in place (?)

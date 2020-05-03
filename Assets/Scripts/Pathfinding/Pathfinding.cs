@@ -135,6 +135,7 @@ namespace Pathfinding
 
 	class Path
 	{
+		public static Vector3Int[] EmptyPath { get => new Vector3Int[0]; }
 
 		public Path()
 		{
@@ -353,7 +354,7 @@ namespace Pathfinding
 		{
 			if (start == goal)
 			{
-				return null;
+				return new Vector3Int[0];
 			}
 			
 			if (_graph.NodeHasNeighbour(start, goal))
@@ -366,7 +367,7 @@ namespace Pathfinding
 			Dictionary<Vector3Int, Vector3Int> cameFrom = new Dictionary<Vector3Int, Vector3Int>() { { start, Graph.NullPos } };
 			Dictionary<Vector3Int, int> costSoFar = new Dictionary<Vector3Int, int>() { { start, 0 } };
 
-			Debug.Log("Starting A* Search...");
+			MessageLogger.LogPathMessage("Starting A* Search...", LogLevel.Debug);
 
 			while (frontier.Count > 0)
 			{
@@ -390,7 +391,7 @@ namespace Pathfinding
 				}
 			}
 
-			Debug.Log("Finished search.");
+			MessageLogger.LogPathMessage("Finished search.", LogLevel.Debug);
 
 			return ReconstructPath(start, goal, cameFrom);
 		}

@@ -4,7 +4,7 @@ using UnityEngine;
 
 [Flags]
 public enum LogLevel { None = 0, Debug = 1, Verbose = 2, Warning = 4, Error = 8 }
-public enum LogType { Tile, Highlight, Graph, Path, Actor, Game, GUI }
+public enum LogType { Tile, Highlight, Graph, Path, FSM, Actor, Game, GUI }
 
 /// <summary>
 /// Streamlined console logger
@@ -23,6 +23,7 @@ public static class MessageLogger
 		{ LogType.Actor,		LogLevel.Warning | LogLevel.Error },
 		{ LogType.Graph,		LogLevel.Warning | LogLevel.Error },
 		{ LogType.Path,			LogLevel.Warning | LogLevel.Error },
+		{ LogType.FSM,			LogLevel.Warning | LogLevel.Error },
 		{ LogType.Game,			LogLevel.Warning | LogLevel.Error },
 		{ LogType.GUI,			LogLevel.Warning | LogLevel.Error },
 	};
@@ -34,6 +35,7 @@ public static class MessageLogger
 	public static LogLevel ActorLevels { get => _modeLevels[LogType.Actor]; private set => _modeLevels[LogType.Actor] = value; }
 	public static LogLevel GraphLevels { get => _modeLevels[LogType.Graph]; private set => _modeLevels[LogType.Graph] = value; }
 	public static LogLevel PathLevels { get => _modeLevels[LogType.Path]; private set => _modeLevels[LogType.Path] = value; }
+	public static LogLevel FSMLevels { get => _modeLevels[LogType.FSM]; private set => _modeLevels[LogType.FSM] = value; }
 	public static LogLevel GameLevels { get => _modeLevels[LogType.Game]; private set => _modeLevels[LogType.Game] = value; }
 	public static LogLevel GUILevels { get => _modeLevels[LogType.GUI]; private set => _modeLevels[LogType.GUI] = value; }
 
@@ -115,6 +117,7 @@ public static class MessageLogger
 	public static void LogActorMessage(string msg, LogLevel level, params object[] args) => LogMessage(msg, LogType.Actor, level, args);
 	public static void LogGraphMessage(string msg, LogLevel level, params object[] args) => LogMessage(msg, LogType.Graph, level, args);
 	public static void LogPathMessage(string msg, LogLevel level, params object[] args) => LogMessage(msg, LogType.Path, level, args);
+	public static void LogFSMMessage(string msg, LogLevel level, params object[] args) => LogMessage(msg, LogType.FSM, level, args);
 	public static void LogGameplayMessage(string msg, LogLevel level, params object[] args) => LogMessage(msg, LogType.Game, level, args);
 	public static void LogGUIMessage(string msg, LogLevel level, params object[] args) => LogMessage(msg, LogType.GUI, level, args);
 

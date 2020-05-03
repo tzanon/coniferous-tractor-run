@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+﻿using UnityEngine;
 using Directions;
 
 public class MovementDriver : MonoBehaviour
@@ -14,8 +11,6 @@ public class MovementDriver : MonoBehaviour
 	private void FixedUpdate()
 	{
 		
-
-
 	}
 
 	// TODO: refactor and get rid of this, maybe even whole class

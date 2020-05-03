@@ -12,6 +12,8 @@ public class Player : Actor
 	private ChaserControls _controls;
 	private InputAction _moveAction;
 
+	private FiniteStateMachine _stateMachine;
+
 	[SerializeField] private float _playerSpeed = 5.0f;
 
 	// TODO: delete this?
@@ -19,10 +21,15 @@ public class Player : Actor
 
 	/* properties */
 
+	/// <summary>
+	/// Whether player is controlled by input
+	/// </summary>
 	public bool InputBlocked { get; set; }
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public int NumCollectibles { get; private set; }
-
 
 	/* methods */
 
@@ -33,6 +40,17 @@ public class Player : Actor
 		CurrentSpeed = _playerSpeed;
 		InputBlocked = false;
 
+		AssignAnimationStateNames();
+		SetUpInput();
+
+		SetUpStateMachine();
+	}
+
+	/// <summary>
+	/// Set names of animation states
+	/// </summary>
+	protected override void AssignAnimationStateNames()
+	{
 		_idleAnimFwd = "Player_idleForward";
 		_idleAnimBack = "Player_idleBackward";
 		_idleAnimRight = "Player_idleRight";
@@ -42,12 +60,32 @@ public class Player : Actor
 		_moveAnimBack = "Player_walkBackward";
 		_moveAnimRight = "Player_walkRight";
 		_moveAnimLeft = "Player_walkLeft";
+	}
 
+	/// <summary>
+	/// Set up keyboard input
+	/// </summary>
+	private void SetUpInput()
+	{
 		_controls = new ChaserControls();
 		_moveAction = _controls.PlayerControls.Move;
 
 		_moveAction.performed += ctx => ReadMovementInput(ctx);
 		_moveAction.canceled += ctx => CancelMovementInput();
+	}
+
+	/// <summary>
+	/// Set up the FSM and its states and transitions
+	/// </summary>
+	protected override void SetUpStateMachine()
+	{
+		
+	}
+
+
+	public void ForcePlayerMovement()
+	{
+
 	}
 
 	protected override void FixedUpdate()
@@ -57,16 +95,23 @@ public class Player : Actor
 
 	}
 
+	/// <summary>
+	/// Enable controls
+	/// </summary>
 	private void OnEnable()
 	{
 		_controls.PlayerControls.Enable();
 	}
 
+	/// <summary>
+	/// Disable controls
+	/// </summary>
 	private void OnDisable()
 	{
 		_controls.PlayerControls.Disable();
 	}
 
+	// TODO: put game over in tractor instead?
 	/// <summary>
 	/// Handle collisions with triggers
 	/// </summary>

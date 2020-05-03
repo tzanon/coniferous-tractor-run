@@ -53,7 +53,13 @@ public abstract class Actor : MonoBehaviour
 
 	public Vector3 Position { get => transform.position; set => transform.position = value; }
 
-	/* methods */
+	/* abstract methods */
+
+	protected abstract void AssignAnimationStateNames();
+
+	protected abstract void SetUpStateMachine();
+
+	/* virtual and normal methods */
 
 	protected virtual void Awake()
 	{
