@@ -48,6 +48,11 @@ public class PlayerAutoControl : FSMState
 		get => ( _path.Length > 0 && _nextPathPointIndex >= 0 && _destNode != TilemapManager.UndefinedCell);
 	}
 
+	/// <summary>
+	/// Whether index is within the path's boundaries
+	/// </summary>
+	private bool PathIndexInRange { get => _nextPathPointIndex >= 0 && _nextPathPointIndex < _path.Length; }
+
 	public PlayerAutoControl(Player player, LevelCompletionChecker mc, TilemapManager tm, TilemapHighlighter th, NavigationMap nm,
 		params FSMTransition[] transitions) : base(transitions)
 	{
@@ -74,14 +79,12 @@ public class PlayerAutoControl : FSMState
 		_destNode = dest;
 		_pathFound = FindPathToDest();
 
+		// set player in direction of first path point
 		if (_pathFound)
 		{
-			// TODO: set direction to first path point
 			Vector3Int playerCell = _tilemapManager.CellOfPosition(_player.Position);
 			Vector3Int pathStart = _path[0];
-			MovementVector directionToNextPoint = MovementVector.DirectionBetweenPoints(playerCell, pathStart);
-
-			_player.SetMoveAnimInDirection(directionToNextPoint);
+			SetPlayerDirection(playerCell, pathStart);
 		}
 	}
 
@@ -126,9 +129,8 @@ public class PlayerAutoControl : FSMState
 			if (!IncrementPathIndex()) // stop movement if at path's end
 				return;
 		}
-		/**/
 
-		Vector3 movedPosition =	Vector3.MoveTowards(_player.Position, nextPosition, _player.CurrentSpeed * 0.75f * Time.deltaTime);
+		Vector3 movedPosition =	Vector3.MoveTowards(_player.Position, nextPosition, _player.CurrentSpeed * 1.0f * Time.deltaTime);
 		_player.Position = movedPosition;
 	}
 
@@ -165,17 +167,32 @@ public class PlayerAutoControl : FSMState
 		}
 
 		_nextPathPointIndex++;
+		SetDirectionToNextNode();
+		return true;
+	}
 
-		// TODO: put in own method
+	/// <summary>
+	/// Orient player towards the next point in the path
+	/// </summary>
+	private void SetDirectionToNextNode()
+	{
+		if (!PathIndexInRange) return;
+
 		int lastIndex = _nextPathPointIndex - 1;
-
 		Vector3Int lastNode = _path[lastIndex];
 		Vector3Int nextNode = _path[_nextPathPointIndex];
-		MovementVector directionToNextPoint = MovementVector.DirectionBetweenPoints(lastNode, nextNode);
+		SetPlayerDirection(lastNode, nextNode);
+	}
 
+	/// <summary>
+	/// Set player's moving animation to the direction between two points
+	/// </summary>
+	/// <param name="node1"></param>
+	/// <param name="node2"></param>
+	private void SetPlayerDirection(Vector3Int node1, Vector3Int node2)
+	{
+		MovementVector directionToNextPoint = MovementVector.DirectionBetweenPoints(node1, node2);
 		_player.SetMoveAnimInDirection(directionToNextPoint);
-
-		return true;
 	}
 
 	/// <summary>
@@ -216,9 +233,8 @@ public class PlayerAutoControl : FSMState
 	public override void OnEnter()
 	{
 		MessageLogger.LogFSMMessage("Entered player auto control state", LogLevel.Verbose);
-		//_player.InputBlocked = true;
-		_player.DisableInput();
 
+		_player.InputBlocked = true;
 		Vector3Int movementDestination = _movementController.CurrentDestNode;
 		SetMovementData(movementDestination);
 	}
@@ -229,6 +245,7 @@ public class PlayerAutoControl : FSMState
 	public override void OnExit()
 	{
 		MessageLogger.LogFSMMessage("Exiting player auto control state", LogLevel.Verbose);
+
 		_player.SetIdleAnimInDirection(_player.CurrentDirection);
 		ResetMovementData();
 	}

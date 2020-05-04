@@ -41,7 +41,6 @@ namespace Directions
 			}
 		}
 
-
 		public static MovementVector DirectionBetweenPoints(Vector3Int from, Vector3Int to)
 		{
 			Vector3Int difference = to - from;
@@ -56,24 +55,11 @@ namespace Directions
 		/// <returns>MovementVector rep of vec3i</returns>
 		public static MovementVector Vec3IntToMV(Vector3Int vec3i)
 		{
-			if (vec3i.x > 0) // right
-			{
-				return MovementVector.Right;
-			}
-			else if (vec3i.x < 0) // left
-			{
-				return MovementVector.Left;
-			}
-			if (vec3i.y > 0) // up
-			{
-				return MovementVector.Up;
-			}
-			else if (vec3i.y < 0) // down
-			{
-				return MovementVector.Down;
-			}
+			if (vec3i.x > 0) return MovementVector.Right;
+			if (vec3i.x < 0) return MovementVector.Left;
+			if (vec3i.y > 0) return MovementVector.Up;
+			if (vec3i.y < 0) return MovementVector.Down;
 
-			// must be (0,0)
 			return MovementVector.Center;
 		}
 

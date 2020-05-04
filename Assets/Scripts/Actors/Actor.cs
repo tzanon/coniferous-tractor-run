@@ -148,5 +148,4 @@ public abstract class Actor : MonoBehaviour
 		_bc.size = dc.ColliderSize;
 	}
 
-
 }

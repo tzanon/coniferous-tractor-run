@@ -61,6 +61,7 @@ public class LevelCompletionChecker : MonoBehaviour
 		if (_gameManager.NumCollectibles > 0)
 		{
 			// TODO: display "must get all items" text
+			// reference separate script for displaying messages
 			MessageLogger.LogGameplayMessage("Must collect all items before leaving!", LogLevel.Debug);
 			CurrentDestNode = RejectDestNode;
 		}

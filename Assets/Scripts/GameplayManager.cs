@@ -75,23 +75,6 @@ public class GameplayManager : MonoBehaviour
 		return true;
 	}
 
-	// TODO: get rid of this, have barrier trigger auto player movement out of level
-	/// <summary>
-	/// Removes the invisible barrier at the forest entrance, allowing the player to exit
-	/// </summary>
-	public void RemoveBarrier()
-	{
-		if (_barrier)
-		{
-			Destroy(_barrier);
-			MessageLogger.LogGameplayMessage("Barrier removed", LogLevel.Debug);
-		}
-		else
-		{
-			MessageLogger.LogGameplayMessage("Already deleted barrier", LogLevel.Error);
-		}
-	}
-
 	/// <summary>
 	/// Removes a collectible from the level and the tracking list
 	/// </summary>
@@ -108,7 +91,6 @@ public class GameplayManager : MonoBehaviour
 		}
 
 		Destroy(toDelete.gameObject);
-		if (CollectiblesEmpty) RemoveBarrier();
 	}
 
 	/// <summary>

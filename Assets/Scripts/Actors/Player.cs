@@ -16,13 +16,12 @@ public class Player : Actor
 	private ChaserControls _controls;
 	private InputAction _moveAction;
 
+	private bool _inputBlocked = false;
+
 	private FiniteStateMachine _stateMachine;
 
 	[SerializeField] private float _playerSpeed = 5.0f;
 	protected Vector2 _movement = Vector2.zero, _lastMovement = Vector2.zero;
-
-	// TODO: delete this?
-	private MovementVector _currentMovement;
 
 	/* properties */
 
@@ -31,7 +30,16 @@ public class Player : Actor
 	/// <summary>
 	/// Whether player is controlled by input
 	/// </summary>
-	public bool InputBlocked { get; set; }
+	public bool InputBlocked
+	{
+		get => _inputBlocked;
+		set
+		{
+			_inputBlocked = value;
+			if (_inputBlocked)
+				_movement = Vector2.zero;
+		}
+	}
 
 	/// <summary>
 	/// 
@@ -103,9 +111,8 @@ public class Player : Actor
 
 	private void FixedUpdate()
 	{
-		if (!InputBlocked)
+		if (!_inputBlocked)
 			DoInputMovement();
-		
 	}
 
 	// use this for FSM/checking if trying to leave?
@@ -127,7 +134,7 @@ public class Player : Actor
 	/// </summary>
 	private void OnEnable()
 	{
-		EnableInput();
+		_controls.PlayerControls.Enable();
 	}
 
 	/// <summary>
@@ -135,12 +142,8 @@ public class Player : Actor
 	/// </summary>
 	private void OnDisable()
 	{
-		DisableInput();
+		_controls.PlayerControls.Disable();
 	}
-
-	public void EnableInput() => _controls.PlayerControls.Enable();
-
-	public void DisableInput() => _controls.PlayerControls.Disable();
 
 	// TODO: put game over in tractor instead?
 	/// <summary>
@@ -172,15 +175,13 @@ public class Player : Actor
 	/// <param name="ctx">Context from pressed keys</param>
 	private void ReadMovementInput(InputAction.CallbackContext ctx)
 	{
-		/*
-		if (InputBlocked)
+		_movement = ctx.ReadValue<Vector2>().normalized;
+
+		if (_inputBlocked)
 		{
 			MessageLogger.LogActorMessage("Player input blocked; Cannot move", LogLevel.Verbose);
 			return;
 		}
-		/**/
-
-		_movement = ctx.ReadValue<Vector2>().normalized;
 
 		if (_movement.x > 0f) // moving right
 		{
@@ -205,33 +206,30 @@ public class Player : Actor
 	/// </summary>
 	private void CancelMovementInput()
 	{
-		/*
-		if (InputBlocked)
+		var lastMovement = _movement;
+		_movement = Vector2.zero;
+
+		if (_inputBlocked)
 		{
 			MessageLogger.LogActorMessage("Player input blocked; Cannot stop", LogLevel.Verbose);
 			return;
 		}
-		/**/
 
-		if (_movement.x > 0f) // stopping right
+		if (lastMovement.x > 0f) // stopping right
 		{
 			SetIdleAnimInDirection(MovementVector.Right);
 		}
-		else if (_movement.x < 0f) // stopping left
+		else if (lastMovement.x < 0f) // stopping left
 		{
 			SetIdleAnimInDirection(MovementVector.Left);
 		}
-		else if (_movement.y > 0f) // stopping up/backward
+		else if (lastMovement.y > 0f) // stopping up/backward
 		{
 			SetIdleAnimInDirection(MovementVector.Up);
 		}
-		else if (_movement.y < 0f) // stopping down/forward
+		else if (lastMovement.y < 0f) // stopping down/forward
 		{
 			SetIdleAnimInDirection(MovementVector.Down);
 		}
-
-		_movement = Vector2.zero;
 	}
-
-	
 }

@@ -4393,7 +4393,6 @@ GameObject:
   - component: {fileID: 972013121}
   - component: {fileID: 972013123}
   - component: {fileID: 972013124}
-  - component: {fileID: 972013125}
   m_Layer: 0
   m_Name: LevelManager
   m_TagString: Untagged
@@ -4462,18 +4461,6 @@ MonoBehaviour:
   _warningToggle: {fileID: 2044696615}
   _errorToggle: {fileID: 1624355890}
   _typeSelector: {fileID: 1905308291}
---- !u!114 &972013125
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 972013120}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c03ff4bc0758514eb308f993a8725ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &983856751
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5409,7 +5396,7 @@ PrefabInstance:
     - target: {fileID: 3488151474865707234, guid: 277b802fb873ad345b7b55c35e8f98fb,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 3488151474865707234, guid: 277b802fb873ad345b7b55c35e8f98fb,
         type: 3}
@@ -5464,12 +5451,17 @@ PrefabInstance:
     - target: {fileID: 5713785000348213080, guid: 277b802fb873ad345b7b55c35e8f98fb,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -7
+      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 5713785000348213080, guid: 277b802fb873ad345b7b55c35e8f98fb,
         type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6627570309391413222, guid: 277b802fb873ad345b7b55c35e8f98fb,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8240080048175622389, guid: 277b802fb873ad345b7b55c35e8f98fb,
         type: 3}
