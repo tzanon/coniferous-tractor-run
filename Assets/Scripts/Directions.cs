@@ -7,7 +7,6 @@ namespace Directions
 	public struct MovementVector
 	{
 		// properties
-		
 		public static MovementVector Up { get { return new MovementVector(Direction.Up); } }
 		public static MovementVector Down { get { return new MovementVector(Direction.Down); } }
 		public static MovementVector Right { get { return new MovementVector(Direction.Right); } }
@@ -42,28 +41,34 @@ namespace Directions
 			}
 		}
 
-		public static MovementVector Vec3IntToMV(Vector3Int vec3I)
-		{
-			// invalid if a diagonal or on nonzero z plane
-			if ((vec3I.x != 0 && vec3I.y != 0) || vec3I.z != 0)
-			{
-				return MovementVector.Null;
-			}
 
-			// right
-			if (vec3I.x > 0)
+		public static MovementVector DirectionBetweenPoints(Vector3Int from, Vector3Int to)
+		{
+			Vector3Int difference = to - from;
+			MovementVector mv = MovementVector.Vec3IntToMV(difference);
+			return mv;
+		}
+
+		/// <summary>
+		/// Get MovementVector representation of a Vector3Int
+		/// </summary>
+		/// <param name="vec3i"></param>
+		/// <returns>MovementVector rep of vec3i</returns>
+		public static MovementVector Vec3IntToMV(Vector3Int vec3i)
+		{
+			if (vec3i.x > 0) // right
 			{
 				return MovementVector.Right;
 			}
-			else if (vec3I.x < 0) // left
+			else if (vec3i.x < 0) // left
 			{
 				return MovementVector.Left;
 			}
-			if (vec3I.y > 0) // up
+			if (vec3i.y > 0) // up
 			{
 				return MovementVector.Up;
 			}
-			else if (vec3I.y < 0) // down
+			else if (vec3i.y < 0) // down
 			{
 				return MovementVector.Down;
 			}

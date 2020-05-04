@@ -142,6 +142,8 @@ namespace Pathfinding
 
 		}
 
+		public static bool IsEmpty(Vector3Int[] path) => (path.Length <= 0);
+
 	}
 
 	class Graph
@@ -193,7 +195,7 @@ namespace Pathfinding
 			if (!_nodeNeighbours.ContainsKey(node))
 			{
 				Debug.LogError("Error: node " + node + " is not in the graph");
-				return null;
+				return new Vector3Int[0];
 			}
 			else
 			{
@@ -352,6 +354,12 @@ namespace Pathfinding
 
 		private Vector3Int[] AStarSearch(Vector3Int start, Vector3Int goal)
 		{
+			if (!_graph.ContainsNode(start) || !_graph.ContainsNode(goal))
+			{
+				MessageLogger.LogPathMessage("Cannot find path between undefined nodes", LogLevel.Error);
+				return Path.EmptyPath;
+			}
+
 			if (start == goal)
 			{
 				return new Vector3Int[0];
@@ -373,8 +381,13 @@ namespace Pathfinding
 			{
 				Vector3Int cell = frontier.PopMin();
 
+				// found goal
 				if (cell == goal)
-					break;
+				{
+					MessageLogger.LogPathMessage("Finished search.", LogLevel.Debug);
+					return ReconstructPath(start, goal, cameFrom);
+				}
+
 
 				Vector3Int[] neighbours = _graph.Neighbours(cell);
 
@@ -391,9 +404,7 @@ namespace Pathfinding
 				}
 			}
 
-			MessageLogger.LogPathMessage("Finished search.", LogLevel.Debug);
-
-			return ReconstructPath(start, goal, cameFrom);
+			return Path.EmptyPath;
 		}
 
 		private Vector3Int[] ReconstructPath(Vector3Int start, Vector3Int goal, Dictionary<Vector3Int, Vector3Int> cameFrom)

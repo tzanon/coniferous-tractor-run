@@ -2,7 +2,7 @@
 
 public abstract class FSMState
 {
-	protected List<FSMTransition> _transitions;
+	private List<FSMTransition> _transitions;
 
 	public FSMTransition[] Transitions { get => _transitions.ToArray(); }
 

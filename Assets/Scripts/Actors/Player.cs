@@ -1,13 +1,17 @@
-﻿using UnityEngine;
+﻿using System;
+
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 using Directions;
 
+// TODO: put user input in separate class?
 public class Player : Actor
 {
 	/* fields */
 
 	[SerializeField] private GameplayManager _level;
+	[SerializeField] private LevelCompletionChecker _levelCompletionChecker;
 
 	private ChaserControls _controls;
 	private InputAction _moveAction;
@@ -15,11 +19,14 @@ public class Player : Actor
 	private FiniteStateMachine _stateMachine;
 
 	[SerializeField] private float _playerSpeed = 5.0f;
+	protected Vector2 _movement = Vector2.zero, _lastMovement = Vector2.zero;
 
 	// TODO: delete this?
 	private MovementVector _currentMovement;
 
 	/* properties */
+
+	public override bool IsIdle { get => _movement == Vector2.zero; }
 
 	/// <summary>
 	/// Whether player is controlled by input
@@ -79,20 +86,40 @@ public class Player : Actor
 	/// </summary>
 	protected override void SetUpStateMachine()
 	{
+		PlayerInputControl inputState = new PlayerInputControl(this);
+		PlayerAutoControl autoState = new PlayerAutoControl(this, _levelCompletionChecker, _tilemapManager, _highlighter, _map);
+
+		Func<bool> PlayerTryingToLeave = () => _levelCompletionChecker.ContainsPlayer;
+		Func<bool> FinishedAutoMovingPlayer = () => autoState.PlayerReachedDest;
+
+		FSMTransition switchToAutoMovement = new FSMTransition(autoState, PlayerTryingToLeave);
+		FSMTransition switchToInputMovement = new FSMTransition(inputState, FinishedAutoMovingPlayer);
+
+		inputState.AddTransition(switchToAutoMovement);
+		autoState.AddTransition(switchToInputMovement);
+
+		_stateMachine = new FiniteStateMachine(inputState);
+	}
+
+	private void FixedUpdate()
+	{
+		if (!InputBlocked)
+			DoInputMovement();
 		
 	}
 
-
-	public void ForcePlayerMovement()
+	// use this for FSM/checking if trying to leave?
+	private void LateUpdate()
 	{
-
+		_stateMachine.Run();
 	}
 
-	protected override void FixedUpdate()
+	private void DoInputMovement()
 	{
-		base.FixedUpdate();
-
-
+		if (_movement != Vector2.zero)
+		{
+			_rb.MovePosition(_rb.position + CurrentSpeed * _movement * Time.fixedDeltaTime);
+		}
 	}
 
 	/// <summary>
@@ -100,7 +127,7 @@ public class Player : Actor
 	/// </summary>
 	private void OnEnable()
 	{
-		_controls.PlayerControls.Enable();
+		EnableInput();
 	}
 
 	/// <summary>
@@ -108,8 +135,12 @@ public class Player : Actor
 	/// </summary>
 	private void OnDisable()
 	{
-		_controls.PlayerControls.Disable();
+		DisableInput();
 	}
+
+	public void EnableInput() => _controls.PlayerControls.Enable();
+
+	public void DisableInput() => _controls.PlayerControls.Disable();
 
 	// TODO: put game over in tractor instead?
 	/// <summary>
@@ -141,11 +172,13 @@ public class Player : Actor
 	/// <param name="ctx">Context from pressed keys</param>
 	private void ReadMovementInput(InputAction.CallbackContext ctx)
 	{
+		/*
 		if (InputBlocked)
 		{
 			MessageLogger.LogActorMessage("Player input blocked; Cannot move", LogLevel.Verbose);
 			return;
 		}
+		/**/
 
 		_movement = ctx.ReadValue<Vector2>().normalized;
 
@@ -172,11 +205,13 @@ public class Player : Actor
 	/// </summary>
 	private void CancelMovementInput()
 	{
+		/*
 		if (InputBlocked)
 		{
 			MessageLogger.LogActorMessage("Player input blocked; Cannot stop", LogLevel.Verbose);
 			return;
 		}
+		/**/
 
 		if (_movement.x > 0f) // stopping right
 		{
@@ -198,4 +233,5 @@ public class Player : Actor
 		_movement = Vector2.zero;
 	}
 
+	
 }

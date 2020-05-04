@@ -47,6 +47,7 @@ public class NavigationMap : MonoBehaviour
 		return _map.HasTile(cell) && _map.GetSprite(cell) == _nodeSprite;
 	}
 
+	/* former node direction method
 	/// <summary>
 	/// Calculates the direction vector between a node and its neighbour
 	/// </summary>
@@ -65,6 +66,7 @@ public class NavigationMap : MonoBehaviour
 
 		return mv;
 	}
+	/**/
 
 	public Vector3Int[] GetNeighboursOfNode(Vector3Int node)
 	{

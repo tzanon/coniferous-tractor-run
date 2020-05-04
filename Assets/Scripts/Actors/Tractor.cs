@@ -17,6 +17,9 @@ public class Tractor : Actor
 	private const float _defaultSpeed = 4f;
 	private const float _chaseSpeed = 8f;
 
+	// TODO
+	public override bool IsIdle { get; }
+
 	protected override void Awake()
 	{
 		base.Awake();
@@ -35,11 +38,9 @@ public class Tractor : Actor
 
 	}
 
-	protected override void FixedUpdate()
+	private void FixedUpdate()
 	{
 		// TODO: path following and handling (or not...?)
 	}
-
-	
 
 }

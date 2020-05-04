@@ -4427,7 +4427,6 @@ Transform:
   m_Children:
   - {fileID: 1991976932}
   - {fileID: 1177651268}
-  - {fileID: 1512515940}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4475,8 +4474,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c03ff4bc0758514eb308f993a8725ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tilemapManager: {fileID: 1565289089}
-  _navMap: {fileID: 1565289091}
 --- !u!1001 &983856751
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5377,7 +5374,7 @@ PrefabInstance:
     - target: {fileID: 3488151474865707232, guid: 277b802fb873ad345b7b55c35e8f98fb,
         type: 3}
       propertyPath: m_BodyType
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3488151474865707232, guid: 277b802fb873ad345b7b55c35e8f98fb,
         type: 3}
@@ -5464,6 +5461,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Barrier
       objectReference: {fileID: 0}
+    - target: {fileID: 5713785000348213080, guid: 277b802fb873ad345b7b55c35e8f98fb,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5713785000348213080, guid: 277b802fb873ad345b7b55c35e8f98fb,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8240080048175622389, guid: 277b802fb873ad345b7b55c35e8f98fb,
+        type: 3}
+      propertyPath: _gameManager
+      value: 
+      objectReference: {fileID: 972013121}
+    - target: {fileID: 8240080048175622389, guid: 277b802fb873ad345b7b55c35e8f98fb,
+        type: 3}
+      propertyPath: _tilemapManager
+      value: 
+      objectReference: {fileID: 1565289089}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 277b802fb873ad345b7b55c35e8f98fb, type: 3}
 --- !u!4 &1177651268 stripped
@@ -5478,11 +5495,11 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1177651267}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1177651270
+--- !u!114 &1177651270 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 8240080048175622389, guid: 277b802fb873ad345b7b55c35e8f98fb,
+    type: 3}
+  m_PrefabInstance: {fileID: 1177651267}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1177651269}
   m_Enabled: 1
@@ -5490,11 +5507,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 560baab5a8237d34e91367a820ee8e58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameManager: {fileID: 972013121}
-  _tilemapManager: {fileID: 1565289089}
-  _navMap: {fileID: 1565289091}
-  _driver: {fileID: 972013125}
-  _rejectionDestination: {fileID: 1512515940}
 --- !u!1001 &1218676438
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7023,36 +7035,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1508038467}
   m_CullTransparentMesh: 0
---- !u!1 &1512515939
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1512515940}
-  m_Layer: 0
-  m_Name: RejectionDestination
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1512515940
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1512515939}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -3, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 972013122}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1555225996
 GameObject:
   m_ObjectHideFlags: 0
@@ -51418,7 +51400,9 @@ MonoBehaviour:
     type: 3}
   _idleSide: {fileID: -3333066005891325668, guid: ce1f574a3ea753147889b09b1e7c3ece,
     type: 3}
+  _tilemapManager: {fileID: 1565289089}
   _level: {fileID: 972013121}
+  _levelCompletionChecker: {fileID: 1177651270}
   _playerSpeed: 5
 --- !u!61 &1610142653
 BoxCollider2D:
@@ -52179,6 +52163,7 @@ MonoBehaviour:
   _idleFwd: {fileID: 21300000, guid: 022b3790093b315429bad97fc3b75a87, type: 3}
   _idleBack: {fileID: 21300000, guid: 6dbf3fc6ae3c0e14ca9070b3a2c373ed, type: 3}
   _idleSide: {fileID: 21300000, guid: 314012f52a2b953418beee81e408bf89, type: 3}
+  _tilemapManager: {fileID: 1565289089}
   _debugDisplay: {fileID: 0}
 --- !u!95 &1733062921
 Animator:

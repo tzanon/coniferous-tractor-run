@@ -19,7 +19,8 @@ public class PlayerInputControl : FSMState
 	/// </summary>
 	public override void OnEnter()
 	{
-		_player.InputBlocked = false;
+		//_player.InputBlocked = false;
+		_player.EnableInput();
 	}
 
 	public override void OnExit() { }

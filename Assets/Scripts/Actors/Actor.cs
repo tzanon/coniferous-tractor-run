@@ -26,8 +26,6 @@ public abstract class Actor : MonoBehaviour
 
 	[SerializeField] protected bool _isAnimated = false;
 
-	protected Vector2 _movement = Vector2.zero, _lastMovement = Vector2.zero;
-
 	// animation sprites and names
 	[SerializeField] private Sprite _idleFwd, _idleBack, _idleSide;
 	protected string _idleAnimFwd, _idleAnimBack, _idleAnimRight, _idleAnimLeft;
@@ -38,10 +36,16 @@ public abstract class Actor : MonoBehaviour
 
 	private readonly Dictionary<MovementVector, DirectionCharacteristic> _directionCharacteristics = new Dictionary<MovementVector, DirectionCharacteristic>();
 
+	// components
 	protected SpriteRenderer _sr;
 	protected BoxCollider2D _bc;
 	protected Rigidbody2D _rb;
 	private Animator _animator;
+
+	[SerializeField] protected TilemapManager _tilemapManager;
+	protected TilemapHighlighter _highlighter;
+	protected NavigationMap _map;
+
 
 	/* properties */
 
@@ -49,7 +53,7 @@ public abstract class Actor : MonoBehaviour
 
 	public MovementVector CurrentDirection { get; protected set; }
 
-	public bool IsIdle { get => _movement == Vector2.zero; }
+	public abstract bool IsIdle { get; }
 
 	public Vector3 Position { get => transform.position; set => transform.position = value; }
 
@@ -63,13 +67,21 @@ public abstract class Actor : MonoBehaviour
 
 	protected virtual void Awake()
 	{
+		CacheComponents();
+		
+		_verticalCollSize = _idleFwd.bounds.size;
+		_horizontalCollSize = _idleSide.bounds.size;
+	}
+
+	private void CacheComponents()
+	{
 		_sr = GetComponent<SpriteRenderer>();
 		_bc = GetComponent<BoxCollider2D>();
 		_rb = GetComponent<Rigidbody2D>();
 		_animator = GetComponent<Animator>();
-		
-		_verticalCollSize = _idleFwd.bounds.size;
-		_horizontalCollSize = _idleSide.bounds.size;
+
+		_highlighter = _tilemapManager.GetComponent<TilemapHighlighter>();
+		_map = _tilemapManager.GetComponent<NavigationMap>();
 	}
 
 	protected virtual void Start()
@@ -78,44 +90,17 @@ public abstract class Actor : MonoBehaviour
 		_directionCharacteristics[MovementVector.Up] = new DirectionCharacteristic(_idleAnimBack, _moveAnimBack, _verticalCollSize);
 		_directionCharacteristics[MovementVector.Right] = new DirectionCharacteristic(_idleAnimRight, _moveAnimRight, _horizontalCollSize);
 		_directionCharacteristics[MovementVector.Left] = new DirectionCharacteristic(_idleAnimLeft, _moveAnimLeft, _horizontalCollSize);
+		_directionCharacteristics[MovementVector.Center] = _directionCharacteristics[MovementVector.Down];
 
 		SetIdleAnimInDirection(MovementVector.Down);
 	}
 
-	protected virtual void FixedUpdate()
-	{
-		if (_movement != Vector2.zero)
-		{
-			_rb.MovePosition(_rb.position + CurrentSpeed * _movement * Time.fixedDeltaTime);
-		}
-	}
-
-	/// <summary>
-	/// Externally-accessible way of setting movement
-	/// </summary>
-	/// <param name="movementDirection">Direction to move in</param>
-	public void SetMovementDirection(MovementVector movementDirection)
-	{
-		_movement = movementDirection.Value;
-		SetMoveAnimInDirection(movementDirection);
-	}
-
-	/// <summary>
-	/// Externally-accessible way of stopping movement
-	/// </summary>
-	/// <param name="stopDirection">Movement direction being stopped in</param>
-	public void StopMovement(MovementVector stopDirection)
-	{
-		_movement = MovementVector.Center.Value;
-		SetIdleAnimInDirection(stopDirection);
-	}
-
-	protected void SetMoveAnimInDirection(MovementVector direction)
+	public void SetMoveAnimInDirection(MovementVector direction)
 	{
 		SetDirectionalAnimation(direction, true);
 	}
 
-	protected void SetIdleAnimInDirection(MovementVector direction)
+	public void SetIdleAnimInDirection(MovementVector direction)
 	{
 		SetDirectionalAnimation(direction, false);
 	}

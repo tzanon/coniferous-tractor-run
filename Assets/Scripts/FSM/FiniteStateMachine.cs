@@ -1,12 +1,24 @@
 ﻿
+/// <summary>
+/// General FSM
+/// </summary>
 public class FiniteStateMachine
 {
-	private FSMState _currentState;
+	/* properties */
 
+	public FSMState CurrentState { get; private set; }
+
+	/// <summary>
+	/// Construct FSM with an initial state
+	/// </summary>
+	/// <param name="initialState">Starting state</param>
 	public FiniteStateMachine(FSMState initialState)
 	{
-		_currentState = initialState;
+		CurrentState = initialState;
+		CurrentState.OnEnter();
 	}
+
+	/* methods */
 
 	/// <summary>
 	/// Run a cycle of the FSM
@@ -14,7 +26,7 @@ public class FiniteStateMachine
 	public void Run()
 	{
 		CheckTransitionConditions();
-		_currentState.PerformAction();
+		CurrentState.PerformAction();
 	}
 
 	/// <summary>
@@ -22,7 +34,7 @@ public class FiniteStateMachine
 	/// </summary>
 	private void CheckTransitionConditions()
 	{
-		FSMTransition transition = _currentState.GetTransitionIfReady();
+		FSMTransition transition = CurrentState.GetTransitionIfReady();
 
 		if (transition != null)
 		{
@@ -37,18 +49,18 @@ public class FiniteStateMachine
 	private void ExecuteTransition(FSMTransition transition)
 	{
 		// don't transition if going to same state as current
-		if (transition.ResultantState == _currentState)
+		if (transition.ResultantState == CurrentState)
 		{
 			MessageLogger.LogFSMMessage("FSM {0} attempting to transition to same state", LogLevel.Verbose, this.ToString());
 			return;
 		}
 
 		MessageLogger.LogFSMMessage("FSM {0} Transitioning to state {1} from state {2}", LogLevel.Debug,
-			this.ToString(), transition.ResultantState.ToString(), _currentState.ToString());
+			this.ToString(), transition.ResultantState.ToString(), CurrentState.ToString());
 
-		_currentState.OnExit();
-		_currentState = transition.ResultantState;
-		_currentState.OnEnter();
+		CurrentState.OnExit();
+		CurrentState = transition.ResultantState;
+		CurrentState.OnEnter();
 	}
 
 }
