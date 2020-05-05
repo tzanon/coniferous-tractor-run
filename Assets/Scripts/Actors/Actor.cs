@@ -67,12 +67,18 @@ public abstract class Actor : MonoBehaviour
 
 	protected virtual void Awake()
 	{
-		CacheComponents();
-		
 		_verticalCollSize = _idleFwd.bounds.size;
 		_horizontalCollSize = _idleSide.bounds.size;
+
+		CacheComponents();
+		AssignAnimationStateNames();
+		SetUpDirectionCharacteristics();
+		SetUpStateMachine();
 	}
 
+	/// <summary>
+	/// Get references to all components attached to the gameobject
+	/// </summary>
 	private void CacheComponents()
 	{
 		_sr = GetComponent<SpriteRenderer>();
@@ -84,14 +90,17 @@ public abstract class Actor : MonoBehaviour
 		_map = _tilemapManager.GetComponent<NavigationMap>();
 	}
 
-	protected virtual void Start()
+	private void SetUpDirectionCharacteristics()
 	{
 		_directionCharacteristics[MovementVector.Down] = new DirectionCharacteristic(_idleAnimFwd, _moveAnimFwd, _verticalCollSize);
 		_directionCharacteristics[MovementVector.Up] = new DirectionCharacteristic(_idleAnimBack, _moveAnimBack, _verticalCollSize);
 		_directionCharacteristics[MovementVector.Right] = new DirectionCharacteristic(_idleAnimRight, _moveAnimRight, _horizontalCollSize);
 		_directionCharacteristics[MovementVector.Left] = new DirectionCharacteristic(_idleAnimLeft, _moveAnimLeft, _horizontalCollSize);
 		_directionCharacteristics[MovementVector.Center] = _directionCharacteristics[MovementVector.Down];
+	}
 
+	protected virtual void Start()
+	{
 		SetIdleAnimInDirection(MovementVector.Down);
 	}
 
@@ -110,17 +119,18 @@ public abstract class Actor : MonoBehaviour
 	/// </summary>
 	/// <param name="direction"> Direction of the animation to be played </param>
 	/// <param name="isMoving"> Whether a moving or idle animation should be played </param>
-	private void SetDirectionalAnimation(MovementVector direction, bool isMoving)
+	protected void SetDirectionalAnimation(MovementVector direction, bool isMoving)
 	{
 		// return if desired direction is the same as the current one
-		if (isMoving && (CurrentDirection == direction || direction == MovementVector.Center))
-			return;
+		//if (isMoving && (CurrentDirection == direction || direction == MovementVector.Center)) return;
 
 		if (direction == MovementVector.Null)
 		{
 			MessageLogger.LogActorMessage("Trying to start animation in null direction on ", LogLevel.Error, this.name);
 			return;
 		}
+
+		// TODO: if direction is Center should dc just be set to that of CurrentDirection?
 
 		DirectionCharacteristic dc = _directionCharacteristics[direction];
 
@@ -140,7 +150,7 @@ public abstract class Actor : MonoBehaviour
 		else
 		{
 			MessageLogger.LogActorMessage("Stopping in direction {0}", LogLevel.Verbose, direction.Value);
-			CurrentDirection = MovementVector.Center;
+			CurrentDirection = direction;
 			_animator.Play(dc.IdleAnimState);
 		}
 

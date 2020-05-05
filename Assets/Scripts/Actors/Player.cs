@@ -21,7 +21,7 @@ public class Player : Actor
 	private FiniteStateMachine _stateMachine;
 
 	[SerializeField] private float _playerSpeed = 5.0f;
-	protected Vector2 _movement = Vector2.zero, _lastMovement = Vector2.zero;
+	protected Vector2 _movement = Vector2.zero;
 
 	/* properties */
 
@@ -36,8 +36,22 @@ public class Player : Actor
 		set
 		{
 			_inputBlocked = value;
+
 			if (_inputBlocked)
+			{
 				_movement = Vector2.zero;
+			}
+			else
+			{
+				if (IsIdle)
+				{
+					SetIdleAnimInDirection(CurrentDirection);
+				}
+				else
+				{
+					SetMoveAnimInDirection(GetDirectionOfMovement());
+				}
+			}
 		}
 	}
 
@@ -55,10 +69,7 @@ public class Player : Actor
 		CurrentSpeed = _playerSpeed;
 		InputBlocked = false;
 
-		AssignAnimationStateNames();
 		SetUpInput();
-
-		SetUpStateMachine();
 	}
 
 	/// <summary>
@@ -115,7 +126,6 @@ public class Player : Actor
 			DoInputMovement();
 	}
 
-	// use this for FSM/checking if trying to leave?
 	private void LateUpdate()
 	{
 		_stateMachine.Run();
@@ -170,35 +180,19 @@ public class Player : Actor
 	}
 
 	/// <summary>
+	/// 
+	/// </summary>
+	/// <returns></returns>
+	private MovementVector GetDirectionOfMovement() => MovementVector.Vec3ToMV(_movement);
+
+	/// <summary>
 	/// Sets player movement according to input
 	/// </summary>
 	/// <param name="ctx">Context from pressed keys</param>
 	private void ReadMovementInput(InputAction.CallbackContext ctx)
 	{
 		_movement = ctx.ReadValue<Vector2>().normalized;
-
-		if (_inputBlocked)
-		{
-			MessageLogger.LogActorMessage("Player input blocked; Cannot move", LogLevel.Verbose);
-			return;
-		}
-
-		if (_movement.x > 0f) // moving right
-		{
-			SetMoveAnimInDirection(MovementVector.Right);
-		}
-		else if (_movement.x < 0f) // moving left
-		{
-			SetMoveAnimInDirection(MovementVector.Left);
-		}
-		else if (_movement.y > 0f) // moving up/backward
-		{
-			SetMoveAnimInDirection(MovementVector.Up);
-		}
-		else if (_movement.y < 0f) // moving down/forward
-		{
-			SetMoveAnimInDirection(MovementVector.Down);
-		}
+		SetAnimation(true);
 	}
 
 	/// <summary>
@@ -206,30 +200,26 @@ public class Player : Actor
 	/// </summary>
 	private void CancelMovementInput()
 	{
-		var lastMovement = _movement;
+		SetAnimation(false);
 		_movement = Vector2.zero;
+	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="isMoving">Whether to set a moving or idle animation</param>
+	private void SetAnimation(bool isMoving)
+	{
 		if (_inputBlocked)
 		{
-			MessageLogger.LogActorMessage("Player input blocked; Cannot stop", LogLevel.Verbose);
+			MessageLogger.LogActorMessage("Player input blocked", LogLevel.Verbose);
 			return;
 		}
 
-		if (lastMovement.x > 0f) // stopping right
-		{
-			SetIdleAnimInDirection(MovementVector.Right);
-		}
-		else if (lastMovement.x < 0f) // stopping left
-		{
-			SetIdleAnimInDirection(MovementVector.Left);
-		}
-		else if (lastMovement.y > 0f) // stopping up/backward
-		{
-			SetIdleAnimInDirection(MovementVector.Up);
-		}
-		else if (lastMovement.y < 0f) // stopping down/forward
-		{
-			SetIdleAnimInDirection(MovementVector.Down);
-		}
+		if (isMoving)
+			SetMoveAnimInDirection(GetDirectionOfMovement());
+		else
+			SetIdleAnimInDirection(GetDirectionOfMovement());
+
 	}
 }

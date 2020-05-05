@@ -246,7 +246,7 @@ public class PlayerAutoControl : FSMState
 	{
 		MessageLogger.LogFSMMessage("Exiting player auto control state", LogLevel.Verbose);
 
-		_player.SetIdleAnimInDirection(_player.CurrentDirection);
+		//_player.SetIdleAnimInDirection(_player.CurrentDirection);
 		ResetMovementData();
 	}
 }

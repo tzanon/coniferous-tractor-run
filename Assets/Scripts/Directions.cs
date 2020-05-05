@@ -44,21 +44,21 @@ namespace Directions
 		public static MovementVector DirectionBetweenPoints(Vector3Int from, Vector3Int to)
 		{
 			Vector3Int difference = to - from;
-			MovementVector mv = MovementVector.Vec3IntToMV(difference);
+			MovementVector mv = MovementVector.Vec3ToMV(difference);
 			return mv;
 		}
 
 		/// <summary>
 		/// Get MovementVector representation of a Vector3Int
 		/// </summary>
-		/// <param name="vec3i"></param>
+		/// <param name="vec3"></param>
 		/// <returns>MovementVector rep of vec3i</returns>
-		public static MovementVector Vec3IntToMV(Vector3Int vec3i)
+		public static MovementVector Vec3ToMV(Vector3 vec3)
 		{
-			if (vec3i.x > 0) return MovementVector.Right;
-			if (vec3i.x < 0) return MovementVector.Left;
-			if (vec3i.y > 0) return MovementVector.Up;
-			if (vec3i.y < 0) return MovementVector.Down;
+			if (vec3.x > 0) return MovementVector.Right;
+			if (vec3.x < 0) return MovementVector.Left;
+			if (vec3.y > 0) return MovementVector.Up;
+			if (vec3.y < 0) return MovementVector.Down;
 
 			return MovementVector.Center;
 		}
