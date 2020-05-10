@@ -86,8 +86,8 @@ public abstract class Actor : MonoBehaviour
 		_rb = GetComponent<Rigidbody2D>();
 		_animator = GetComponent<Animator>();
 
-		_highlighter = _tilemapManager.GetComponent<TilemapHighlighter>();
-		_map = _tilemapManager.GetComponent<NavigationMap>();
+		_highlighter = _tilemapManager?.GetComponent<TilemapHighlighter>();
+		_map = _tilemapManager?.GetComponent<NavigationMap>();
 	}
 
 	private void SetUpDirectionCharacteristics()
