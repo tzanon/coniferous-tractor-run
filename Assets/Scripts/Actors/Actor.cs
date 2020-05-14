@@ -126,7 +126,7 @@ public abstract class Actor : MonoBehaviour
 
 		if (direction == MovementVector.Null)
 		{
-			MessageLogger.LogActorMessage("Trying to start animation in null direction on ", LogLevel.Error, this.name);
+			MessageLogger.LogErrorMessage(LogType.Actor, "Trying to start animation in null direction on ", this.name);
 			return;
 		}
 
@@ -143,13 +143,13 @@ public abstract class Actor : MonoBehaviour
 		// play walking animation if moving, idle if not
 		if (isMoving)
 		{
-			MessageLogger.LogActorMessage("Moving in direction {0}", LogLevel.Verbose, direction.Value);
+			MessageLogger.LogVerboseMessage(LogType.Actor, "Moving in direction {0}", direction.Value);
 			CurrentDirection = direction;
 			_animator.Play(dc.MoveAnimState);
 		}
 		else
 		{
-			MessageLogger.LogActorMessage("Stopping in direction {0}", LogLevel.Verbose, direction.Value);
+			MessageLogger.LogVerboseMessage(LogType.Actor, "Stopping in direction {0}", direction.Value);
 			CurrentDirection = direction;
 			_animator.Play(dc.IdleAnimState);
 		}

@@ -164,7 +164,8 @@ public class Player : Actor
 	{
 		if (coll.CompareTag("Collectible"))
 		{
-			MessageLogger.LogActorMessage("Picked up a collectible!", LogLevel.Debug);
+			MessageLogger.LogDebugMessage(LogType.Actor, "Picked up a collectible!");
+
 
 			NumCollectibles++;
 
@@ -175,7 +176,7 @@ public class Player : Actor
 		else if (coll.CompareTag("Tractor"))
 		{
 			// game over
-			MessageLogger.LogActorMessage("Game over...", LogLevel.Debug);
+			MessageLogger.LogDebugMessage(LogType.Actor, "Game over...");
 		}
 	}
 
@@ -212,7 +213,7 @@ public class Player : Actor
 	{
 		if (_inputBlocked)
 		{
-			MessageLogger.LogActorMessage("Player input blocked", LogLevel.Verbose);
+			MessageLogger.LogVerboseMessage(LogType.Actor, "Player input blocked");
 			return;
 		}
 

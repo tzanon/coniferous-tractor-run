@@ -51,12 +51,12 @@ public class FiniteStateMachine
 		// don't transition if going to same state as current
 		if (transition.ResultantState == CurrentState)
 		{
-			MessageLogger.LogFSMMessage("FSM {0} attempting to transition to same state", LogLevel.Verbose, this.ToString());
+			MessageLogger.LogVerboseMessage(LogType.FSM, "FSM {0} attempting to transition to same state", this.ToString());
 			return;
 		}
 
-		MessageLogger.LogFSMMessage("FSM {0} Transitioning to state {1} from state {2}", LogLevel.Debug,
-			this.ToString(), transition.ResultantState.ToString(), CurrentState.ToString());
+		MessageLogger.LogDebugMessage(LogType.FSM, "FSM {0} Transitioning to state {1} from state {2}", this.ToString(),
+			transition.ResultantState.ToString(), CurrentState.ToString());
 
 		CurrentState.OnExit();
 		CurrentState = transition.ResultantState;

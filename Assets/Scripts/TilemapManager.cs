@@ -24,7 +24,7 @@ public class TilemapManager : MonoBehaviour
 
 		if (!ReferencesAreValid())
 		{
-			MessageLogger.LogTileMessage("Exiting Awake() in {0}", LogLevel.Error, this.name);
+			MessageLogger.LogErrorMessage(LogType.Tile, "Exiting Awake() in {0}", this.name);
 			return;
 		}
 
@@ -48,7 +48,7 @@ public class TilemapManager : MonoBehaviour
 			if (reference == null)
 			{
 				refsOK = false;
-				MessageLogger.LogTileMessage("Error: Reference is null", LogLevel.Error);
+				MessageLogger.LogErrorMessage(LogType.Tile, "Error: Reference is null");
 			}
 		}
 
@@ -99,8 +99,7 @@ public class TilemapManager : MonoBehaviour
 	{
 		if (!IsCellInBounds(cell))
 		{
-			MessageLogger.LogGraphMessage("Cell {0} is not within bounds of this tilemap",
-				LogLevel.Debug, cell);
+			MessageLogger.LogDebugMessage(LogType.Graph, "Cell {0} is not within bounds of this tilemap", cell);
 			return;
 		}
 
@@ -108,12 +107,12 @@ public class TilemapManager : MonoBehaviour
 		{
 			string neighbourStr = _navMap.GetNeighboursOfNode(cell).ToString();
 
-			MessageLogger.LogGraphMessage("Cell {0} is in bounds and is a node", LogLevel.Debug, cell);
-			MessageLogger.LogGraphMessage("Neighbours: {0}", LogLevel.Verbose, neighbourStr);
+			MessageLogger.LogDebugMessage(LogType.Graph, "Cell {0} is in bounds and is a node", cell);
+			MessageLogger.LogVerboseMessage(LogType.Graph, "Neighbours: {0}", neighbourStr);
 		}
 		else
 		{
-			MessageLogger.LogGraphMessage("Cell {0} is in bounds", LogLevel.Debug, cell);
+			MessageLogger.LogDebugMessage(LogType.Graph, "Cell {0} is in bounds", cell);
 		}
 	}
 
@@ -124,9 +123,8 @@ public class TilemapManager : MonoBehaviour
 	{
 		BoundsInt mapBounds = _map.cellBounds;
 
-		MessageLogger.LogTileMessage("bounds and size of tilemap: {0}", LogLevel.Debug, mapBounds);
-		MessageLogger.LogTileMessage("bound min is {0}, bound max is {1}",
-			LogLevel.Verbose, mapBounds.min, mapBounds.max);
+		MessageLogger.LogDebugMessage(LogType.Tile, "bounds and size of tilemap: {0}", mapBounds);
+		MessageLogger.LogVerboseMessage(LogType.Tile, "bound min is {0}, bound max is {1}", mapBounds.min, mapBounds.max);
 	}
 
 	/// <summary>
@@ -135,7 +133,7 @@ public class TilemapManager : MonoBehaviour
 	public void PrintGraphInfo()
 	{
 		int nodeCount = _navMap.PathfindingNodeCount;
-		MessageLogger.LogGraphMessage("Total pathfinding nodes: {0}", LogLevel.Debug, nodeCount);
+		MessageLogger.LogDebugMessage(LogType.Graph, "Total pathfinding nodes: {0}", nodeCount);
 	}
 
 	/// <summary>
@@ -145,8 +143,8 @@ public class TilemapManager : MonoBehaviour
 	{
 		Vector3 cellCenter = CenterPositionOfCell(PlayerCell);
 
-		MessageLogger.LogTileMessage("Player has position {0}; is in cell {1}, position {2}",
-			LogLevel.Debug, PlayerPosition, PlayerCell, cellCenter);
+		MessageLogger.LogDebugMessage(LogType.Tile, "Player has position {0}; is in cell {1}, position {2}",
+			PlayerPosition, PlayerCell, cellCenter);
 	}
 
 	/// <summary>
@@ -170,7 +168,7 @@ public class TilemapManager : MonoBehaviour
 			args = new object[] { cell, spr.ToString()};
 		}
 
-		MessageLogger.LogTileMessage(msg, LogLevel.Debug, args);
+		MessageLogger.LogDebugMessage(LogType.Tile, msg, args);
 	}
 
 	#endregion

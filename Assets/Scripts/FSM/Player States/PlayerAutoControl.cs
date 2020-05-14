@@ -111,7 +111,7 @@ public class PlayerAutoControl : FSMState
 		// if a path to the dest couldn't be found, just teleport the player to it
 		if (!_pathFound)
 		{
-			MessageLogger.LogPathMessage("Couldn't find path to dest, teleporing", LogLevel.Warning);
+			MessageLogger.LogWarningMessage(LogType.Path, "Couldn't find path to dest, teleporing");
 			TeleportMove();
 			return;
 		}
@@ -162,7 +162,7 @@ public class PlayerAutoControl : FSMState
 	{
 		if (_nextPathPointIndex >= _path.Length)
 		{
-			MessageLogger.LogFSMMessage("Player has reached destination", LogLevel.Debug);
+			MessageLogger.LogDebugMessage(LogType.FSM, "Player has reached destination");
 			return false;
 		}
 
@@ -204,7 +204,7 @@ public class PlayerAutoControl : FSMState
 		// must have a valid destination
 		if (_destNode == TilemapManager.UndefinedCell)
 		{
-			MessageLogger.LogFSMMessage("Error: cannot calculate path to nonexistant node", LogLevel.Error);
+			MessageLogger.LogErrorMessage(LogType.FSM, "Error: cannot calculate path to nonexistant node");
 			return false;
 		}
 
@@ -215,7 +215,7 @@ public class PlayerAutoControl : FSMState
 
 		if (Path.IsEmpty(_path))
 		{
-			MessageLogger.LogFSMMessage("Error: could not find path to Player's destination", LogLevel.Error);
+			MessageLogger.LogErrorMessage(LogType.FSM, "Error: could not find path to Player's destination");
 			return false;
 		}
 		else
@@ -232,7 +232,7 @@ public class PlayerAutoControl : FSMState
 	/// </summary>
 	public override void OnEnter()
 	{
-		MessageLogger.LogFSMMessage("Entered player auto control state", LogLevel.Verbose);
+		MessageLogger.LogVerboseMessage(LogType.FSM, "Entered player auto control state");
 
 		_player.InputBlocked = true;
 		Vector3Int movementDestination = _movementController.CurrentDestNode;
@@ -244,7 +244,7 @@ public class PlayerAutoControl : FSMState
 	/// </summary>
 	public override void OnExit()
 	{
-		MessageLogger.LogFSMMessage("Exiting player auto control state", LogLevel.Verbose);
+		MessageLogger.LogVerboseMessage(LogType.FSM, "Exiting player auto control state");
 
 		//_player.SetIdleAnimInDirection(_player.CurrentDirection);
 		ResetMovementData();

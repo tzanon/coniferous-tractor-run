@@ -132,7 +132,7 @@ public class TilemapHighlighter : MonoBehaviour
 
 		if (!_navMap.IsPathfindingNode(node))
 		{
-			MessageLogger.LogHighlightMessage("Cell {0} is not a node", LogLevel.Debug, node);
+			MessageLogger.LogDebugMessage(LogType.Highlight, "Cell {0} is not a node", node);
 			return;
 		}
 
@@ -177,18 +177,18 @@ public class TilemapHighlighter : MonoBehaviour
 	/// <param name="end">End node of path</param>
 	public void HighlightPath(Vector3Int start, Vector3Int end)
 	{
-		MessageLogger.LogHighlightMessage("Highlighting path between {0} and {1}...", LogLevel.Debug, start, end);
+		MessageLogger.LogDebugMessage(LogType.Highlight, "Highlighting path between {0} and {1}...", start, end);
 
 		if (!(_navMap.IsPathfindingNode(start) && _navMap.IsPathfindingNode(end)))
 		{
-			MessageLogger.LogHighlightMessage("one or both of cells {0} and {1} are not nodes", LogLevel.Error, start, end);
+			MessageLogger.LogErrorMessage(LogType.Highlight, "one or both of cells {0} and {1} are not nodes", start, end);
 			return;
 		}
 
 		Vector3Int[] path = _navMap.FindPathBetweenNodes(start, end);
 		HighlightCells(path, _nodeHighlight, _clearHighlight);
 
-		MessageLogger.LogHighlightMessage("path calculated successfully!", LogLevel.Debug);
+		MessageLogger.LogDebugMessage(LogType.Highlight, "path calculated successfully!");
 	}
 
 	/// <summary>
@@ -204,7 +204,7 @@ public class TilemapHighlighter : MonoBehaviour
 
 		if (!_map.HasTile(cell))
 		{
-			MessageLogger.LogHighlightMessage("No tile here", LogLevel.Debug);
+			MessageLogger.LogDebugMessage(LogType.Highlight, "No tile here");
 			return;
 		}
 
@@ -239,7 +239,7 @@ public class TilemapHighlighter : MonoBehaviour
 	{
 		if (_isAnimating)
 		{
-			MessageLogger.LogHighlightMessage("Error: cannot start a new animation until the current one is complete", LogLevel.Error);
+			MessageLogger.LogErrorMessage(LogType.Highlight, "Error: cannot start a new animation until the current one is complete");
 			yield break;
 		}
 

@@ -41,7 +41,7 @@ namespace Pathfinding
 			if (_queue.Count <= 0)
 			{
 				//Debug.LogError("Cannot pop from empty queue!");
-				MessageLogger.LogPathMessage("Cannot pop from empty queue!", LogLevel.Error);
+				MessageLogger.LogErrorMessage(LogType.Path, "Cannot pop from empty queue!");
 				return Graph.NullPos;
 			}
 
@@ -56,7 +56,7 @@ namespace Pathfinding
 			if (!_queue.Remove(minItem))
 			{
 				//Debug.LogError("Could not remove item from queue");
-				MessageLogger.LogPathMessage("Could not remove item from queue", LogLevel.Error);
+				MessageLogger.LogErrorMessage(LogType.Path, "Could not remove item from queue");
 				return Graph.NullPos;
 			}
 
@@ -68,7 +68,7 @@ namespace Pathfinding
 			if (_queue.Count <= 0)
 			{
 				//Debug.LogError("Cannot pop from empty queue!");
-				MessageLogger.LogPathMessage("Cannot pop from empty queue!", LogLevel.Error);
+				MessageLogger.LogErrorMessage(LogType.Path, "Cannot pop from empty queue!");
 				return Graph.NullPos;
 			}
 
@@ -83,7 +83,7 @@ namespace Pathfinding
 			if (!_queue.Remove(maxItem))
 			{
 				//Debug.LogError("Could not remove item from queue");
-				MessageLogger.LogPathMessage("Could not remove item from queue", LogLevel.Error);
+				MessageLogger.LogErrorMessage(LogType.Path, "Could not remove item from queue");
 				return Graph.NullPos;
 			}
 
@@ -356,7 +356,7 @@ namespace Pathfinding
 		{
 			if (!_graph.ContainsNode(start) || !_graph.ContainsNode(goal))
 			{
-				MessageLogger.LogPathMessage("Cannot find path between undefined nodes", LogLevel.Error);
+				MessageLogger.LogErrorMessage(LogType.Path, "Cannot find path between undefined nodes");
 				return Path.EmptyPath;
 			}
 
@@ -375,7 +375,7 @@ namespace Pathfinding
 			Dictionary<Vector3Int, Vector3Int> cameFrom = new Dictionary<Vector3Int, Vector3Int>() { { start, Graph.NullPos } };
 			Dictionary<Vector3Int, int> costSoFar = new Dictionary<Vector3Int, int>() { { start, 0 } };
 
-			MessageLogger.LogPathMessage("Starting A* Search...", LogLevel.Debug);
+			MessageLogger.LogDebugMessage(LogType.Path, "Starting A* Search...");
 
 			while (frontier.Count > 0)
 			{
@@ -384,7 +384,7 @@ namespace Pathfinding
 				// found goal
 				if (cell == goal)
 				{
-					MessageLogger.LogPathMessage("Finished search.", LogLevel.Debug);
+					MessageLogger.LogDebugMessage(LogType.Path, "Finished search.");
 					return ReconstructPath(start, goal, cameFrom);
 				}
 
@@ -411,8 +411,7 @@ namespace Pathfinding
 		{
 			if (!cameFrom.ContainsKey(goal) || !cameFrom.ContainsValue(start))
 			{
-				//Debug.LogError("Given cameFrom does not contain the goal, start, or both");
-				MessageLogger.LogPathMessage("Given cameFrom does not contain the goal, start, or both", LogLevel.Error);
+				MessageLogger.LogErrorMessage(LogType.Path, "Given cameFrom does not contain the goal, start, or both");
 				return null;
 			}
 

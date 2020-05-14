@@ -40,7 +40,7 @@ public class LevelCompletionChecker : MonoBehaviour
 			CheckIfLevelComplete(coll.GetComponent<Player>());
 			ContainsPlayer = true;
 
-			MessageLogger.LogGameplayMessage("Player entered leave area", LogLevel.Verbose);
+			MessageLogger.LogVerboseMessage(LogType.Game, "Player entered leave area");
 		}
 	}
 
@@ -49,7 +49,7 @@ public class LevelCompletionChecker : MonoBehaviour
 		if (coll.CompareTag("Player"))
 		{
 			ContainsPlayer = false;
-			MessageLogger.LogGameplayMessage("Player exited leave area", LogLevel.Verbose);
+			MessageLogger.LogVerboseMessage(LogType.Game, "Player exited leave area");
 		}
 	}
 
@@ -62,13 +62,13 @@ public class LevelCompletionChecker : MonoBehaviour
 		{
 			// TODO: display "must get all items" text
 			// reference separate script for displaying messages
-			MessageLogger.LogGameplayMessage("Must collect all items before leaving!", LogLevel.Debug);
+			MessageLogger.LogDebugMessage(LogType.Game, "Must collect all items before leaving!");
 			CurrentDestNode = RejectDestNode;
 		}
 		else // game done, move player out of level
 		{
 			// TODO: display "game won" text
-			MessageLogger.LogGameplayMessage("You're winner!!", LogLevel.Debug);
+			MessageLogger.LogDebugMessage(LogType.Game, "You're winner!!");
 			CurrentDestNode = AcceptDestNode;
 		}
 	}

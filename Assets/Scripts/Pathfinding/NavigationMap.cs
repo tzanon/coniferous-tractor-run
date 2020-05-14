@@ -88,7 +88,7 @@ public class NavigationMap : MonoBehaviour
 		// return if already searching
 		if (_isFindingNode)
 		{
-			MessageLogger.LogGraphMessage("Already searching for a node, must wait", LogLevel.Debug);
+			MessageLogger.LogDebugMessage(LogType.Graph, "Already searching for a node, must wait");
 			evaluatedCells = null;
 			return new Vector3Int(0, 0, -1);
 		}
@@ -98,7 +98,7 @@ public class NavigationMap : MonoBehaviour
 		// return if graph not initialized
 		if (_graph.Nodes.Length <= 0)
 		{
-			MessageLogger.LogGraphMessage("Error: either no node tiles in map or graph is uninitialized", LogLevel.Error);
+			MessageLogger.LogErrorMessage(LogType.Graph, "Error: either no node tiles in map or graph is uninitialized");
 			evaluatedCells = null;
 			_isFindingNode = false;
 			return new Vector3Int(0, 0, -1);
@@ -128,7 +128,7 @@ public class NavigationMap : MonoBehaviour
 
 			if (++numCellsSoFar >= _bfsLimit)
 			{
-				MessageLogger.LogGraphMessage("Error: have exceeded search limit of {0} cells", LogLevel.Error, numCellsSoFar);
+				MessageLogger.LogErrorMessage(LogType.Graph, "Error: have exceeded search limit of {0} cells", numCellsSoFar);
 				break;
 			}
 
@@ -144,7 +144,7 @@ public class NavigationMap : MonoBehaviour
 			}
 		}
 
-		MessageLogger.LogGraphMessage("Error: could not find any nodes", LogLevel.Error);
+		MessageLogger.LogErrorMessage(LogType.Graph, "Error: could not find any nodes");
 
 		_isFindingNode = false;
 		return new Vector3Int(0, 0, -1);
@@ -170,7 +170,7 @@ public class NavigationMap : MonoBehaviour
 	{
 		if (!IsPathfindingNode(node))
 		{
-			MessageLogger.LogGraphMessage("Given cell is either not in the map or not a node", LogLevel.Error);
+			MessageLogger.LogErrorMessage(LogType.Graph, "Given cell is either not in the map or not a node");
 			return null;
 		}
 

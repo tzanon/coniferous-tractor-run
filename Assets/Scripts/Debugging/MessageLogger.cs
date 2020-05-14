@@ -112,6 +112,7 @@ public static class MessageLogger
 
 	#region Message logging
 
+	/** DEPRECATED: logging by type
 	public static void LogTileMessage(string msg, LogLevel level, params object[] args) => LogMessage(msg, LogType.Tile, level, args);
 	public static void LogHighlightMessage(string msg, LogLevel level, params object[] args) => LogMessage(msg, LogType.Highlight, level, args);
 	public static void LogActorMessage(string msg, LogLevel level, params object[] args) => LogMessage(msg, LogType.Actor, level, args);
@@ -120,6 +121,13 @@ public static class MessageLogger
 	public static void LogFSMMessage(string msg, LogLevel level, params object[] args) => LogMessage(msg, LogType.FSM, level, args);
 	public static void LogGameplayMessage(string msg, LogLevel level, params object[] args) => LogMessage(msg, LogType.Game, level, args);
 	public static void LogGUIMessage(string msg, LogLevel level, params object[] args) => LogMessage(msg, LogType.GUI, level, args);
+	*/
+
+	// logging by error level 
+	public static void LogDebugMessage(LogType type, string msg, params object[] args) => LogMessage(msg, type, LogLevel.Debug, args);
+	public static void LogVerboseMessage(LogType type, string msg, params object[] args) => LogMessage(msg, type, LogLevel.Verbose, args);
+	public static void LogWarningMessage(LogType type, string msg, params object[] args) => LogMessage(msg, type, LogLevel.Warning, args);
+	public static void LogErrorMessage(LogType type, string msg, params object[] args) => LogMessage(msg, type, LogLevel.Error, args);
 
 	private static void LogMessage(string msg, LogType type, LogLevel level, params object[] args)
 	{

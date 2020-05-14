@@ -97,15 +97,15 @@ public class LoggerController : MonoBehaviour
 		if (toggle.isOn)
 		{
 			MessageLogger.EnableLevel(SelectedType, _toggleLevels[toggle]);
-			MessageLogger.LogGUIMessage("{0} enabled", LogLevel.Debug, toggle.name);
+			MessageLogger.LogDebugMessage(LogType.GUI, "{0} enabled", toggle.name);
 		}
 		else
 		{
-			MessageLogger.LogGUIMessage("{0} disabled", LogLevel.Debug, toggle.name);
+			MessageLogger.LogDebugMessage(LogType.GUI, "{0} disabled", toggle.name);
 			MessageLogger.DisableLevel(SelectedType, _toggleLevels[toggle]);
 		}
 
-		MessageLogger.LogGUIMessage("Current {0} level is {1}", LogLevel.Verbose, SelectedType, MessageLogger.GetLevels(SelectedType));
+		MessageLogger.LogVerboseMessage(LogType.GUI, "Current {0} level is {1}", SelectedType, MessageLogger.GetLevels(SelectedType));
 	}
 
 	/// <summary>
@@ -117,7 +117,7 @@ public class LoggerController : MonoBehaviour
 
 		foreach (Toggle toggle in _toggleLevels.Keys)
 		{
-			MessageLogger.LogGUIMessage("{0} updated", LogLevel.Verbose, toggle);
+			MessageLogger.LogVerboseMessage(LogType.GUI, "{0} updated", toggle);
 
 			if (MessageLogger.TypeHasLevelEnabled(SelectedType, _toggleLevels[toggle]))
 			{
@@ -130,7 +130,7 @@ public class LoggerController : MonoBehaviour
 		}
 
 		EnableToggleListeners();
-		MessageLogger.LogGUIMessage("Selected {0}, currently has levels {1}", LogLevel.Debug, SelectedType, MessageLogger.GetLevels(SelectedType));
+		MessageLogger.LogDebugMessage(LogType.GUI, "Selected {0}, currently has levels {1}", SelectedType, MessageLogger.GetLevels(SelectedType));
 	}
 
 }

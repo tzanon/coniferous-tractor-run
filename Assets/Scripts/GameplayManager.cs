@@ -41,7 +41,7 @@ public class GameplayManager : MonoBehaviour
 	private void Start()
 	{
 		_collectibles = new List<Collectible>(FindObjectsOfType<Collectible>());
-		MessageLogger.LogGameplayMessage("Number of collectibles in level: ", LogLevel.Debug, _collectibles.Count);
+		MessageLogger.LogDebugMessage(LogType.Game, "Number of collectibles in level: ", _collectibles.Count);
 	}
 
 	/// <summary>
@@ -60,15 +60,13 @@ public class GameplayManager : MonoBehaviour
 	{
 		if (_collectibles.Count <= 0)
 		{
-			MessageLogger.LogGameplayMessage("Trying to delete collectible from empty list", LogLevel.Error);
+			MessageLogger.LogErrorMessage(LogType.Game, "Trying to delete collectible from empty list");
 			return false;
 		}
 
 		if (collectible == null || !_collectibles.Contains(collectible))
 		{
-			MessageLogger.LogGameplayMessage(
-				"Trying to delete either nothing or something not in the list",
-				LogLevel.Error);
+			MessageLogger.LogErrorMessage(LogType.Game, "Trying to delete either nothing or something not in the list");
 			return false;
 		}
 
@@ -86,7 +84,7 @@ public class GameplayManager : MonoBehaviour
 		// remove the collectible from tracking list
 		if (!_collectibles.Remove(toDelete))
 		{
-			MessageLogger.LogGameplayMessage("Could not delete collectible", LogLevel.Error);
+			MessageLogger.LogErrorMessage(LogType.Game, "Could not delete collectible");
 			return;
 		}
 

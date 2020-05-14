@@ -119,7 +119,7 @@ public class TilemapVisualDebugger : MonoBehaviour
 
 		Vector3Int mouseCell = _tileManager.CellOfPosition(worldMousePos);
 
-		MessageLogger.LogHighlightMessage("Screen mouse position is {0}", LogLevel.Debug, screenMousePos);
+		MessageLogger.LogVerboseMessage(LogType.Highlight, "Screen mouse position is {0}", screenMousePos);
 
 		switch (_visualDebugType)
 		{
@@ -152,7 +152,7 @@ public class TilemapVisualDebugger : MonoBehaviour
 			return;
 		}
 
-		MessageLogger.LogHighlightMessage("Adding node {0} to path", LogLevel.Debug, node);
+		MessageLogger.LogDebugMessage(LogType.Highlight, "Adding node {0} to path", node);
 
 		_visualPathPoints[_visualPathIdx++] = node;
 		_highlighter.HighlightStandardCell(node);
