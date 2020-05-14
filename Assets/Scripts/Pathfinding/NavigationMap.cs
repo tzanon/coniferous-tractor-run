@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-using Directions;
 using Pathfinding;
 
 public class NavigationMap : MonoBehaviour
@@ -82,7 +81,7 @@ public class NavigationMap : MonoBehaviour
 	/// Use BFS to find closest node to given cell
 	/// </summary>
 	/// <param name="startCell">Cell to start search from</param>
-	/// <param name="searchedCells">Nodes that were searched</param>
+	/// <param name="evaluatedCells">Nodes that were searched</param>
 	/// <returns>The first node found around cell</returns>
 	public Vector3Int ClosestNodeToCell(Vector3Int startCell, out Queue<Vector3Int> evaluatedCells)
 	{
@@ -171,7 +170,6 @@ public class NavigationMap : MonoBehaviour
 	{
 		if (!IsPathfindingNode(node))
 		{
-			//Debug.LogError("Given cell is either not in the map or not a node");
 			MessageLogger.LogGraphMessage("Given cell is either not in the map or not a node", LogLevel.Error);
 			return null;
 		}

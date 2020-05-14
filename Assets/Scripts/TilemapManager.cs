@@ -22,10 +22,37 @@ public class TilemapManager : MonoBehaviour
 		_map = GetComponent<Tilemap>();
 		_navMap = GetComponent<NavigationMap>();
 
+		if (!ReferencesAreValid())
+		{
+			MessageLogger.LogTileMessage("Exiting Awake() in {0}", LogLevel.Error, this.name);
+			return;
+		}
+
 		foreach (Vector3Int pos in _map.cellBounds.allPositionsWithin)
 		{
 			_map.SetTileFlags(pos, (TileFlags.LockTransform));
 		}
+	}
+
+	/// <summary>
+	/// Checks if all references are defined
+	/// </summary>
+	/// <param name="refs">References to check</param>
+	/// <returns>True if all defined, false if at least one isn't</returns>
+	private bool ReferencesAreValid(params Object[] refs)
+	{
+		bool refsOK = true;
+
+		foreach (Object reference in refs)
+		{
+			if (reference == null)
+			{
+				refsOK = false;
+				MessageLogger.LogTileMessage("Error: Reference is null", LogLevel.Error);
+			}
+		}
+
+		return refsOK;
 	}
 
 	#region Tilemap functions
