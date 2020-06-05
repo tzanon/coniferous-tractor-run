@@ -10,7 +10,8 @@ public class NavigationMap : MonoBehaviour
 	[SerializeField] private Sprite _nodeSprite;
 
 	private Graph _graph;
-	private Pathfinder _pathfinder;
+	//private Pathfinder _pathfinder;
+	private PathfindingAlgorithm _aStarSearch;
 
 	// finding node from cell
 	[SerializeField] [Range(4, 100)] private int _bfsLimit = 20;
@@ -33,7 +34,8 @@ public class NavigationMap : MonoBehaviour
 		_tileManager = GetComponent<TilemapManager>();
 
 		_graph = new Graph();
-		_pathfinder = new Pathfinder(_graph);
+		//_pathfinder = new Pathfinder(_graph);
+		_aStarSearch = new AStarSearch(_graph);
 	}
 
 	private void Start()
@@ -74,7 +76,8 @@ public class NavigationMap : MonoBehaviour
 
 	public Vector3Int[] FindPathBetweenNodes(Vector3Int start, Vector3Int end)
 	{
-		return _pathfinder.CalculatePath(start, end);
+		//return _pathfinder.CalculatePath(start, end);
+		return _aStarSearch.CalculatePath(start, end);
 	}
 
 	/// <summary>

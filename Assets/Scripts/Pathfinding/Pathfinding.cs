@@ -117,15 +117,9 @@ namespace Pathfinding
 			return !(a == b);
 		}
 
-		public override bool Equals(object obj)
-		{
-			return base.Equals(obj);
-		}
+		public override bool Equals(object obj) => base.Equals(obj);
 
-		public override int GetHashCode()
-		{
-			return base.GetHashCode();
-		}
+		public override int GetHashCode() => base.GetHashCode();
 
 		public override string ToString()
 		{
@@ -388,7 +382,6 @@ namespace Pathfinding
 					return ReconstructPath(start, goal, cameFrom);
 				}
 
-
 				Vector3Int[] neighbours = _graph.Neighbours(cell);
 
 				foreach (Vector3Int next in neighbours)
@@ -404,6 +397,7 @@ namespace Pathfinding
 				}
 			}
 
+			MessageLogger.LogErrorMessage(LogType.Path, "No path found between {0} and {1}", start, goal);
 			return Path.EmptyPath;
 		}
 
@@ -432,4 +426,197 @@ namespace Pathfinding
 			return path.ToArray();
 		}
 	}
+
+	/// <summary>
+	/// Used to track the path while it is being constructed
+	/// </summary>
+	class PathTracker
+	{
+		private Dictionary<Vector3Int, Vector3Int> _cameFrom;
+
+		public Vector3Int StartNode { get; private set; }
+
+		public Vector3Int EndNode { get; private set; }
+
+		public PathTracker()
+		{
+			_cameFrom = new Dictionary<Vector3Int, Vector3Int>();
+		}
+
+		/// <summary>
+		/// Initialize tracker for a new search
+		/// </summary>
+		/// <param name="start">Starting node</param>
+		public void Setup(Vector3Int start)
+		{
+			this.Clear();
+			_cameFrom[start] = Graph.NullPos;
+		}
+
+
+		public void Add(Vector3Int nextNode, Vector3Int currentNode)
+		{
+			_cameFrom[nextNode] = currentNode;
+		}
+
+
+		public void AddFinalNode(Vector3Int end)
+		{
+			EndNode = end;
+		}
+
+
+		public void Clear()
+		{
+			StartNode = EndNode = Graph.NullPos;
+			_cameFrom.Clear();
+		}
+
+	}
+
+	/// <summary>
+	/// Abstract class for finding a path between two points
+	/// </summary>
+	abstract class PathfindingAlgorithm
+	{
+		protected Graph _graph;
+		//protected PathTracker _tracker;
+		protected Dictionary<Vector3Int, Vector3Int> _cameFrom = new Dictionary<Vector3Int, Vector3Int>();
+
+		protected readonly Dictionary<CoordinatePair, Vector3Int[]> _paths = new Dictionary<CoordinatePair, Vector3Int[]>();
+
+		public PathfindingAlgorithm(Graph graph)
+		{
+			_graph = graph;
+			//_tracker = new PathTracker();
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="start"></param>
+		protected virtual void PrepareForSearch(Vector3Int start)
+		{
+			//_tracker.Setup(start);
+			_cameFrom.Clear();
+			_cameFrom[start] = Graph.NullPos;
+		}
+
+		protected abstract Vector3Int[] PerformSearch(Vector3Int start, Vector3Int end);
+
+		public Vector3Int[] CalculatePath(Vector3Int start, Vector3Int end)
+		{
+			// TODO: get stored path if already calculated
+
+			PrepareForSearch(start); // clear associated data structures
+			Vector3Int[] path = PerformSearch(start, end);
+
+			return path;
+		}
+
+		protected Vector3Int[] ReconstructPath(Vector3Int start, Vector3Int goal)
+		{
+			// initial, reversed path is path between end and start
+			if (!_cameFrom.ContainsKey(goal) || !_cameFrom.ContainsValue(start))
+			{
+				MessageLogger.LogErrorMessage(LogType.Path, "Given cameFrom does not contain the goal, start, or both");
+				return null;
+			}
+
+			Debug.Log("Reconstructing path...");
+
+			List<Vector3Int> path = new List<Vector3Int>(_cameFrom.Count);
+			Vector3Int cell = goal;
+			
+			while (cell != start)
+			{
+				path.Add(cell);
+				cell = _cameFrom[cell];
+			}
+
+			path.Add(start);
+			path.Reverse();
+
+			return path.ToArray();
+		}
+	}
+
+	class AStarSearch : PathfindingAlgorithm
+	{
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="graph"></param>
+		public AStarSearch(Graph graph) : base(graph) { }
+
+		public int ManhattanDistance(Vector3Int a, Vector3Int b)
+		{
+			return Math.Abs(a.x - b.x) + Math.Abs(a.y - b.y);
+		}
+
+		private int Cost(Vector3Int a, Vector3Int b)
+		{
+			return ManhattanDistance(a, b);
+		}
+
+		protected override Vector3Int[] PerformSearch(Vector3Int start, Vector3Int goal)
+		{
+			if (!_graph.ContainsNode(start) || !_graph.ContainsNode(goal))
+			{
+				MessageLogger.LogErrorMessage(LogType.Path, "Cannot find path between undefined nodes");
+				return Path.EmptyPath;
+			}
+
+			if (start == goal)
+			{
+				return new Vector3Int[0];
+			}
+
+			if (_graph.NodeHasNeighbour(start, goal))
+			{
+				return new Vector3Int[] { start, goal };
+			}
+
+			NaivePriorityQueue frontier = new NaivePriorityQueue();
+			frontier.Push(start, 0);
+
+			//Dictionary<Vector3Int, Vector3Int> _cameFrom = new Dictionary<Vector3Int, Vector3Int>() { { start, Graph.NullPos } };
+
+			Dictionary<Vector3Int, int> costSoFar = new Dictionary<Vector3Int, int>() { { start, 0 } };
+
+			MessageLogger.LogDebugMessage(LogType.Path, "Starting A* Search...");
+
+			while (frontier.Count > 0)
+			{
+				Vector3Int cell = frontier.PopMin();
+
+				// found goal
+				if (cell == goal)
+				{
+					MessageLogger.LogDebugMessage(LogType.Path, "Finished search.");
+					return ReconstructPath(start, goal);
+				}
+
+				Vector3Int[] neighbours = _graph.Neighbours(cell);
+
+				foreach (Vector3Int next in neighbours)
+				{
+					int newCost = costSoFar[cell] + Cost(cell, next);
+					if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next])
+					{
+						costSoFar[next] = newCost;
+						int priority = newCost + ManhattanDistance(next, goal);
+						frontier.Push(next, priority);
+						_cameFrom[next] = cell;
+					}
+				}
+			}
+
+			MessageLogger.LogErrorMessage(LogType.Path, "No path found between {0} and {1}", start, goal);
+			return Path.EmptyPath;
+		}
+
+
+	}
+
 }
