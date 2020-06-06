@@ -77,7 +77,7 @@ public class NavigationMap : MonoBehaviour
 	public Vector3Int[] FindPathBetweenNodes(Vector3Int start, Vector3Int end)
 	{
 		//return _pathfinder.CalculatePath(start, end);
-		return _aStarSearch.CalculatePath(start, end);
+		return _aStarSearch.GetPathBetweenPoints(start, end);
 	}
 
 	/// <summary>
