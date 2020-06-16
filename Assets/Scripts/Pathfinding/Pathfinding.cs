@@ -438,8 +438,6 @@ namespace Pathfinding
 
 		protected readonly Dictionary<CoordinatePair, Vector3Int[]> _paths = new Dictionary<CoordinatePair, Vector3Int[]>();
 
-		
-
 		public PathfindingAlgorithm(Graph graph)
 		{
 			_graph = graph;
