@@ -48,35 +48,36 @@ public class NavigationMap : MonoBehaviour
 		return _map.HasTile(cell) && _map.GetSprite(cell) == _nodeSprite;
 	}
 
-	/* former node direction method
-	/// <summary>
-	/// Calculates the direction vector between a node and its neighbour
-	/// </summary>
-	/// <param name="from">Node starting from</param>
-	/// <param name="to">Neighbour to get direction to</param>
-	/// <returns>MovementVector corresponding to the direction, Null MV if to is not a neighbour</returns>
-	public MovementVector DirectionToNode(Vector3Int from, Vector3Int to)
-	{
-		Vector3Int difference = to - from;
-		MovementVector mv = MovementVector.Vec3IntToMV(difference);
-
-		if (mv == MovementVector.Null)
-		{
-			MessageLogger.LogGraphMessage("Null direction to node", LogLevel.Error);
-		}
-
-		return mv;
-	}
-	/**/
-
 	public Vector3Int[] GetNeighboursOfNode(Vector3Int node)
 	{
 		return _graph.Neighbours(node);
 	}
 
+	public Vector3Int[] FindPathBetweenNodes(Vector3Int start, Vector3Int end, out ColoredTile[] evaluatedCells, out Vector3Int[] nonPathCells)
+	{
+		Vector3Int[] path = _aStarSearch.GetPathBetweenPoints(start, end);
+		evaluatedCells = _aStarSearch.TileHighlightOrder;
+
+		//List<Vector3Int> totalCells = new List<Vector3Int>(_aStarSearch.TotalVisitedTiles);
+		HashSet<Vector3Int> totalCells = new HashSet<Vector3Int>(_aStarSearch.TotalVisitedTiles);
+
+		// remove path nodes from list of all cells
+		foreach (Vector3Int node in path)
+		{
+			if (!totalCells.Remove(node))
+			{
+				Debug.LogError("could not remove node from total cells");
+			}
+		}
+
+		nonPathCells = new Vector3Int[totalCells.Count];
+		totalCells.CopyTo(nonPathCells);
+		
+		return path;
+	}
+
 	public Vector3Int[] FindPathBetweenNodes(Vector3Int start, Vector3Int end)
 	{
-		//return _pathfinder.CalculatePath(start, end);
 		return _aStarSearch.GetPathBetweenPoints(start, end);
 	}
 

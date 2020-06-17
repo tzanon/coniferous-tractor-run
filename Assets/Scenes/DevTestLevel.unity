@@ -79984,7 +79984,7 @@ MonoBehaviour:
   _refreshToggle: {fileID: 1061514462}
   _animationToggle: {fileID: 1971952443}
   _animationDelay: 0.235
-  _nodeHighlight: {r: 0.6981132, g: 0.040151246, b: 0, a: 1}
+  _nodeHighlight: {r: 0.6981132, g: 0.104, b: 0, a: 1}
   _neighbourHighlight: {r: 0.9056604, g: 0.2874495, b: 0, a: 1}
   _searchHighlight: {r: 0.08018869, g: 0.46450204, b: 1, a: 1}
 --- !u!114 &1610142652 stripped

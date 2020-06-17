@@ -7,19 +7,6 @@ using UnityEngine.Events;
 
 public class TilemapHighlighter : MonoBehaviour
 {
-	private struct ColoredCells
-	{
-		public Vector3Int[] Cells { get; private set; }
-
-		public Color Color { get; }
-
-		public ColoredCells(Vector3Int[] cellList, Color col)
-		{
-			Cells = cellList;
-			Color = col;
-		}
-	}
-
 	[SerializeField] private bool _clearHighlight = true;
 	[SerializeField] private bool _animateHighlight = false;
 
@@ -152,13 +139,17 @@ public class TilemapHighlighter : MonoBehaviour
 
 		if (_animateHighlight)
 		{
-			ColoredCells[] coloredCells =
-			{
-				new ColoredCells(examinedCells.ToArray(), _searchHighlight),
-				new ColoredCells(new Vector3Int[] { closestNode }, _nodeHighlight)
-			};
+			ColoredTile[] tileColors = new ColoredTile[examinedCells.Count + 1];
 
-			StartCoroutine(HighlightCellsWithDelay(coloredCells, _clearHighlight));
+			int i = 0;
+			while (examinedCells.Count > 0)
+			{
+				tileColors[i++] = new ColoredTile(examinedCells.Dequeue(), _searchHighlight);
+			}
+
+			tileColors[tileColors.Length - 1] = new ColoredTile(closestNode, _nodeHighlight);
+
+			StartCoroutine(AnimateCellHighlight(tileColors, _clearHighlight));
 
 			return;
 		}
@@ -177,7 +168,7 @@ public class TilemapHighlighter : MonoBehaviour
 	/// <param name="end">End node of path</param>
 	public void HighlightPath(Vector3Int start, Vector3Int end)
 	{
-		MessageLogger.LogDebugMessage(LogType.Highlight, "Highlighting path between {0} and {1}...", start, end);
+		MessageLogger.LogVerboseMessage(LogType.Highlight, "Highlighting path between {0} and {1}...", start, end);
 
 		if (!(_navMap.IsPathfindingNode(start) && _navMap.IsPathfindingNode(end)))
 		{
@@ -185,10 +176,24 @@ public class TilemapHighlighter : MonoBehaviour
 			return;
 		}
 
-		Vector3Int[] path = _navMap.FindPathBetweenNodes(start, end);
-		HighlightCells(path, _nodeHighlight, _clearHighlight);
+		Vector3Int[] path;
 
-		MessageLogger.LogDebugMessage(LogType.Highlight, "path calculated successfully!");
+		// TODO: animate option
+		if (_animateHighlight)
+		{
+			ColoredTile[] tileColors;
+			Vector3Int[] nonPathCells;
+			// TODO: make struct for search highlight info...
+			path = _navMap.FindPathBetweenNodes(start, end, out tileColors, out nonPathCells);
+			StartCoroutine(AnimateCellHighlight(tileColors, _clearHighlight, nonPathCells));
+		}
+		else
+		{
+			path = _navMap.FindPathBetweenNodes(start, end);
+			HighlightCells(path, _nodeHighlight, _clearHighlight);
+		}
+
+		MessageLogger.LogVerboseMessage(LogType.Highlight, "path calculated successfully!");
 	}
 
 	/// <summary>
@@ -235,7 +240,7 @@ public class TilemapHighlighter : MonoBehaviour
 	/// <param name="coloredCells">List of queues of cells with their corresponding colours</param>
 	/// <param name="col">Colour to highlight tiles with</param>
 	/// <param name="removeExistingHighlight">Whether to reset currently highlighted cells</param>
-	private IEnumerator HighlightCellsWithDelay(ColoredCells[] totalCells, bool removeExistingHighlight = true)
+	private IEnumerator AnimateCellHighlight(ColoredTile[] tileColors, bool removeExistingHighlight = true, Vector3Int[] nonPathTiles = null)
 	{
 		if (_isAnimating)
 		{
@@ -248,16 +253,16 @@ public class TilemapHighlighter : MonoBehaviour
 		if (removeExistingHighlight)
 			RemoveHighlight();
 
-		foreach(ColoredCells coloredCells in totalCells)
+		foreach (ColoredTile coloredTile in tileColors)
 		{
-			Vector3Int[] cells = coloredCells.Cells;
-			Color currentColor = coloredCells.Color;
+			HighlightCell(coloredTile.Tile, coloredTile.Color, false);
+			yield return new WaitForSeconds(_animationDelay);
+		}
 
-			foreach (Vector3Int cell in cells)
-			{
-				HighlightCell(cell, currentColor, false);
-				yield return new WaitForSeconds(_animationDelay);
-			}
+		// clear remaining cells not in the path
+		if (nonPathTiles != null)
+		{
+			HighlightCells(nonPathTiles, Color.white, false);
 		}
 
 		_isAnimating = false;

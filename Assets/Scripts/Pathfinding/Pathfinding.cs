@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -434,15 +435,42 @@ namespace Pathfinding
 	{
 		protected Graph _graph;
 		protected Vector3Int _currentStart, _currentEnd;
-		protected readonly Dictionary<Vector3Int, Vector3Int> _pathTracker = new Dictionary<Vector3Int, Vector3Int>();
+		protected readonly Dictionary<Vector3Int, Vector3Int> _pathTracker;
+		protected readonly Dictionary<CoordinatePair, Vector3Int[]> _paths;
 
-		protected readonly Dictionary<CoordinatePair, Vector3Int[]> _paths = new Dictionary<CoordinatePair, Vector3Int[]>();
+		protected readonly Queue<ColoredTile> _tileColors;
+		protected readonly HashSet<Vector3Int> _totalVisitedTiles;
+		protected Color _pathColor = new Color(0.7f, 0.1f, 0.0f, 1.0f); // same as standard tile highlight
+		protected Color _clearColor = Color.white;
+
+		/// <summary>
+		/// Array of tiles in the order they had their highlights defined
+		/// </summary>
+		public ColoredTile[] TileHighlightOrder { get => _tileColors.ToArray(); }
+
+		/// <summary>
+		/// Total tiles visited by the algorithm
+		/// </summary>
+		public Vector3Int[] TotalVisitedTiles
+		{
+			get
+			{
+				Vector3Int[] visitedArr = new Vector3Int[_totalVisitedTiles.Count];
+				_totalVisitedTiles.CopyTo(visitedArr);
+				return visitedArr;
+			}
+		}
 
 		public PathfindingAlgorithm(Graph graph)
 		{
 			_graph = graph;
 			_currentStart = _currentEnd = Graph.NullPos;
-			//_tracker = new PathTracker();
+
+			_pathTracker = new Dictionary<Vector3Int, Vector3Int>();
+			_paths = new Dictionary<CoordinatePair, Vector3Int[]>();
+
+			_tileColors = new Queue<ColoredTile>();
+			_totalVisitedTiles = new HashSet<Vector3Int>();
 		}
 
 		public int ManhattanDistance(Vector3Int a, Vector3Int b)
@@ -479,6 +507,8 @@ namespace Pathfinding
 		{
 			_currentStart = _currentEnd = Graph.NullPos;
 			_pathTracker.Clear();
+			_tileColors.Clear();
+			_totalVisitedTiles.Clear();
 		}
 
 		/// <summary>
@@ -537,9 +567,9 @@ namespace Pathfinding
 
 			// TODO: get stored path if already calculated
 
+			ResetData(); // clear data from last search
 			PrepareForSearch(start, end); // set up necessary data structures
 			path = AreEndpointsValid() ? CalculatePath() : Path.EmptyPath;
-			ResetData();
 
 			return path;
 		}
@@ -560,13 +590,22 @@ namespace Pathfinding
 			
 			while (cell != _currentStart)
 			{
+				_tileColors.Enqueue(new ColoredTile(cell, _pathColor));
 				nodeList.Add(cell);
 				cell = _pathTracker[cell];
 			}
 
+			_tileColors.Enqueue(new ColoredTile(_currentStart, _pathColor));
 			nodeList.Add(_currentStart);
 			nodeList.Reverse();
 
+			/* TODO: do this in highlighter class
+			foreach (Vector3Int node in nodeList)
+				_totalVisitedTiles.Remove(node);
+
+			foreach (Vector3Int node in _totalVisitedTiles)
+				_tileColors.Enqueue(new ColoredTile(node, _clearColor));
+			/**/
 			return nodeList.ToArray();
 		}
 	}
@@ -579,6 +618,9 @@ namespace Pathfinding
 		private readonly NaivePriorityQueue _frontier;
 		private readonly Dictionary<Vector3Int, int> _costSoFar;
 
+		private Color _exploredColor = new Color(1.0f, 0.5f, 0.0f, 1.0f);
+		private Color _frontierColor = new Color(0.1f, 0.5f, 1.0f, 1.0f); // medium blue
+
 		public AStarSearch(Graph graph) : base(graph)
 		{
 			_frontier = new NaivePriorityQueue();
@@ -590,6 +632,7 @@ namespace Pathfinding
 			base.PrepareForSearch(start, end);
 			_frontier.Push(_currentStart, 0);
 			_costSoFar.Add(_currentStart, 0);
+			_tileColors.Enqueue(new ColoredTile(start, _pathColor));
 		}
 
 		protected override void ResetData()
@@ -610,25 +653,31 @@ namespace Pathfinding
 			while (_frontier.Count > 0)
 			{
 				Vector3Int cell = _frontier.PopMin();
+				_tileColors.Enqueue(new ColoredTile(cell, _frontierColor));
+				_totalVisitedTiles.Add(cell);
 
 				// check if current goal found
 				if (cell == _currentEnd)
 				{
 					MessageLogger.LogVerboseMessage(LogType.Path, "Finished A* Search.");
+					_tileColors.Enqueue(new ColoredTile(cell, _pathColor));
 					return ReconstructPath();
 				}
 
 				Vector3Int[] neighbours = _graph.Neighbours(cell);
-
+				
 				foreach (Vector3Int next in neighbours)
 				{
 					int newCost = _costSoFar[cell] + Cost(cell, next);
 					if (!_costSoFar.ContainsKey(next) || newCost < _costSoFar[next])
 					{
+						_tileColors.Enqueue(new ColoredTile(next, _exploredColor));
+						_totalVisitedTiles.Add(next);
 						_costSoFar[next] = newCost;
 						int priority = newCost + ManhattanDistance(next, _currentEnd);
 						_frontier.Push(next, priority);
 						_pathTracker[next] = cell;
+						//_tileColors.Enqueue(new ColoredTile(cell, _pathColor));
 					}
 				}
 			}
