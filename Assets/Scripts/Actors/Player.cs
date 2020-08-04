@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 using Directions;
+using UnityEngine.SocialPlatforms;
 
 // TODO: put user input in separate class?
 public class Player : Actor
@@ -13,50 +14,25 @@ public class Player : Actor
 	[SerializeField] private GameplayManager _level;
 	[SerializeField] private LevelCompletionChecker _levelCompletionChecker;
 
-	private ChaserControls _controls;
-	private InputAction _moveAction;
-
-	private bool _inputBlocked = false;
+	//private ChaserControls _controls;
+	//private InputAction _moveAction;
 
 	private FiniteStateMachine _stateMachine;
 
 	[SerializeField] private float _playerSpeed = 5.0f;
-	protected Vector2 _movement = Vector2.zero;
+	//protected Vector2 _movementDirection = Vector2.zero;
 
 	/* properties */
 
-	public override bool IsIdle { get => _movement == Vector2.zero; }
+	//public override bool IsIdle { get => _movementDirection == Vector2.zero; }
 
 	/// <summary>
 	/// Whether player is controlled by input
 	/// </summary>
-	public bool InputBlocked
-	{
-		get => _inputBlocked;
-		set
-		{
-			_inputBlocked = value;
-
-			if (_inputBlocked)
-			{
-				_movement = Vector2.zero;
-			}
-			else
-			{
-				if (IsIdle)
-				{
-					SetIdleAnimInDirection(CurrentDirection);
-				}
-				else
-				{
-					SetMoveAnimInDirection(GetDirectionOfMovement());
-				}
-			}
-		}
-	}
+	public bool InputBlocked { get; set; }
 
 	/// <summary>
-	/// 
+	/// Number of collected items
 	/// </summary>
 	public int NumCollectibles { get; private set; }
 
@@ -93,11 +69,13 @@ public class Player : Actor
 	/// </summary>
 	private void SetUpInput()
 	{
+		/*
 		_controls = new ChaserControls();
 		_moveAction = _controls.PlayerControls.Move;
 
 		_moveAction.performed += ctx => ReadMovementInput(ctx);
 		_moveAction.canceled += ctx => CancelMovementInput();
+		/**/
 	}
 
 	/// <summary>
@@ -120,39 +98,12 @@ public class Player : Actor
 		_stateMachine = new FiniteStateMachine(inputState);
 	}
 
-	private void FixedUpdate()
-	{
-		if (!_inputBlocked)
-			DoInputMovement();
-	}
-
+	/// <summary>
+	/// Run FSM
+	/// </summary>
 	private void LateUpdate()
 	{
 		_stateMachine.Run();
-	}
-
-	private void DoInputMovement()
-	{
-		if (_movement != Vector2.zero)
-		{
-			_rb.MovePosition(_rb.position + CurrentSpeed * _movement * Time.fixedDeltaTime);
-		}
-	}
-
-	/// <summary>
-	/// Enable controls
-	/// </summary>
-	private void OnEnable()
-	{
-		_controls.PlayerControls.Enable();
-	}
-
-	/// <summary>
-	/// Disable controls
-	/// </summary>
-	private void OnDisable()
-	{
-		_controls.PlayerControls.Disable();
 	}
 
 	// TODO: put game over in tractor instead?
@@ -166,11 +117,8 @@ public class Player : Actor
 		{
 			MessageLogger.LogDebugMessage(LogType.Actor, "Picked up a collectible!");
 
-
 			NumCollectibles++;
-
 			Collectible collectible = coll.GetComponent<Collectible>();
-
 			_level.DeleteCollectible(collectible);
 		}
 		else if (coll.CompareTag("Tractor"))
@@ -180,47 +128,4 @@ public class Player : Actor
 		}
 	}
 
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <returns></returns>
-	private MovementVector GetDirectionOfMovement() => MovementVector.Vec3ToMV(_movement);
-
-	/// <summary>
-	/// Sets player movement according to input
-	/// </summary>
-	/// <param name="ctx">Context from pressed keys</param>
-	private void ReadMovementInput(InputAction.CallbackContext ctx)
-	{
-		_movement = ctx.ReadValue<Vector2>().normalized;
-		SetAnimation(true);
-	}
-
-	/// <summary>
-	/// Stops movement when input stops
-	/// </summary>
-	private void CancelMovementInput()
-	{
-		SetAnimation(false);
-		_movement = Vector2.zero;
-	}
-
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <param name="isMoving">Whether to set a moving or idle animation</param>
-	private void SetAnimation(bool isMoving)
-	{
-		if (_inputBlocked)
-		{
-			MessageLogger.LogVerboseMessage(LogType.Actor, "Player input blocked");
-			return;
-		}
-
-		if (isMoving)
-			SetMoveAnimInDirection(GetDirectionOfMovement());
-		else
-			SetIdleAnimInDirection(GetDirectionOfMovement());
-
-	}
 }

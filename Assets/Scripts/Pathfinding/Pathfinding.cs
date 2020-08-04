@@ -545,7 +545,7 @@ namespace Pathfinding
 			}
 			else if (_currentStart == _currentEnd) // check if start and end are the same
 			{
-				MessageLogger.LogVerboseMessage(LogType.Path, "Returning empty path between two nodes that are the same");
+				MessageLogger.LogWarningMessage(LogType.Path, "Returning empty path between two nodes that are the same");
 				return false;
 			}
 			else

@@ -3,6 +3,7 @@
 using UnityEngine;
 using Pathfinding;
 using Directions;
+using UnityEditor.VersionControl;
 
 public class PlayerAutoControl : FSMState
 {
@@ -14,7 +15,8 @@ public class PlayerAutoControl : FSMState
 	private Vector3Int[] _path;
 	private int _nextPathPointIndex;
 
-	private float _distanceThreshold = 0.1f;
+	private const float _distanceThreshold = 0.1f;
+	private float _moveFactor = 1.0f;
 
 	private bool _pathFound;
 
@@ -31,9 +33,9 @@ public class PlayerAutoControl : FSMState
 	/// </summary>
 	public Vector3Int DestinationNode { get => _destNode; }
 
-	// TODO: this will be the condition for transitioning out
 	/// <summary>
-	/// Whether the player is at its destined coordinates
+	/// Whether the player is at its destined coordinates.
+	/// Condition used by the FSM to transition back to the input-based movement state.
 	/// </summary>
 	public bool PlayerReachedDest
 	{
@@ -53,6 +55,15 @@ public class PlayerAutoControl : FSMState
 	/// </summary>
 	private bool PathIndexInRange { get => _nextPathPointIndex >= 0 && _nextPathPointIndex < _path.Length; }
 
+	/// <summary>
+	/// Constructs an auto control state
+	/// </summary>
+	/// <param name="player">Player to control</param>
+	/// <param name="mc">LevelCompletionChecker containing destination nodes to move the player to</param>
+	/// <param name="tm">Tilemap Manager</param>
+	/// <param name="th">Highlighting tiles for debugging</param>
+	/// <param name="nm">Nav map for pathfinding</param>
+	/// <param name="transitions">Transitions to other states</param>
 	public PlayerAutoControl(Player player, LevelCompletionChecker mc, TilemapManager tm, TilemapHighlighter th, NavigationMap nm,
 		params FSMTransition[] transitions) : base(transitions)
 	{
@@ -84,7 +95,7 @@ public class PlayerAutoControl : FSMState
 		{
 			Vector3Int playerCell = _tilemapManager.CellOfPosition(_player.Position);
 			Vector3Int pathStart = _path[0];
-			SetPlayerDirection(playerCell, pathStart);
+			//SetPlayerDirection(playerCell, pathStart);
 		}
 	}
 
@@ -94,7 +105,7 @@ public class PlayerAutoControl : FSMState
 	private void ResetMovementData()
 	{
 		_destNode = TilemapManager.UndefinedCell;
-		_path = new Vector3Int[0];
+		_path = Path.EmptyPath;
 		_nextPathPointIndex = -1;
 	}
 
@@ -111,7 +122,7 @@ public class PlayerAutoControl : FSMState
 		// if a path to the dest couldn't be found, just teleport the player to it
 		if (!_pathFound)
 		{
-			MessageLogger.LogWarningMessage(LogType.Path, "Couldn't find path to dest, teleporing");
+			MessageLogger.LogWarningMessage(LogType.Path, "Couldn't find path to dest, teleporting");
 			TeleportMove();
 			return;
 		}
@@ -120,9 +131,9 @@ public class PlayerAutoControl : FSMState
 		if (!PathDefined || _nextPathPointIndex >= _path.Length)
 			return;
 
-		
-		Vector3 nextPosition = _tilemapManager.CenterPositionOfCell(_path[_nextPathPointIndex]);
+		var nextPosition = _tilemapManager.CenterPositionOfCell(_path[_nextPathPointIndex]);
 
+		// if player has reached the point, increment index to point to next point
 		if (PlayerReachedPoint(nextPosition))
 		{
 			_player.Position = nextPosition; // correcting threshold innaccuracy
@@ -130,8 +141,12 @@ public class PlayerAutoControl : FSMState
 				return;
 		}
 
-		Vector3 movedPosition =	Vector3.MoveTowards(_player.Position, nextPosition, _player.CurrentSpeed * 1.0f * Time.deltaTime);
-		_player.Position = movedPosition;
+		// move player
+		//Vector3 movedPosition =	Vector3.MoveTowards(_player.Position, nextPosition, _player.CurrentSpeed * _moveFactor * Time.deltaTime);
+		//_player.Position = movedPosition;
+
+		var pointDifference = nextPosition - _player.Position;
+		_player.MoveActor(pointDifference);
 	}
 
 	// helpers
@@ -151,9 +166,17 @@ public class PlayerAutoControl : FSMState
 	private bool PlayerReachedPoint(Vector3 point)
 	{
 		Vector3 distance = point - _player.Position;
-		return (Vector3.SqrMagnitude(distance) < Mathf.Pow(_distanceThreshold, 2f));
+
+		if (distance.sqrMagnitude < Mathf.Pow(_distanceThreshold, 2f))
+		{
+			MessageLogger.LogVerboseMessage(LogType.Actor, "Player reached node with {0} units remaining", distance.magnitude);
+			return true;
+		}
+		else
+			return false;
 	}
 
+	// TODO: put direction change in another method (before refactoring?)
 	/// <summary>
 	/// Increments index to point to the next node in the path
 	/// </summary>
@@ -167,7 +190,7 @@ public class PlayerAutoControl : FSMState
 		}
 
 		_nextPathPointIndex++;
-		SetDirectionToNextNode();
+		//SetDirectionToNextNode();
 		return true;
 	}
 
@@ -181,7 +204,7 @@ public class PlayerAutoControl : FSMState
 		int lastIndex = _nextPathPointIndex - 1;
 		Vector3Int lastNode = _path[lastIndex];
 		Vector3Int nextNode = _path[_nextPathPointIndex];
-		SetPlayerDirection(lastNode, nextNode);
+		//SetPlayerDirection(lastNode, nextNode);
 	}
 
 	/// <summary>
@@ -191,14 +214,14 @@ public class PlayerAutoControl : FSMState
 	/// <param name="node2"></param>
 	private void SetPlayerDirection(Vector3Int node1, Vector3Int node2)
 	{
-		MovementVector directionToNextPoint = MovementVector.DirectionBetweenPoints(node1, node2);
-		_player.SetMoveAnimInDirection(directionToNextPoint);
+		CardinalDirection directionToNextPoint = CardinalDirection.DirectionBetweenPoints(node1, node2);
+		//_player.SetMoveAnimInDirection(directionToNextPoint);
 	}
 
 	/// <summary>
 	/// Calculate path from player's location to destination
 	/// </summary>
-	/// <returns>True if path found, false, if not</returns>
+	/// <returns>True if path found, false if not</returns>
 	private bool FindPathToDest()
 	{
 		// must have a valid destination

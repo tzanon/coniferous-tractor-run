@@ -2,6 +2,8 @@
 using UnityEngine;
 
 using Directions;
+using UnityEditor.Profiling.Memory.Experimental;
+using UnityEditor.VersionControl;
 
 public abstract class Actor : MonoBehaviour
 {
@@ -26,6 +28,8 @@ public abstract class Actor : MonoBehaviour
 
 	[SerializeField] protected bool _isAnimated = false;
 
+	protected Vector2 _lastMovement = Vector3.zero;
+
 	// animation sprites and names
 	[SerializeField] private Sprite _idleFwd, _idleBack, _idleSide;
 	protected string _idleAnimFwd, _idleAnimBack, _idleAnimRight, _idleAnimLeft;
@@ -34,7 +38,7 @@ public abstract class Actor : MonoBehaviour
 	private Vector2 _verticalCollSize;
 	private Vector2 _horizontalCollSize;
 
-	private readonly Dictionary<MovementVector, DirectionCharacteristic> _directionCharacteristics = new Dictionary<MovementVector, DirectionCharacteristic>();
+	private readonly Dictionary<CardinalDirection, DirectionCharacteristic> _directionCharacteristics = new Dictionary<CardinalDirection, DirectionCharacteristic>();
 
 	// components
 	protected SpriteRenderer _sr;
@@ -51,9 +55,13 @@ public abstract class Actor : MonoBehaviour
 
 	public float CurrentSpeed { get; protected set; }
 
-	public MovementVector CurrentDirection { get; protected set; }
+	//public CardinalDirection CurrentDirection { get; protected set; }
 
-	public abstract bool IsIdle { get; }
+	public bool IsIdle
+	{
+		get;
+		protected set;
+	}
 
 	public Vector3 Position { get => transform.position; set => transform.position = value; }
 
@@ -92,24 +100,61 @@ public abstract class Actor : MonoBehaviour
 
 	private void SetUpDirectionCharacteristics()
 	{
-		_directionCharacteristics[MovementVector.Down] = new DirectionCharacteristic(_idleAnimFwd, _moveAnimFwd, _verticalCollSize);
-		_directionCharacteristics[MovementVector.Up] = new DirectionCharacteristic(_idleAnimBack, _moveAnimBack, _verticalCollSize);
-		_directionCharacteristics[MovementVector.Right] = new DirectionCharacteristic(_idleAnimRight, _moveAnimRight, _horizontalCollSize);
-		_directionCharacteristics[MovementVector.Left] = new DirectionCharacteristic(_idleAnimLeft, _moveAnimLeft, _horizontalCollSize);
-		_directionCharacteristics[MovementVector.Center] = _directionCharacteristics[MovementVector.Down];
+		_directionCharacteristics[CardinalDirection.South] = new DirectionCharacteristic(_idleAnimFwd, _moveAnimFwd, _verticalCollSize);
+		_directionCharacteristics[CardinalDirection.North] = new DirectionCharacteristic(_idleAnimBack, _moveAnimBack, _verticalCollSize);
+		_directionCharacteristics[CardinalDirection.East] = new DirectionCharacteristic(_idleAnimRight, _moveAnimRight, _horizontalCollSize);
+		_directionCharacteristics[CardinalDirection.West] = new DirectionCharacteristic(_idleAnimLeft, _moveAnimLeft, _horizontalCollSize);
+		_directionCharacteristics[CardinalDirection.Center] = _directionCharacteristics[CardinalDirection.South];
 	}
 
 	protected virtual void Start()
 	{
-		SetIdleAnimInDirection(MovementVector.Down);
+		SetIdleAnimInDirection(CardinalDirection.South);
 	}
 
-	public void SetMoveAnimInDirection(MovementVector direction)
+	/// <summary>
+	/// Moves the actor in the direction of the given Vector3
+	/// </summary>
+	/// <param name="movement">Direction to move in</param>
+	public void MoveActor(Vector2 movement)
+	{
+		// convert to directional unit vector
+		var normalizedMovement = movement.normalized;
+
+		var movementDirection = CardinalDirection.Vec3ToCardinal(normalizedMovement);
+
+		// move actor if nonzero movement
+		if (normalizedMovement != Vector2.zero)
+		{
+			_rb.MovePosition(_rb.position + CurrentSpeed * normalizedMovement * Time.fixedDeltaTime);
+
+			if (normalizedMovement != _lastMovement)
+			{
+				MessageLogger.LogDebugMessage(LogType.Actor, "Setting animation in direction {0} from last direction {1}", normalizedMovement, _lastMovement);
+				SetMoveAnimInDirection(movementDirection);
+				IsIdle = false;
+			}
+		}
+		else // zero movement, if actor was moving last time set idle anim in movement's direction
+		{
+			if (_lastMovement != Vector2.zero)
+			{
+				var lastMovementDirection = CardinalDirection.Vec3ToCardinal(_lastMovement);
+				SetIdleAnimInDirection(lastMovementDirection);
+				IsIdle = true;
+			}
+		}
+
+		// update last movement
+		_lastMovement = normalizedMovement;
+	}
+
+	protected void SetMoveAnimInDirection(CardinalDirection direction)
 	{
 		SetDirectionalAnimation(direction, true);
 	}
 
-	public void SetIdleAnimInDirection(MovementVector direction)
+	protected void SetIdleAnimInDirection(CardinalDirection direction)
 	{
 		SetDirectionalAnimation(direction, false);
 	}
@@ -119,23 +164,19 @@ public abstract class Actor : MonoBehaviour
 	/// </summary>
 	/// <param name="direction"> Direction of the animation to be played </param>
 	/// <param name="isMoving"> Whether a moving or idle animation should be played </param>
-	protected void SetDirectionalAnimation(MovementVector direction, bool isMoving)
+	protected void SetDirectionalAnimation(CardinalDirection direction, bool isMoving)
 	{
-		// return if desired direction is the same as the current one
-		//if (isMoving && (CurrentDirection == direction || direction == MovementVector.Center)) return;
-
-		if (direction == MovementVector.Null)
+		// check if trying to set animation in nonexistant direction
+		if (direction == CardinalDirection.Null)
 		{
 			MessageLogger.LogErrorMessage(LogType.Actor, "Trying to start animation in null direction on ", this.name);
 			return;
 		}
 
-		// TODO: if direction is Center should dc just be set to that of CurrentDirection?
-
 		DirectionCharacteristic dc = _directionCharacteristics[direction];
 
 		// flip side animation for left movement
-		if (direction == MovementVector.Left)
+		if (direction == CardinalDirection.West)
 			_sr.flipX = true;
 		else
 			_sr.flipX = false;
@@ -144,13 +185,11 @@ public abstract class Actor : MonoBehaviour
 		if (isMoving)
 		{
 			MessageLogger.LogVerboseMessage(LogType.Actor, "Moving in direction {0}", direction.Value);
-			CurrentDirection = direction;
 			_animator.Play(dc.MoveAnimState);
 		}
 		else
 		{
 			MessageLogger.LogVerboseMessage(LogType.Actor, "Stopping in direction {0}", direction.Value);
-			CurrentDirection = direction;
 			_animator.Play(dc.IdleAnimState);
 		}
 

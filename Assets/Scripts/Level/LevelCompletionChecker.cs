@@ -1,7 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+/// <summary>
+/// 
+/// </summary>
 public class LevelCompletionChecker : MonoBehaviour
 {
 	/* fields */
@@ -33,6 +34,10 @@ public class LevelCompletionChecker : MonoBehaviour
 
 	/* methods */
 
+	/// <summary>
+	/// Checks what entered the checker
+	/// </summary>
+	/// <param name="coll">Collider of whatever entered the checker</param>
 	private void OnTriggerEnter2D(Collider2D coll)
 	{
 		if (coll.CompareTag("Player"))
@@ -44,6 +49,10 @@ public class LevelCompletionChecker : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// Checks what exited the checker
+	/// </summary>
+	/// <param name="coll">Collider of whatever exited the checker</param>
 	private void OnTriggerExit2D(Collider2D coll)
 	{
 		if (coll.CompareTag("Player"))

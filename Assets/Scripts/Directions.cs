@@ -2,37 +2,37 @@
 
 namespace Directions
 {
-	enum Direction { Null = -1, Center, Up, Right, Down, Left }
+	enum DirectionNames { Null = -1, Center, North, East, South, West }
 
-	public struct MovementVector
+	public struct CardinalDirection
 	{
 		// properties
-		public static MovementVector Up { get { return new MovementVector(Direction.Up); } }
-		public static MovementVector Down { get { return new MovementVector(Direction.Down); } }
-		public static MovementVector Right { get { return new MovementVector(Direction.Right); } }
-		public static MovementVector Left { get { return new MovementVector(Direction.Left); } }
-		public static MovementVector Center { get { return new MovementVector(Direction.Center); } }
-		public static MovementVector Null { get { return new MovementVector(Direction.Null); } }
+		public static CardinalDirection North { get { return new CardinalDirection(DirectionNames.North); } }
+		public static CardinalDirection South { get { return new CardinalDirection(DirectionNames.South); } }
+		public static CardinalDirection East { get { return new CardinalDirection(DirectionNames.East); } }
+		public static CardinalDirection West { get { return new CardinalDirection(DirectionNames.West); } }
+		public static CardinalDirection Center { get { return new CardinalDirection(DirectionNames.Center); } }
+		public static CardinalDirection Null { get { return new CardinalDirection(DirectionNames.Null); } }
 
 		public Vector3 Value { get; private set; }
 
-		private MovementVector(Direction direction)
+		private CardinalDirection(DirectionNames direction)
 		{
 			switch (direction)
 			{
-				case Direction.Up:
+				case DirectionNames.North:
 					Value = Vector3.up;
 					break;
-				case Direction.Down:
+				case DirectionNames.South:
 					Value = Vector3.down;
 					break;
-				case Direction.Right:
+				case DirectionNames.East:
 					Value = Vector3.right;
 					break;
-				case Direction.Left:
+				case DirectionNames.West:
 					Value = Vector3.left;
 					break;
-				case Direction.Center:
+				case DirectionNames.Center:
 					Value = Vector3.zero;
 					break;
 				default:
@@ -41,34 +41,34 @@ namespace Directions
 			}
 		}
 
-		public static MovementVector DirectionBetweenPoints(Vector3Int from, Vector3Int to)
+		public static CardinalDirection DirectionBetweenPoints(Vector3 from, Vector3 to)
 		{
-			Vector3Int difference = to - from;
-			MovementVector mv = MovementVector.Vec3ToMV(difference);
+			var difference = to - from;
+			CardinalDirection mv = CardinalDirection.Vec3ToCardinal(difference);
 			return mv;
 		}
 
 		/// <summary>
-		/// Get MovementVector representation of a Vector3Int
+		/// Get MovementVector representation of a Vector3
 		/// </summary>
 		/// <param name="vec3"></param>
-		/// <returns>MovementVector rep of vec3i</returns>
-		public static MovementVector Vec3ToMV(Vector3 vec3)
+		/// <returns>MovementVector rep of vec3</returns>
+		public static CardinalDirection Vec3ToCardinal(Vector3 vec3)
 		{
-			if (vec3.x > 0) return MovementVector.Right;
-			if (vec3.x < 0) return MovementVector.Left;
-			if (vec3.y > 0) return MovementVector.Up;
-			if (vec3.y < 0) return MovementVector.Down;
+			if (vec3.x > 0) return CardinalDirection.East;
+			if (vec3.x < 0) return CardinalDirection.West;
+			if (vec3.y > 0) return CardinalDirection.North;
+			if (vec3.y < 0) return CardinalDirection.South;
 
-			return MovementVector.Center;
+			return CardinalDirection.Center;
 		}
 
-		public static bool operator ==(MovementVector a, MovementVector b)
+		public static bool operator ==(CardinalDirection a, CardinalDirection b)
 		{
 			return a.Value == b.Value;
 		}
 
-		public static bool operator !=(MovementVector a, MovementVector b)
+		public static bool operator !=(CardinalDirection a, CardinalDirection b)
 		{
 			return a.Value != b.Value;
 		}
