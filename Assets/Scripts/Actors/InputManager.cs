@@ -15,6 +15,9 @@ public class InputManager : MonoBehaviour
 		SetUpInput();
 	}
 
+	/// <summary>
+	/// Initialize controls and input actions
+	/// </summary>
 	private void SetUpInput()
 	{
 		_controls = new ChaserControls();
@@ -24,7 +27,9 @@ public class InputManager : MonoBehaviour
 		_moveAction.canceled += ctx => CancelMovementInput();
 	}
 
-
+	/// <summary>
+	/// Applies input values to player
+	/// </summary>
 	private void FixedUpdate()
 	{
 		if (!_player.InputBlocked)

@@ -14,17 +14,11 @@ public class Player : Actor
 	[SerializeField] private GameplayManager _level;
 	[SerializeField] private LevelCompletionChecker _levelCompletionChecker;
 
-	//private ChaserControls _controls;
-	//private InputAction _moveAction;
-
 	private FiniteStateMachine _stateMachine;
 
 	[SerializeField] private float _playerSpeed = 5.0f;
-	//protected Vector2 _movementDirection = Vector2.zero;
 
 	/* properties */
-
-	//public override bool IsIdle { get => _movementDirection == Vector2.zero; }
 
 	/// <summary>
 	/// Whether player is controlled by input
@@ -44,8 +38,6 @@ public class Player : Actor
 
 		CurrentSpeed = _playerSpeed;
 		InputBlocked = false;
-
-		SetUpInput();
 	}
 
 	/// <summary>
@@ -62,20 +54,6 @@ public class Player : Actor
 		_moveAnimBack = "Player_walkBackward";
 		_moveAnimRight = "Player_walkRight";
 		_moveAnimLeft = "Player_walkLeft";
-	}
-
-	/// <summary>
-	/// Set up keyboard input
-	/// </summary>
-	private void SetUpInput()
-	{
-		/*
-		_controls = new ChaserControls();
-		_moveAction = _controls.PlayerControls.Move;
-
-		_moveAction.performed += ctx => ReadMovementInput(ctx);
-		_moveAction.canceled += ctx => CancelMovementInput();
-		/**/
 	}
 
 	/// <summary>
@@ -106,7 +84,6 @@ public class Player : Actor
 		_stateMachine.Run();
 	}
 
-	// TODO: put game over in tractor instead?
 	/// <summary>
 	/// Handle collisions with triggers
 	/// </summary>
@@ -124,6 +101,7 @@ public class Player : Actor
 		else if (coll.CompareTag("Tractor"))
 		{
 			// game over
+			// TODO: put in tractor
 			MessageLogger.LogDebugMessage(LogType.Actor, "Game over...");
 		}
 	}

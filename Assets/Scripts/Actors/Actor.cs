@@ -98,6 +98,9 @@ public abstract class Actor : MonoBehaviour
 		_map = _tilemapManager?.GetComponent<NavigationMap>();
 	}
 
+	/// <summary>
+	/// Initialize each direction's associated animations and colliders
+	/// </summary>
 	private void SetUpDirectionCharacteristics()
 	{
 		_directionCharacteristics[CardinalDirection.South] = new DirectionCharacteristic(_idleAnimFwd, _moveAnimFwd, _verticalCollSize);
@@ -121,8 +124,6 @@ public abstract class Actor : MonoBehaviour
 		// convert to directional unit vector
 		var normalizedMovement = movement.normalized;
 
-		var movementDirection = CardinalDirection.Vec3ToCardinal(normalizedMovement);
-
 		// move actor if nonzero movement
 		if (normalizedMovement != Vector2.zero)
 		{
@@ -130,7 +131,8 @@ public abstract class Actor : MonoBehaviour
 
 			if (normalizedMovement != _lastMovement)
 			{
-				MessageLogger.LogDebugMessage(LogType.Actor, "Setting animation in direction {0} from last direction {1}", normalizedMovement, _lastMovement);
+				MessageLogger.LogVerboseMessage(LogType.Actor, "Setting move animation in direction {0} from last direction {1}", normalizedMovement, _lastMovement);
+				var movementDirection = CardinalDirection.Vec3ToCardinal(normalizedMovement);
 				SetMoveAnimInDirection(movementDirection);
 				IsIdle = false;
 			}
@@ -139,6 +141,7 @@ public abstract class Actor : MonoBehaviour
 		{
 			if (_lastMovement != Vector2.zero)
 			{
+				MessageLogger.LogVerboseMessage(LogType.Actor, "Setting idle animation from last direction {0}", _lastMovement);
 				var lastMovementDirection = CardinalDirection.Vec3ToCardinal(_lastMovement);
 				SetIdleAnimInDirection(lastMovementDirection);
 				IsIdle = true;
@@ -149,22 +152,24 @@ public abstract class Actor : MonoBehaviour
 		_lastMovement = normalizedMovement;
 	}
 
-	protected void SetMoveAnimInDirection(CardinalDirection direction)
-	{
-		SetDirectionalAnimation(direction, true);
-	}
+	/// <summary>
+	/// Set move animation in given direction
+	/// </summary>
+	/// <param name="direction">Direction of the animation to be played</param>
+	protected void SetMoveAnimInDirection(CardinalDirection direction) => SetDirectionalAnimation(direction, true);
 
-	protected void SetIdleAnimInDirection(CardinalDirection direction)
-	{
-		SetDirectionalAnimation(direction, false);
-	}
+	/// <summary>
+	/// Set idle animation in given direction
+	/// </summary>
+	/// <param name="direction">Direction of the animation to be played</param>
+	protected void SetIdleAnimInDirection(CardinalDirection direction) => SetDirectionalAnimation(direction, false);
 
 	/// <summary>
 	/// Sets a moving or idle animation in the given direction
 	/// </summary>
-	/// <param name="direction"> Direction of the animation to be played </param>
-	/// <param name="isMoving"> Whether a moving or idle animation should be played </param>
-	protected void SetDirectionalAnimation(CardinalDirection direction, bool isMoving)
+	/// <param name="direction">Direction of the animation to be played</param>
+	/// <param name="isMoving">Whether a moving or idle animation should be played</param>
+	private void SetDirectionalAnimation(CardinalDirection direction, bool isMoving)
 	{
 		// check if trying to set animation in nonexistant direction
 		if (direction == CardinalDirection.Null)
@@ -173,25 +178,13 @@ public abstract class Actor : MonoBehaviour
 			return;
 		}
 
-		DirectionCharacteristic dc = _directionCharacteristics[direction];
-
 		// flip side animation for left movement
-		if (direction == CardinalDirection.West)
-			_sr.flipX = true;
-		else
-			_sr.flipX = false;
+		_sr.flipX = direction == CardinalDirection.West;
 
 		// play walking animation if moving, idle if not
-		if (isMoving)
-		{
-			MessageLogger.LogVerboseMessage(LogType.Actor, "Moving in direction {0}", direction.Value);
-			_animator.Play(dc.MoveAnimState);
-		}
-		else
-		{
-			MessageLogger.LogVerboseMessage(LogType.Actor, "Stopping in direction {0}", direction.Value);
-			_animator.Play(dc.IdleAnimState);
-		}
+		var dc = _directionCharacteristics[direction];
+		var anim = isMoving ? dc.MoveAnimState : dc.IdleAnimState;
+		_animator.Play(anim);
 
 		// set collider to directional size
 		_bc.size = dc.ColliderSize;

@@ -95,7 +95,6 @@ public class PlayerAutoControl : FSMState
 		{
 			Vector3Int playerCell = _tilemapManager.CellOfPosition(_player.Position);
 			Vector3Int pathStart = _path[0];
-			//SetPlayerDirection(playerCell, pathStart);
 		}
 	}
 
@@ -145,8 +144,10 @@ public class PlayerAutoControl : FSMState
 		//Vector3 movedPosition =	Vector3.MoveTowards(_player.Position, nextPosition, _player.CurrentSpeed * _moveFactor * Time.deltaTime);
 		//_player.Position = movedPosition;
 
+		// move player in direction of next point if it hasn't been reached
 		var pointDifference = nextPosition - _player.Position;
-		_player.MoveActor(pointDifference);
+		if (pointDifference != Vector3.zero)
+			_player.MoveActor(pointDifference);
 	}
 
 	// helpers
@@ -176,7 +177,6 @@ public class PlayerAutoControl : FSMState
 			return false;
 	}
 
-	// TODO: put direction change in another method (before refactoring?)
 	/// <summary>
 	/// Increments index to point to the next node in the path
 	/// </summary>
@@ -190,32 +190,7 @@ public class PlayerAutoControl : FSMState
 		}
 
 		_nextPathPointIndex++;
-		//SetDirectionToNextNode();
 		return true;
-	}
-
-	/// <summary>
-	/// Orient player towards the next point in the path
-	/// </summary>
-	private void SetDirectionToNextNode()
-	{
-		if (!PathIndexInRange) return;
-
-		int lastIndex = _nextPathPointIndex - 1;
-		Vector3Int lastNode = _path[lastIndex];
-		Vector3Int nextNode = _path[_nextPathPointIndex];
-		//SetPlayerDirection(lastNode, nextNode);
-	}
-
-	/// <summary>
-	/// Set player's moving animation to the direction between two points
-	/// </summary>
-	/// <param name="node1"></param>
-	/// <param name="node2"></param>
-	private void SetPlayerDirection(Vector3Int node1, Vector3Int node2)
-	{
-		CardinalDirection directionToNextPoint = CardinalDirection.DirectionBetweenPoints(node1, node2);
-		//_player.SetMoveAnimInDirection(directionToNextPoint);
 	}
 
 	/// <summary>
@@ -268,8 +243,6 @@ public class PlayerAutoControl : FSMState
 	public override void OnExit()
 	{
 		MessageLogger.LogVerboseMessage(LogType.FSM, "Exiting player auto control state");
-
-		//_player.SetIdleAnimInDirection(_player.CurrentDirection);
 		ResetMovementData();
 	}
 }
