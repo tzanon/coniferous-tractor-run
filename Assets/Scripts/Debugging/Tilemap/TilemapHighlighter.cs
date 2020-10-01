@@ -7,8 +7,9 @@ using UnityEngine.Events;
 
 public class TilemapHighlighter : MonoBehaviour
 {
-	[SerializeField] private bool _clearHighlight = true;
-	[SerializeField] private bool _animateHighlight = false;
+	[SerializeField] private bool _shouldClearHighlight = true;
+	[SerializeField] private bool _shouldAnimateHighlight = false;
+	[SerializeField] private bool _shouldHoverHighlight = true;
 
 	[SerializeField] private Toggle _refreshToggle, _animationToggle;
 	private UnityAction<bool> _readRefreshToggle, _readAnimToggle;
@@ -16,6 +17,7 @@ public class TilemapHighlighter : MonoBehaviour
 	private bool _isAnimating = false;
 	[SerializeField] [Range(0.1f, 1.0f)] private float _animationDelay = 0.2f;
 
+	[SerializeField] private Color _hoverHighlight;
 	[SerializeField] private Color _nodeHighlight;
 	[SerializeField] private Color _neighbourHighlight;
 	[SerializeField] private Color _searchHighlight;
@@ -28,8 +30,8 @@ public class TilemapHighlighter : MonoBehaviour
 
 	/* Properties */
 
-	public bool RefreshEnabled { get => _clearHighlight; }
-	public bool AnimationEnabled { get => _animateHighlight; }
+	public bool RefreshEnabled { get => _shouldClearHighlight; }
+	public bool AnimationEnabled { get => _shouldAnimateHighlight; }
 
 	/* Methods */
 
@@ -65,18 +67,18 @@ public class TilemapHighlighter : MonoBehaviour
 	{
 		DisableToggleListeners();
 
-		_refreshToggle.isOn = _clearHighlight ? true : false;
-		_animationToggle.isOn = _animateHighlight ? true : false;
+		_refreshToggle.isOn = _shouldClearHighlight ? true : false;
+		_animationToggle.isOn = _shouldAnimateHighlight ? true : false;
 
 		EnableToggleListeners();
 	}
 
-	public void ToggleHighlightRefresh() => _clearHighlight = !_clearHighlight;
+	public void ToggleHighlightRefresh() => _shouldClearHighlight = !_shouldClearHighlight;
 
 	public void ToggleAnimation()
 	{
-		_animateHighlight = !_animateHighlight;
-		_animationDelay = !_animateHighlight ? 0.0f : 0.2f;
+		_shouldAnimateHighlight = !_shouldAnimateHighlight;
+		_animationDelay = !_shouldAnimateHighlight ? 0.0f : 0.2f;
 	}
 
 	/// <summary>
@@ -84,7 +86,7 @@ public class TilemapHighlighter : MonoBehaviour
 	/// </summary>
 	public void HighlightAllNodes()
 	{
-		HighlightCells(_navMap.PathfindingNodes, _nodeHighlight, _clearHighlight);
+		HighlightCells(_navMap.PathfindingNodes, _nodeHighlight, _shouldClearHighlight);
 	}
 
 	/// <summary>
@@ -101,12 +103,36 @@ public class TilemapHighlighter : MonoBehaviour
 	}
 
 	/// <summary>
+	/// Highlight a tile the cursor hovers over
+	/// </summary>
+	/// <param name="cell">Position of tile to highlight</param>
+	public void HighlightHover(Vector3Int cell)
+	{
+		if (_shouldHoverHighlight && _map.HasTile(cell) && !_highlightedCells.Contains(cell))
+		{
+			_map.SetColor(cell, _hoverHighlight);
+		}
+	}
+
+	/// <summary>
+	/// Clear any hover highlighting on the cell
+	/// </summary>
+	/// <param name="cell">Position of tile to clear</param>
+	public void ClearHover(Vector3Int cell)
+	{
+		if (_shouldHoverHighlight && _map.HasTile(cell) && !_highlightedCells.Contains(cell))
+		{
+			_map.SetColor(cell, Color.white);
+		}
+	}
+
+	/// <summary>
 	/// Highlight a tile with default tint
 	/// </summary>
 	/// <param name="cell">Position of tile to highlight</param>
 	public void HighlightStandardCell(Vector3Int cell)
 	{
-		HighlightCell(cell, _nodeHighlight, _clearHighlight);
+		HighlightCell(cell, _nodeHighlight, _shouldClearHighlight);
 	}
 
 	/// <summary>
@@ -137,7 +163,7 @@ public class TilemapHighlighter : MonoBehaviour
 
 		Vector3Int closestNode = _navMap.ClosestNodeToCell(cell, out examinedCells);
 
-		if (_animateHighlight)
+		if (_shouldAnimateHighlight)
 		{
 			ColoredTile[] tileColors = new ColoredTile[examinedCells.Count + 1];
 
@@ -149,12 +175,12 @@ public class TilemapHighlighter : MonoBehaviour
 
 			tileColors[tileColors.Length - 1] = new ColoredTile(closestNode, _nodeHighlight);
 
-			StartCoroutine(AnimateCellHighlight(tileColors, _clearHighlight));
+			StartCoroutine(AnimateCellHighlight(tileColors, _shouldClearHighlight));
 
 			return;
 		}
 
-		if (_clearHighlight)
+		if (_shouldClearHighlight)
 			RemoveHighlight();
 
 		HighlightCells(examinedCells.ToArray(), _searchHighlight, false);
@@ -179,18 +205,18 @@ public class TilemapHighlighter : MonoBehaviour
 		Vector3Int[] path;
 
 		// TODO: animate option
-		if (_animateHighlight)
+		if (_shouldAnimateHighlight)
 		{
 			ColoredTile[] tileColors;
 			Vector3Int[] nonPathCells;
 			// TODO: make struct for search highlight info...
 			path = _navMap.FindPathBetweenNodes(start, end, out tileColors, out nonPathCells);
-			StartCoroutine(AnimateCellHighlight(tileColors, _clearHighlight, nonPathCells));
+			StartCoroutine(AnimateCellHighlight(tileColors, _shouldClearHighlight, nonPathCells));
 		}
 		else
 		{
 			path = _navMap.FindPathBetweenNodes(start, end);
-			HighlightCells(path, _nodeHighlight, _clearHighlight);
+			HighlightCells(path, _nodeHighlight, _shouldClearHighlight);
 		}
 
 		MessageLogger.LogVerboseMessage(LogType.Highlight, "path calculated successfully!");

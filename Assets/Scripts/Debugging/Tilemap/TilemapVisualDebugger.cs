@@ -12,14 +12,15 @@ public class TilemapVisualDebugger : MonoBehaviour
 	[SerializeField] private bool _UIDebugMode = false;
 
 	// TODO: highlight tile borders on mouse hover
-	[SerializeField] private float _hoverHighlightRefreshRate = 0.15f;
+	[SerializeField] private float _hoverUpdateRate = 0.15f;
+	private float _nextHoverUpdate = 0.0f;
 
 	[SerializeField] private RectTransform _UIDebugMenu;
 
 	private ChaserControls _controls;
 	private InputAction _leftClick;
 	private InputAction _mousePosAction;
-	private Vector2 _mousePosition;
+	private Vector2 _mousePosition = Vector2.zero;
 
 	private enum VisualDebugType { None, Cell, Neighbours, Path, Closest }
 	private VisualDebugType _visualDebugType = VisualDebugType.None;
@@ -80,8 +81,8 @@ public class TilemapVisualDebugger : MonoBehaviour
 		_mousePosAction = _controls.Debug.Position;
 
 		_leftClick.performed += HandleMouseClick;
-		_mousePosAction.started += ctx => _mousePosition = ctx.ReadValue<Vector2>();
-		_mousePosAction.performed += ctx => _mousePosition = ctx.ReadValue<Vector2>();
+		_mousePosAction.started += ReadMousePosition;
+		_mousePosAction.performed += ReadMousePosition;
 	}
 
 	/* Selectors */
@@ -103,6 +104,33 @@ public class TilemapVisualDebugger : MonoBehaviour
 
 		// reset path
 		InitPathPoints();
+	}
+
+	/// <summary>
+	/// Read mouse position and highlight node it's over
+	/// </summary>
+	/// <param name="ctx">Container for mouse position</param>
+	private void ReadMousePosition(InputAction.CallbackContext ctx)
+	{
+		if (_nextHoverUpdate <= 0f)
+		{
+			// clear last hover
+			var worldMousePos = Camera.main.ScreenToWorldPoint(_mousePosition);
+			var mouseCell = _tileManager.CellOfPosition(worldMousePos);
+			_highlighter.ClearHover(mouseCell);
+
+			// get cell of mouse position
+			_mousePosition = ctx.ReadValue<Vector2>();
+			worldMousePos = Camera.main.ScreenToWorldPoint(_mousePosition);
+			mouseCell = _tileManager.CellOfPosition(worldMousePos);
+
+			// hover highlight
+			_highlighter.HighlightHover(mouseCell);
+
+			_nextHoverUpdate = _hoverUpdateRate;
+		}
+
+		_nextHoverUpdate -= Time.deltaTime;
 	}
 
 	/// <summary>
