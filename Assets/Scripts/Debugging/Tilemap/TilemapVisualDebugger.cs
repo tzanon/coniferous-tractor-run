@@ -114,18 +114,23 @@ public class TilemapVisualDebugger : MonoBehaviour
 	{
 		if (_nextHoverUpdate <= 0f)
 		{
+			// get cell of mouse position
+			var _oldPosition = _mousePosition;
+			_mousePosition = ctx.ReadValue<Vector2>();
+
 			// clear last hover
-			var worldMousePos = Camera.main.ScreenToWorldPoint(_mousePosition);
+			var worldMousePos = Camera.main.ScreenToWorldPoint(_oldPosition);
 			var mouseCell = _tileManager.CellOfPosition(worldMousePos);
 			_highlighter.ClearHover(mouseCell);
 
-			// get cell of mouse position
-			_mousePosition = ctx.ReadValue<Vector2>();
-			worldMousePos = Camera.main.ScreenToWorldPoint(_mousePosition);
-			mouseCell = _tileManager.CellOfPosition(worldMousePos);
-
-			// hover highlight
-			_highlighter.HighlightHover(mouseCell);
+			// highlight if over a tile
+			if (!EventSystem.current.IsPointerOverGameObject())
+			{
+				// hover current tile
+				worldMousePos = Camera.main.ScreenToWorldPoint(_mousePosition);
+				mouseCell = _tileManager.CellOfPosition(worldMousePos);
+				_highlighter.HighlightHover(mouseCell);
+			}
 
 			_nextHoverUpdate = _hoverUpdateRate;
 		}

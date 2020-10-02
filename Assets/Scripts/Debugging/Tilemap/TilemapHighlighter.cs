@@ -11,8 +11,8 @@ public class TilemapHighlighter : MonoBehaviour
 	[SerializeField] private bool _shouldAnimateHighlight = false;
 	[SerializeField] private bool _shouldHoverHighlight = true;
 
-	[SerializeField] private Toggle _refreshToggle, _animationToggle;
-	private UnityAction<bool> _readRefreshToggle, _readAnimToggle;
+	[SerializeField] private Toggle _refreshToggle, _animationToggle, _hoverToggle;
+	private UnityAction<bool> _readRefreshToggle, _readAnimToggle, _readHoverToggle;
 
 	private bool _isAnimating = false;
 	[SerializeField] [Range(0.1f, 1.0f)] private float _animationDelay = 0.2f;
@@ -49,18 +49,21 @@ public class TilemapHighlighter : MonoBehaviour
 	{
 		_readRefreshToggle = delegate { ToggleHighlightRefresh(); };
 		_readAnimToggle = delegate { ToggleAnimation(); };
+		_readHoverToggle = delegate { ToggleHoverHighlight(); };
 	}
 
 	private void EnableToggleListeners()
 	{
 		_refreshToggle.onValueChanged.AddListener(_readRefreshToggle);
 		_animationToggle.onValueChanged.AddListener(_readAnimToggle);
+		_hoverToggle.onValueChanged.AddListener(_readHoverToggle);
 	}
 
 	private void DisableToggleListeners()
 	{
 		_refreshToggle.onValueChanged.RemoveListener(_readRefreshToggle);
 		_animationToggle.onValueChanged.RemoveListener(_readAnimToggle);
+		_hoverToggle.onValueChanged.RemoveListener(_readHoverToggle);
 	}
 
 	private void UpdateToggles()
@@ -80,6 +83,8 @@ public class TilemapHighlighter : MonoBehaviour
 		_shouldAnimateHighlight = !_shouldAnimateHighlight;
 		_animationDelay = !_shouldAnimateHighlight ? 0.0f : 0.2f;
 	}
+
+	public void ToggleHoverHighlight() => _shouldHoverHighlight = !_shouldHoverHighlight;
 
 	/// <summary>
 	/// Highlights all pathfinding node tiles
