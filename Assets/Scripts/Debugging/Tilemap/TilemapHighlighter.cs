@@ -24,6 +24,8 @@ public class TilemapHighlighter : MonoBehaviour
 
 	private readonly HashSet<Vector3Int> _highlightedCells = new HashSet<Vector3Int>();
 
+	private Vector3Int _hoveredCell = Pathfinding.Graph.NullPos;
+
 	// components
 	private Tilemap _map;
 	private NavigationMap _navMap;
@@ -32,6 +34,24 @@ public class TilemapHighlighter : MonoBehaviour
 
 	public bool RefreshEnabled { get => _shouldClearHighlight; }
 	public bool AnimationEnabled { get => _shouldAnimateHighlight; }
+
+	/// <summary>
+	/// Tile currently being hovered over
+	/// </summary>
+	public Vector3Int HoveredTile
+	{
+		get => _hoveredCell;
+		set
+		{
+			_map.SetColor(_hoveredCell, Color.white);
+
+			if (_shouldHoverHighlight && _map.HasTile(value) && !_highlightedCells.Contains(value) && value != Pathfinding.Graph.NullPos)
+			{
+				_hoveredCell = value;
+				_map.SetColor(_hoveredCell, _hoverHighlight);
+			}
+		}
+	}
 
 	/* Methods */
 
@@ -45,6 +65,9 @@ public class TilemapHighlighter : MonoBehaviour
 		UpdateToggles();
 	}
 
+	/// <summary>
+	/// Set up the toggle action wrappers
+	/// </summary>
 	private void InitToggleReaders()
 	{
 		_readRefreshToggle = delegate { ToggleHighlightRefresh(); };
@@ -66,25 +89,40 @@ public class TilemapHighlighter : MonoBehaviour
 		_hoverToggle.onValueChanged.RemoveListener(_readHoverToggle);
 	}
 
+	/// <summary>
+	/// Updates the toggle UI elements based on the script variables
+	/// </summary>
 	private void UpdateToggles()
 	{
 		DisableToggleListeners();
 
-		_refreshToggle.isOn = _shouldClearHighlight ? true : false;
-		_animationToggle.isOn = _shouldAnimateHighlight ? true : false;
+		_refreshToggle.isOn = _shouldClearHighlight;
+		_animationToggle.isOn = _shouldAnimateHighlight;
 
 		EnableToggleListeners();
 	}
 
 	public void ToggleHighlightRefresh() => _shouldClearHighlight = !_shouldClearHighlight;
 
+	/// <summary>
+	/// Toggle the animation of highlighting
+	/// </summary>
 	public void ToggleAnimation()
 	{
 		_shouldAnimateHighlight = !_shouldAnimateHighlight;
 		_animationDelay = !_shouldAnimateHighlight ? 0.0f : 0.2f;
 	}
 
-	public void ToggleHoverHighlight() => _shouldHoverHighlight = !_shouldHoverHighlight;
+	/// <summary>
+	/// Toggle hover highlighting
+	/// </summary>
+	public void ToggleHoverHighlight()
+	{
+		_shouldHoverHighlight = !_shouldHoverHighlight;
+
+		if (!_shouldAnimateHighlight)
+			HoveredTile = Pathfinding.Graph.NullPos;
+	}
 
 	/// <summary>
 	/// Highlights all pathfinding node tiles
@@ -105,30 +143,6 @@ public class TilemapHighlighter : MonoBehaviour
 		}
 
 		_highlightedCells.Clear();
-	}
-
-	/// <summary>
-	/// Highlight a tile the cursor hovers over
-	/// </summary>
-	/// <param name="cell">Position of tile to highlight</param>
-	public void HighlightHover(Vector3Int cell)
-	{
-		if (_shouldHoverHighlight && _map.HasTile(cell) && !_highlightedCells.Contains(cell))
-		{
-			_map.SetColor(cell, _hoverHighlight);
-		}
-	}
-
-	/// <summary>
-	/// Clear any hover highlighting on the cell
-	/// </summary>
-	/// <param name="cell">Position of tile to clear</param>
-	public void ClearHover(Vector3Int cell)
-	{
-		if (_shouldHoverHighlight && _map.HasTile(cell) && !_highlightedCells.Contains(cell))
-		{
-			_map.SetColor(cell, Color.white);
-		}
 	}
 
 	/// <summary>

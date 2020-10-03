@@ -80352,7 +80352,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _UIDebugMode: 1
-  _hoverUpdateRate: 0.06
+  _hoverUpdateRate: 0.05
   _UIDebugMenu: {fileID: 1508038468}
 --- !u!114 &1565289091
 MonoBehaviour:
