@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.41355296"
-     inkscape:cx="1051.5872"
-     inkscape:cy="417.96091"
+     inkscape:zoom="1.1697044"
+     inkscape:cx="1320.49"
+     inkscape:cy="2239.4038"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -4625,7 +4625,7 @@
          style="opacity:1;fill:#499005;fill-opacity:1;stroke:none;stroke-width:0.11217551;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     </g>
     <g
-       transform="rotate(-180,68.13201,218.19105)"
+       transform="rotate(-180,66.183051,238.65638)"
        id="g4656"
        inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\open_intersection_path.png"
        inkscape:export-xdpi="96"
@@ -4751,7 +4751,7 @@
          style="opacity:1;fill:#499005;fill-opacity:1;stroke:none;stroke-width:0.11217551;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     </g>
     <g
-       transform="translate(374.47115,-646.39598)"
+       transform="translate(402.78146,-650.7145)"
        id="g4698"
        inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\intersection_path.png"
        inkscape:export-xdpi="96"
@@ -5433,7 +5433,7 @@
     </g>
     <g
        id="g2519"
-       transform="translate(-0.90478698,1.809574)">
+       transform="translate(-19.452918,17.190952)">
       <rect
          inkscape:export-filename="D:\Unity_Projects\forest-maze-chaser\Assets\Sprites\ph_player.png"
          inkscape:export-ydpi="96"
@@ -5885,8 +5885,8 @@
        id="rect1943"
        width="135.46666"
        height="67.73333"
-       x="-1575.516"
-       y="-523.6535"
+       x="-1318.9639"
+       y="-555.64258"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96"
        transform="scale(-1)" />
@@ -6546,125 +6546,121 @@
          inkscape:export-ydpi="96"
          inkscape:export-filename="D:\Unity_Projects\forest-maze-chaser\Assets\Sprites\ph_player.png" />
     </g>
+    <rect
+       inkscape:export-filename="D:\Unity_Projects\forest-maze-chaser\Assets\Sprites\ph_player.png"
+       inkscape:export-ydpi="96"
+       inkscape:export-xdpi="96"
+       style="opacity:1;fill:#ff8b00;fill-opacity:1;stroke:none;stroke-width:0.18382074;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect2451"
+       width="16.933332"
+       height="33.866665"
+       x="88.678528"
+       y="-67.004059" />
     <g
-       transform="translate(-455.10784,-90.478696)"
-       id="g2484">
+       inkscape:export-ydpi="96"
+       inkscape:export-xdpi="96"
+       inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\side_tractor.png"
+       transform="translate(-122.952,-273.439)"
+       id="g2465">
       <rect
-         y="5.8312964"
-         x="609.38342"
-         height="33.866665"
+         y="347.96378"
+         x="-231.82838"
+         height="42.333332"
+         width="25.4"
+         id="rect2453"
+         style="opacity:1;fill:#43b5ff;fill-opacity:1;stroke:none;stroke-width:0.2517069;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         transform="rotate(-90)" />
+      <rect
+         style="opacity:1;fill:#43b5ff;fill-opacity:1;stroke:none;stroke-width:0.23879017;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect2455"
+         width="38.100002"
+         height="25.4"
+         x="-244.5284"
+         y="322.56378"
+         transform="rotate(-90)" />
+      <rect
+         style="opacity:1;fill:#ff8b00;fill-opacity:1;stroke:none;stroke-width:0.14532305;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect2457"
          width="16.933332"
-         id="rect2451"
-         style="opacity:1;fill:#ff8b00;fill-opacity:1;stroke:none;stroke-width:0.18382074;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         inkscape:export-xdpi="96"
-         inkscape:export-ydpi="96"
-         inkscape:export-filename="D:\Unity_Projects\forest-maze-chaser\Assets\Sprites\ph_player.png" />
-      <g
-         id="g2465"
-         transform="translate(389.15742,-202.86561)"
-         inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\side_tractor.png"
-         inkscape:export-xdpi="96"
-         inkscape:export-ydpi="96">
-        <rect
-           transform="rotate(-90)"
-           style="opacity:1;fill:#43b5ff;fill-opacity:1;stroke:none;stroke-width:0.2517069;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="rect2453"
-           width="25.4"
-           height="42.333332"
-           x="-231.82838"
-           y="347.96378" />
-        <rect
-           transform="rotate(-90)"
-           y="322.56378"
-           x="-244.5284"
-           height="25.4"
-           width="38.100002"
-           id="rect2455"
-           style="opacity:1;fill:#43b5ff;fill-opacity:1;stroke:none;stroke-width:0.23879017;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-        <rect
-           y="193.72836"
-           x="340.29086"
-           height="21.166666"
-           width="16.933332"
-           id="rect2457"
-           style="opacity:1;fill:#ff8b00;fill-opacity:1;stroke:none;stroke-width:0.14532305;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-        <rect
-           style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.09748568;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="rect2460"
-           width="12.7"
-           height="12.7"
-           x="-244.52838"
-           y="377.59711"
-           transform="rotate(-90)" />
-        <rect
-           transform="rotate(-90)"
-           y="322.56378"
-           x="-244.5284"
-           height="25.400015"
-           width="25.400015"
-           id="rect2463"
-           style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.19497147;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-      </g>
-      <g
-         id="g2482"
-         transform="translate(315.95057,-117.39416)"
-         inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\front_tractor.png"
-         inkscape:export-xdpi="96"
-         inkscape:export-ydpi="96">
-        <rect
-           y="116.72362"
-           x="342.6799"
-           height="42.333332"
-           width="25.4"
-           id="rect2467"
-           style="opacity:1;fill:#43b5ff;fill-opacity:1;stroke:none;stroke-width:0.2517069;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-        <rect
-           style="opacity:1;fill:#43b5ff;fill-opacity:1;stroke:none;stroke-width:0.27573112;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="rect2469"
-           width="50.799999"
-           height="25.4"
-           x="329.97989"
-           y="91.323624" />
-        <rect
-           style="opacity:1;fill:#ff8b00;fill-opacity:1;stroke:none;stroke-width:0.14532305;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="rect2471"
-           width="16.933332"
-           height="21.166666"
-           x="346.91321"
-           y="104.20495" />
-        <rect
-           style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1378656;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="rect2473"
-           width="25.400015"
-           height="12.7"
-           x="-116.72362"
-           y="329.97989"
-           transform="rotate(-90)" />
-        <rect
-           transform="rotate(-90)"
-           y="368.07986"
-           x="-116.72363"
-           height="12.7"
-           width="25.400015"
-           id="rect2476"
-           style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1378656;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-        <rect
-           transform="rotate(-90)"
-           y="336.3299"
-           x="-159.05695"
-           height="6.3499999"
-           width="12.700007"
-           id="rect2478"
-           style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.0689328;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-        <rect
-           style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.0689328;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="rect2480"
-           width="12.700007"
-           height="6.3499999"
-           x="-159.05695"
-           y="368.0799"
-           transform="rotate(-90)" />
-      </g>
+         height="21.166666"
+         x="340.29086"
+         y="193.72836" />
+      <rect
+         transform="rotate(-90)"
+         y="377.59711"
+         x="-244.52838"
+         height="12.7"
+         width="12.7"
+         id="rect2460"
+         style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.09748568;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.19497147;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect2463"
+         width="25.400015"
+         height="25.400015"
+         x="-244.5284"
+         y="322.56378"
+         transform="rotate(-90)" />
+    </g>
+    <g
+       inkscape:export-ydpi="96"
+       inkscape:export-xdpi="96"
+       inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\front_tractor.png"
+       transform="translate(-205.59686,-176.68461)"
+       id="g2482">
+      <rect
+         style="opacity:1;fill:#43b5ff;fill-opacity:1;stroke:none;stroke-width:0.2517069;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect2467"
+         width="25.4"
+         height="42.333332"
+         x="342.6799"
+         y="116.72362" />
+      <rect
+         y="91.323624"
+         x="329.97989"
+         height="25.4"
+         width="50.799999"
+         id="rect2469"
+         style="opacity:1;fill:#43b5ff;fill-opacity:1;stroke:none;stroke-width:0.27573112;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         y="104.20495"
+         x="346.91321"
+         height="21.166666"
+         width="16.933332"
+         id="rect2471"
+         style="opacity:1;fill:#ff8b00;fill-opacity:1;stroke:none;stroke-width:0.14532305;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         transform="rotate(-90)"
+         y="329.97989"
+         x="-116.72362"
+         height="12.7"
+         width="25.400015"
+         id="rect2473"
+         style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1378656;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1378656;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect2476"
+         width="25.400015"
+         height="12.7"
+         x="-116.72363"
+         y="368.07986"
+         transform="rotate(-90)" />
+      <rect
+         style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.0689328;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect2478"
+         width="12.700007"
+         height="6.3499999"
+         x="-159.05695"
+         y="336.3299"
+         transform="rotate(-90)" />
+      <rect
+         transform="rotate(-90)"
+         y="368.0799"
+         x="-159.05695"
+         height="6.3499999"
+         width="12.700007"
+         id="rect2480"
+         style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.0689328;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     </g>
     <rect
        inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\open_path.png"
@@ -6677,5 +6673,24 @@
        id="rect2423"
        style="opacity:1;fill:#896400;fill-opacity:1;stroke:none;stroke-width:0.89740235;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        transform="rotate(90)" />
+    <path
+       style="opacity:1;fill:#ffac24;fill-opacity:1;stroke:none;stroke-width:0.33652645;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 322.83198,-332.62568 v 25.39999 h 25.4 v -25.39999 z m 3.175,3.175 h 19.05 v 19.04999 h -19.05 z"
+       id="rect6658"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="D:\Unity_Projects\forest-maze-chaser\Assets\Sprites\hover_highlight.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <rect
+       transform="rotate(90)"
+       style="opacity:1;fill:#ffac24;fill-opacity:1;stroke:none;stroke-width:0.44870201;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect6662"
+       width="33.866665"
+       height="33.86673"
+       x="-336.95831"
+       y="-295.59048"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96"
+       inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\open_path.png" />
   </g>
 </svg>
