@@ -25,28 +25,25 @@ namespace Tests
 		[OneTimeSetUp]
 		public void InitSFM()
 		{
-			/**
-			a = new DummyState();
-			b = new DummyState();
-			c = new DummyState();
-			/**/
-
 			aToB = new FSMTransition(b, xIsPos);
 			toA = new FSMTransition(a, xIsNeg);
 			bToC = new FSMTransition(c, xIsPos);
 
-			a.AddTransition(aToB);
-			b.AddTransition(toA);
-			b.AddTransition(bToC);
-			c.AddTransition(toA);
-
-			_fsm = new FiniteStateMachine(a);
+			_fsm = new FiniteStateMachine();
+			_fsm.AddState(a, aToB);
+			_fsm.AddState(b, toA, bToC);
+			_fsm.AddState(c, toA);
+			_fsm.CurrentState = a;
 		}
 
 		[TearDown]
 		public void ResetFSM()
 		{
-			_fsm = new FiniteStateMachine(a);
+			_fsm = new FiniteStateMachine();
+			_fsm.AddState(a, aToB);
+			_fsm.AddState(b, toA, bToC);
+			_fsm.AddState(c, toA);
+			_fsm.CurrentState = a;
 		}
 
 		[Test]

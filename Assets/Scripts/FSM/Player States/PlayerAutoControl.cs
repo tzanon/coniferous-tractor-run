@@ -64,8 +64,7 @@ public class PlayerAutoControl : FSMState
 	/// <param name="th">Highlighting tiles for debugging</param>
 	/// <param name="nm">Nav map for pathfinding</param>
 	/// <param name="transitions">Transitions to other states</param>
-	public PlayerAutoControl(Player player, LevelCompletionChecker mc, TilemapManager tm, TilemapHighlighter th, NavigationMap nm,
-		params FSMTransition[] transitions) : base(transitions)
+	public PlayerAutoControl(Player player, LevelCompletionChecker mc, TilemapManager tm, TilemapHighlighter th, NavigationMap nm)
 	{
 		_player = player;
 		_movementController = mc;

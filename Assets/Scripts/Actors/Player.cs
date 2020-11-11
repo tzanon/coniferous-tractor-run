@@ -70,10 +70,10 @@ public class Player : Actor
 		FSMTransition switchToAutoMovement = new FSMTransition(autoState, PlayerTryingToLeave);
 		FSMTransition switchToInputMovement = new FSMTransition(inputState, FinishedAutoMovingPlayer);
 
-		inputState.AddTransition(switchToAutoMovement);
-		autoState.AddTransition(switchToInputMovement);
-
-		_stateMachine = new FiniteStateMachine(inputState);
+		_stateMachine = new FiniteStateMachine();
+		_stateMachine.AddState(inputState, switchToAutoMovement);
+		_stateMachine.AddState(autoState, switchToInputMovement);
+		_stateMachine.CurrentState = inputState;
 	}
 
 	/// <summary>

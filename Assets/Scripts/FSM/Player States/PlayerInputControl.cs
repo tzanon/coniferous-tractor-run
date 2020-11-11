@@ -3,8 +3,7 @@ public class PlayerInputControl : FSMState
 {
 	private Player _player;
 
-	public PlayerInputControl(Player player, params FSMTransition[] transitions)
-		: base(transitions)
+	public PlayerInputControl(Player player)
 	{
 		_player = player;
 	}

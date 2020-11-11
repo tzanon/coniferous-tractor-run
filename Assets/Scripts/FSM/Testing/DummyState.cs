@@ -6,7 +6,7 @@ public class DummyState : FSMState
 {
 	private string _name;
 
-	public DummyState(string n, params FSMTransition[] transitions) : base(transitions)
+	public DummyState(string n)
 	{
 		_name = n;
 	}
@@ -16,13 +16,7 @@ public class DummyState : FSMState
 		Debug.Log("At state " + _name);
 	}
 
-	public override void OnEnter()
-	{
-		
-	}
+	public override void OnEnter() { }
 
-	public override void OnExit()
-	{
-		
-	}
+	public override void OnExit() { }
 }
