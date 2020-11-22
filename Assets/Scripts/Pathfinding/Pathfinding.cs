@@ -169,7 +169,7 @@ namespace Pathfinding
 		/// <param name="path1">First path</param>
 		/// <param name="path2">Path whose starting point is the same as the first path's end point</param>
 		/// <returns>New path consisting of the operands' points</returns>
-		public static Path operator +(Path path1, Path path2)
+		public static Path operator+(Path path1, Path path2)
 		{
 			if (path1[path1.Length-1] != path2[0])
 			{

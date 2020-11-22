@@ -17,7 +17,7 @@ public abstract class AutoControl : FSMState
 
 	/* properties */
 
-	private bool PathDefined { get => _currentPath != null && !_currentPath.Empty && _pathIdx >= 0; }
+	private bool PathDefined { get => _currentPath != null && !_currentPath.Empty; }
 
 	private bool PathIndexInRange { get => _pathIdx >= 0 && _pathIdx < _currentPath.Length; }
 
@@ -33,6 +33,23 @@ public abstract class AutoControl : FSMState
 	protected void FindPath(Vector3Int start, Vector3Int end)
 	{
 		_currentPath = _navMap.FindPathBetweenNodes(start, end);
+	}
+
+	protected abstract void CalculatePath();
+
+	protected virtual void InitializeData()
+	{
+		CalculatePath();
+		if (!_currentPath.Empty)
+		{
+			_pathIdx = 0;
+		}
+	}
+
+	protected virtual void ClearData()
+	{
+		_currentPath = Path.EmptyPath;
+		_pathIdx = -1;
 	}
 
 	protected abstract void NoPathAction();
@@ -74,11 +91,11 @@ public abstract class AutoControl : FSMState
 
 	public override void OnEnter()
 	{
-		
+		InitializeData();
 	}
 
 	public override void OnExit()
 	{
-
+		ClearData();
 	}
 }

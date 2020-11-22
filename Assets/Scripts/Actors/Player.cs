@@ -1,10 +1,5 @@
 ﻿using System;
-
 using UnityEngine;
-using UnityEngine.InputSystem;
-
-using Directions;
-using UnityEngine.SocialPlatforms;
 
 // TODO: put user input in separate class?
 public class Player : Actor
@@ -62,17 +57,23 @@ public class Player : Actor
 	protected override void SetUpStateMachine()
 	{
 		PlayerInputControl inputState = new PlayerInputControl(this);
-		PlayerAutoControl autoState = new PlayerAutoControl(this, _levelCompletionChecker, _tilemapManager, _highlighter, _map);
+		//PlayerAutoControl autoState = new PlayerAutoControl(this, _levelCompletionChecker, _tilemapManager, _highlighter, _map);
+		PlayerAutoMovement autoMoveState = new PlayerAutoMovement(this, _tilemapManager, _map, _levelCompletionChecker);
 
 		Func<bool> PlayerTryingToLeave = () => _levelCompletionChecker.ContainsPlayer;
-		Func<bool> FinishedAutoMovingPlayer = () => autoState.PlayerReachedDest;
+		//Func<bool> FinishedAutoMovingPlayer = () => autoState.PlayerReachedDest;
+		Func<bool> AutoMovementDone = () => autoMoveState.PlayerReachedDest;
 
-		FSMTransition switchToAutoMovement = new FSMTransition(autoState, PlayerTryingToLeave);
-		FSMTransition switchToInputMovement = new FSMTransition(inputState, FinishedAutoMovingPlayer);
+		//FSMTransition switchToAutoMovement = new FSMTransition(autoState, PlayerTryingToLeave);
+		//FSMTransition switchToInputMovement = new FSMTransition(inputState, FinishedAutoMovingPlayer);
+		FSMTransition switchToAutoMovement = new FSMTransition(autoMoveState, PlayerTryingToLeave);
+		FSMTransition switchToInputMovement = new FSMTransition(inputState, AutoMovementDone);
+
 
 		_stateMachine = new FiniteStateMachine();
 		_stateMachine.AddState(inputState, switchToAutoMovement);
-		_stateMachine.AddState(autoState, switchToInputMovement);
+		_stateMachine.AddState(autoMoveState, switchToInputMovement);
+		//_stateMachine.AddState(autoState, switchToInputMovement);
 		_stateMachine.CurrentState = inputState;
 	}
 

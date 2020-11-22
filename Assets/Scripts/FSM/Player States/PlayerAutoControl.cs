@@ -8,7 +8,6 @@ public class PlayerAutoControl : FSMState
 	private Player _player;
 	private LevelCompletionChecker _completionChecker;
 	private Vector3Int _destNode;
-	//private Vector3Int[] _path;
 	private Path _path;
 	private int _nextPathPointIndex;
 
@@ -50,6 +49,8 @@ public class PlayerAutoControl : FSMState
 	/// </summary>
 	private bool PathIndexInRange { get => _nextPathPointIndex >= 0 && _nextPathPointIndex < _path.Length; }
 
+	/* methods */
+
 	/// <summary>
 	/// Constructs an auto control state
 	/// </summary>
@@ -70,8 +71,6 @@ public class PlayerAutoControl : FSMState
 		_navMap = nm;
 	}
 
-	/* methods */
-	
 	// data setting
 
 	/// <summary>
@@ -137,10 +136,7 @@ public class PlayerAutoControl : FSMState
 	/// <summary>
 	/// "Teleports" player to destination (use if no path can be found)
 	/// </summary>
-	private void TeleportMove()
-	{
-		_player.Position = _tilemapManager.CenterPositionOfCell(_destNode);
-	}
+	private void TeleportMove() => _player.Position = _tilemapManager.CenterPositionOfCell(_destNode);
 
 	/// <summary>
 	/// Checks if player's position is the same as the given point
@@ -215,7 +211,7 @@ public class PlayerAutoControl : FSMState
 		MessageLogger.LogVerboseMessage(LogType.FSM, "Entered player auto control state");
 
 		_player.InputBlocked = true;
-		Vector3Int movementDestination = _completionChecker.CurrentDestNode;
+		var movementDestination = _completionChecker.CurrentDestNode;
 		SetMovementData(movementDestination);
 	}
 

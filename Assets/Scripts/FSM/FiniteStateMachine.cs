@@ -99,6 +99,7 @@ public class FiniteStateMachine
 		if (transition != null)
 		{
 			CurrentState = transition.ResultantState;
+			MessageLogger.LogVerboseMessage(LogType.FSM, "FSM {0} transitioning to state {1}", this.ToString(), CurrentState.ToString());
 		}
 
 		CurrentState.PerformAction();
