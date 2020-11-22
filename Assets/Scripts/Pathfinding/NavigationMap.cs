@@ -51,9 +51,9 @@ public class NavigationMap : MonoBehaviour
 		return _graph.Neighbours(node);
 	}
 
-	public Vector3Int[] FindPathBetweenNodes(Vector3Int start, Vector3Int end, out ColoredTile[] evaluatedCells, out Vector3Int[] nonPathCells)
+	public Path FindPathBetweenNodes(Vector3Int start, Vector3Int end, out ColoredTile[] evaluatedCells, out Vector3Int[] nonPathCells)
 	{
-		Vector3Int[] path = _aStarSearch.GetPathBetweenPoints(start, end);
+		Path path = _aStarSearch.GetPathBetweenPoints(start, end);
 		evaluatedCells = _aStarSearch.TileHighlightOrder;
 
 		HashSet<Vector3Int> totalCells = new HashSet<Vector3Int>(_aStarSearch.TotalVisitedTiles);
@@ -73,7 +73,7 @@ public class NavigationMap : MonoBehaviour
 		return path;
 	}
 
-	public Vector3Int[] FindPathBetweenNodes(Vector3Int start, Vector3Int end)
+	public Path FindPathBetweenNodes(Vector3Int start, Vector3Int end)
 	{
 		return _aStarSearch.GetPathBetweenPoints(start, end);
 	}

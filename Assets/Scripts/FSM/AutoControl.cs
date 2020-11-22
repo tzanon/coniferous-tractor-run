@@ -30,13 +30,18 @@ public abstract class AutoControl : FSMState
 		_navMap = nm;
 	}
 
+	protected void FindPath(Vector3Int start, Vector3Int end)
+	{
+		_currentPath = _navMap.FindPathBetweenNodes(start, end);
+	}
+
 	protected abstract void NoPathAction();
 
 	protected abstract void PathEndAction();
 
 	private bool IncrementPathIndex() => ++_pathIdx < _currentPath.Length;
 
-	private bool ActorAtPoint(Vector3 point)
+	protected bool ActorAtPoint(Vector3 point)
 	{
 		var distance = point - _actor.Position;
 		return distance.sqrMagnitude < Mathf.Pow(_distanceThreshold, 2f);
@@ -65,5 +70,15 @@ public abstract class AutoControl : FSMState
 			var pointDifference = nextPoint - _actor.Position;
 			_actor.MoveActor(pointDifference);
 		}
+	}
+
+	public override void OnEnter()
+	{
+		
+	}
+
+	public override void OnExit()
+	{
+
 	}
 }

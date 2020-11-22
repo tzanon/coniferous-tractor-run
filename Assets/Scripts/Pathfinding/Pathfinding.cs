@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -130,7 +131,7 @@ namespace Pathfinding
 	/// <summary>
 	/// List of adjacent points for computer-controlled movement to use
 	/// </summary>
-	class Path
+	public class Path : IEnumerable<Vector3Int>
 	{
 		private List<Vector3Int> _pointList;
 
@@ -142,7 +143,7 @@ namespace Pathfinding
 
 		public bool Empty { get => Length <= 0; }
 
-		public static Vector3Int[] EmptyPath { get => new Vector3Int[0]; }
+		public static Path EmptyPath { get => new Path(new Vector3Int[0]); }
 
 		public Vector3Int this[int idx] { get => _pointList[idx]; }
 
@@ -170,7 +171,7 @@ namespace Pathfinding
 		/// <returns>New path consisting of the operands' points</returns>
 		public static Path operator +(Path path1, Path path2)
 		{
-			if (path1.Points[path1.Length-1] != path2.Points[0])
+			if (path1[path1.Length-1] != path2[0])
 			{
 				throw new Exception("ERROR: attempting to concatenate two non-adjacent paths!");
 			}
@@ -179,11 +180,11 @@ namespace Pathfinding
 
 			for (int i = 0; i < path1.Length; i++)
 			{
-				concatPoints[i] = path1.Points[i];
+				concatPoints[i] = path1[i];
 			}
 			for (int i = 1; i < path2.Length; i++)
 			{
-				concatPoints[path1.Length + i - 1] = path2.Points[i];
+				concatPoints[path1.Length + i - 1] = path2[i];
 			}
 
 			return new Path(concatPoints);
@@ -209,8 +210,15 @@ namespace Pathfinding
 			return true;
 		}
 
-		// TODO: get rid of...
-		public static bool IsEmpty(Vector3Int[] path) => (path.Length <= 0);
+		public IEnumerator<Vector3Int> GetEnumerator()
+		{
+			return ((IEnumerable<Vector3Int>)_pointList).GetEnumerator();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return ((IEnumerable)_pointList).GetEnumerator();
+		}
 	}
 
 	class Graph
@@ -373,7 +381,7 @@ namespace Pathfinding
 			return ManhattanDistance(a, b);
 		}
 
-		public Vector3Int[] CalculatePath(Vector3Int start, Vector3Int end)
+		public Path CalculatePath(Vector3Int start, Vector3Int end)
 		{
 			switch (_pathfinder)
 			{
@@ -386,7 +394,7 @@ namespace Pathfinding
 			}
 		}
 
-		private Vector3Int[] BFSEarlyExit(Vector3Int start, Vector3Int goal)
+		private Path BFSEarlyExit(Vector3Int start, Vector3Int goal)
 		{
 			Queue<Vector3Int> frontier = new Queue<Vector3Int>();
 			frontier.Enqueue(start);
@@ -414,12 +422,12 @@ namespace Pathfinding
 			return ReconstructPath(start, goal, cameFrom);
 		}
 
-		private Vector3Int[] Dijkstra(Vector3Int start, Vector3Int goal)
+		private Path Dijkstra(Vector3Int start, Vector3Int goal)
 		{
 			return null;
 		}
 
-		private Vector3Int[] AStarSearch(Vector3Int start, Vector3Int goal)
+		private Path AStarSearch(Vector3Int start, Vector3Int goal)
 		{
 			if (!_graph.ContainsNode(start) || !_graph.ContainsNode(goal))
 			{
@@ -429,12 +437,12 @@ namespace Pathfinding
 
 			if (start == goal)
 			{
-				return new Vector3Int[0];
+				return Path.EmptyPath;
 			}
 			
 			if (_graph.NodeHasNeighbour(start, goal))
 			{
-				return new Vector3Int[] { start, goal };
+				return new Path(new Vector3Int[] { start, goal });
 			}
 
 			NaivePriorityQueue frontier = new NaivePriorityQueue();
@@ -474,7 +482,7 @@ namespace Pathfinding
 			return Path.EmptyPath;
 		}
 
-		private Vector3Int[] ReconstructPath(Vector3Int start, Vector3Int goal, Dictionary<Vector3Int, Vector3Int> cameFrom)
+		private Path ReconstructPath(Vector3Int start, Vector3Int goal, Dictionary<Vector3Int, Vector3Int> cameFrom)
 		{
 			if (!cameFrom.ContainsKey(goal) || !cameFrom.ContainsValue(start))
 			{
@@ -484,19 +492,19 @@ namespace Pathfinding
 
 			Debug.Log("Reconstructing path...");
 
-			List<Vector3Int> path = new List<Vector3Int>(cameFrom.Count);
+			List<Vector3Int> points = new List<Vector3Int>(cameFrom.Count);
 			Vector3Int cell = goal;
 
 			while (cell != start)
 			{
-				path.Add(cell);
+				points.Add(cell);
 				cell = cameFrom[cell];
 			}
 
-			path.Add(start);
-			path.Reverse();
+			points.Add(start);
+			points.Reverse();
 
-			return path.ToArray();
+			return new Path(points.ToArray());
 		}
 	}
 
@@ -589,7 +597,7 @@ namespace Pathfinding
 		/// <param name="start"></param>
 		/// <param name="end"></param>
 		/// <returns></returns>
-		protected abstract Vector3Int[] CalculatePath();
+		protected abstract Path CalculatePath();
 
 		/// <summary>
 		/// Checks if the start and end nodes are in the tracker
@@ -633,9 +641,9 @@ namespace Pathfinding
 		/// <param name="start">start node</param>
 		/// <param name="end">end node</param>
 		/// <returns>Path between start and end</returns>
-		public Vector3Int[] GetPathBetweenPoints(Vector3Int start, Vector3Int end)
+		public Path GetPathBetweenPoints(Vector3Int start, Vector3Int end)
 		{
-			Vector3Int[] path;
+			Path path;
 
 			// TODO: get stored path if already calculated
 
@@ -650,7 +658,7 @@ namespace Pathfinding
 		/// Reconstructs path from nodes stored in search tracker
 		/// </summary>
 		/// <returns>An array of Vector3Ints representing the path</returns>
-		protected Vector3Int[] ReconstructPath()
+		protected Path ReconstructPath()
 		{
 			if (!IsTrackerValid())
 				return null;
@@ -678,7 +686,7 @@ namespace Pathfinding
 			foreach (Vector3Int node in _totalVisitedTiles)
 				_tileColors.Enqueue(new ColoredTile(node, _clearColor));
 			/**/
-			return nodeList.ToArray();
+			return new Path(nodeList.ToArray());
 		}
 	}
 
@@ -718,7 +726,7 @@ namespace Pathfinding
 		/// Calculates the shortest path between _start and _end
 		/// </summary>
 		/// <returns>A Vector3Int[] representing the shortest path</returns>
-		protected override Vector3Int[] CalculatePath()
+		protected override Path CalculatePath()
 		{
 			MessageLogger.LogVerboseMessage(LogType.Path, "Starting A* Search...");
 

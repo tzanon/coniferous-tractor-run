@@ -8,7 +8,8 @@ public class PlayerAutoControl : FSMState
 	private Player _player;
 	private LevelCompletionChecker _completionChecker;
 	private Vector3Int _destNode;
-	private Vector3Int[] _path;
+	//private Vector3Int[] _path;
+	private Path _path;
 	private int _nextPathPointIndex;
 
 	private const float _distanceThreshold = 0.1f;
@@ -192,7 +193,7 @@ public class PlayerAutoControl : FSMState
 
 		_path = _navMap.FindPathBetweenNodes(closestNodeToPlayer, _destNode);
 
-		if (Path.IsEmpty(_path))
+		if (_path.Empty)
 		{
 			MessageLogger.LogErrorMessage(LogType.FSM, "Error: could not find path to Player's destination");
 			return false;

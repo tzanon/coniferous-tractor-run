@@ -5,6 +5,8 @@ using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 using UnityEngine.Events;
 
+using Pathfinding;
+
 public class TilemapHighlighter : MonoBehaviour
 {
 	[SerializeField] private bool _shouldClearHighlight = true;
@@ -207,7 +209,7 @@ public class TilemapHighlighter : MonoBehaviour
 			return;
 		}
 
-		Vector3Int[] path;
+		Path path;
 
 		// TODO: animate option
 		if (_shouldAnimateHighlight)
@@ -221,7 +223,7 @@ public class TilemapHighlighter : MonoBehaviour
 		else
 		{
 			path = _navMap.FindPathBetweenNodes(start, end);
-			HighlightCells(path, _nodeHighlight, _shouldClearHighlight);
+			HighlightCells(path.Points, _nodeHighlight, _shouldClearHighlight);
 		}
 
 		MessageLogger.LogVerboseMessage(LogType.Highlight, "path calculated successfully!");
