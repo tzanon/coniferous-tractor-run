@@ -28,6 +28,8 @@ public abstract class AutoControl : FSMState
 		_actor = actor;
 		_tilemapManager = tm;
 		_navMap = nm;
+
+		ClearData();
 	}
 
 	protected void FindPath(Vector3Int start, Vector3Int end)
@@ -35,7 +37,13 @@ public abstract class AutoControl : FSMState
 		_currentPath = _navMap.FindPathBetweenNodes(start, end);
 	}
 
-	protected abstract void CalculatePath();
+	private bool IncrementPathIndex() => ++_pathIdx < _currentPath.Length;
+
+	protected bool ActorAtPoint(Vector3 point)
+	{
+		var distance = point - _actor.Position;
+		return distance.sqrMagnitude < Mathf.Pow(_distanceThreshold, 2f);
+	}
 
 	protected virtual void InitializeData()
 	{
@@ -52,23 +60,18 @@ public abstract class AutoControl : FSMState
 		_pathIdx = -1;
 	}
 
+	protected abstract void CalculatePath();
+
 	protected abstract void NoPathAction();
 
 	protected abstract void PathEndAction();
-
-	private bool IncrementPathIndex() => ++_pathIdx < _currentPath.Length;
-
-	protected bool ActorAtPoint(Vector3 point)
-	{
-		var distance = point - _actor.Position;
-		return distance.sqrMagnitude < Mathf.Pow(_distanceThreshold, 2f);
-	}
 
 	public override void PerformAction()
 	{
 		// check if path is defined and that index is in range
 		if (!(PathDefined && PathIndexInRange))
 		{
+
 			NoPathAction();
 			return;
 		}

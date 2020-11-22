@@ -221,6 +221,14 @@ namespace Pathfinding
 		}
 	}
 
+	/// <summary>
+	/// A sequence of waypoints with paths between them
+	/// </summary>
+	public class Route
+	{
+
+	}
+
 	class Graph
 	{
 		//enum PathfinderType { BFS, DIJKSTRA, ASTAR} // TODO: implement or get rid of Dijkstra
