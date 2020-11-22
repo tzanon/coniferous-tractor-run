@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-public abstract class FSMState
+﻿public abstract class FSMState
 {
 	public abstract void PerformAction();
 	public abstract void OnEnter();

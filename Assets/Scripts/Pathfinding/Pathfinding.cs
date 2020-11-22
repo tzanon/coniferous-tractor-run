@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -128,17 +127,90 @@ namespace Pathfinding
 		}
 	}
 
+	/// <summary>
+	/// List of adjacent points for computer-controlled movement to use
+	/// </summary>
 	class Path
 	{
+		private List<Vector3Int> _pointList;
+
+		/* properties */
+
+		public Vector3Int[] Points { get => _pointList.ToArray(); }
+
+		public int Length { get => _pointList.Count; }
+
+		public bool Empty { get => Length <= 0; }
+
 		public static Vector3Int[] EmptyPath { get => new Vector3Int[0]; }
 
-		public Path()
-		{
+		public Vector3Int this[int idx] { get => _pointList[idx]; }
 
+		/// <summary>
+		/// constructor
+		/// </summary>
+		/// <param name="pathPoints">Vector3Int points to create path from</param>
+		public Path(Vector3Int[] pathPoints)
+		{
+			if (!PointsValid(pathPoints))
+			{
+				throw new Exception("ERROR: Trying to create path from non-adjacent points!");
+			}
+
+			_pointList = new List<Vector3Int>(pathPoints);
 		}
 
-		public static bool IsEmpty(Vector3Int[] path) => (path.Length <= 0);
+		/* methods */
 
+		/// <summary>
+		/// Concatenate two adjacent paths together, NOT commutative!
+		/// </summary>
+		/// <param name="path1">First path</param>
+		/// <param name="path2">Path whose starting point is the same as the first path's end point</param>
+		/// <returns>New path consisting of the operands' points</returns>
+		public static Path operator +(Path path1, Path path2)
+		{
+			if (path1.Points[path1.Length-1] != path2.Points[0])
+			{
+				throw new Exception("ERROR: attempting to concatenate two non-adjacent paths!");
+			}
+
+			Vector3Int[] concatPoints = new Vector3Int[path1.Length + path2.Length - 1];
+
+			for (int i = 0; i < path1.Length; i++)
+			{
+				concatPoints[i] = path1.Points[i];
+			}
+			for (int i = 1; i < path2.Length; i++)
+			{
+				concatPoints[path1.Length + i - 1] = path2.Points[i];
+			}
+
+			return new Path(concatPoints);
+		}
+
+		/// <summary>
+		/// Checks if an array of points is a valid path
+		/// </summary>
+		/// <param name="points">Vector3Int points to validate</param>
+		/// <returns>True if valid, false if not</returns>
+		public static bool PointsValid(Vector3Int[] points)
+		{
+			if (points.Length == 0 || points.Length == 1) return true;
+
+			for (int i = 0; i < points.Length - 1; i++)
+			{
+				if ((points[i] - points[i+1]).sqrMagnitude != 1 )
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		// TODO: get rid of...
+		public static bool IsEmpty(Vector3Int[] path) => (path.Length <= 0);
 	}
 
 	class Graph

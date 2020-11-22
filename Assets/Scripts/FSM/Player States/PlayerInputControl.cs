@@ -1,5 +1,4 @@
-﻿
-public class PlayerInputControl : FSMState
+﻿public class PlayerInputControl : FSMState
 {
 	private Player _player;
 

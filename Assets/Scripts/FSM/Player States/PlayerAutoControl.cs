@@ -1,27 +1,21 @@
-﻿using System.Collections;
-
-using UnityEngine;
+﻿using UnityEngine;
 using Pathfinding;
-using Directions;
-using UnityEditor.VersionControl;
 
 public class PlayerAutoControl : FSMState
 {
 	/* fields */
 
 	private Player _player;
-	private LevelCompletionChecker _movementController;
+	private LevelCompletionChecker _completionChecker;
 	private Vector3Int _destNode;
 	private Vector3Int[] _path;
 	private int _nextPathPointIndex;
 
 	private const float _distanceThreshold = 0.1f;
-	private float _moveFactor = 1.0f;
 
 	private bool _pathFound;
 
 	// components
-
 	private TilemapManager _tilemapManager;
 	private TilemapHighlighter _highlighter;
 	private NavigationMap _navMap;
@@ -63,11 +57,10 @@ public class PlayerAutoControl : FSMState
 	/// <param name="tm">Tilemap Manager</param>
 	/// <param name="th">Highlighting tiles for debugging</param>
 	/// <param name="nm">Nav map for pathfinding</param>
-	/// <param name="transitions">Transitions to other states</param>
-	public PlayerAutoControl(Player player, LevelCompletionChecker mc, TilemapManager tm, TilemapHighlighter th, NavigationMap nm)
+	public PlayerAutoControl(Player player, LevelCompletionChecker lcc, TilemapManager tm, TilemapHighlighter th, NavigationMap nm)
 	{
 		_player = player;
-		_movementController = mc;
+		_completionChecker = lcc;
 
 		ResetMovementData();
 
@@ -88,13 +81,6 @@ public class PlayerAutoControl : FSMState
 	{
 		_destNode = dest;
 		_pathFound = FindPathToDest();
-
-		// set player in direction of first path point
-		if (_pathFound)
-		{
-			Vector3Int playerCell = _tilemapManager.CellOfPosition(_player.Position);
-			Vector3Int pathStart = _path[0];
-		}
 	}
 
 	/// <summary>
@@ -134,14 +120,10 @@ public class PlayerAutoControl : FSMState
 		// if player has reached the point, increment index to point to next point
 		if (PlayerReachedPoint(nextPosition))
 		{
-			_player.Position = nextPosition; // correcting threshold innaccuracy
+			_player.Position = nextPosition; // correct threshold innaccuracy
 			if (!IncrementPathIndex()) // stop movement if at path's end
 				return;
 		}
-
-		// move player
-		//Vector3 movedPosition =	Vector3.MoveTowards(_player.Position, nextPosition, _player.CurrentSpeed * _moveFactor * Time.deltaTime);
-		//_player.Position = movedPosition;
 
 		// move player in direction of next point if it hasn't been reached
 		var pointDifference = nextPosition - _player.Position;
@@ -232,7 +214,7 @@ public class PlayerAutoControl : FSMState
 		MessageLogger.LogVerboseMessage(LogType.FSM, "Entered player auto control state");
 
 		_player.InputBlocked = true;
-		Vector3Int movementDestination = _movementController.CurrentDestNode;
+		Vector3Int movementDestination = _completionChecker.CurrentDestNode;
 		SetMovementData(movementDestination);
 	}
 
