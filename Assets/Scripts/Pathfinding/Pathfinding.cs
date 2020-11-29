@@ -20,7 +20,7 @@ namespace Pathfinding
 	/// <summary>
 	/// Inefficient, brute force priority queue
 	/// </summary>
-	class NaivePriorityQueue
+	public class NaivePriorityQueue
 	{
 		private List<PriorityItem> _queue;
 
@@ -97,7 +97,7 @@ namespace Pathfinding
 	/// <summary>
 	/// Pair of coordinates
 	/// </summary>
-	struct CoordinatePair
+	public struct CoordinatePair
 	{
 		public Vector3Int Coord1 { get; private set; }
 		public Vector3Int Coord2 { get; private set; }
@@ -164,6 +164,16 @@ namespace Pathfinding
 		/* methods */
 
 		/// <summary>
+		/// Checks if path contains the given point
+		/// </summary>
+		/// <param name="point">Point to check</param>
+		/// <returns>True if point in path, false if not</returns>
+		public bool Contains(Vector3Int point)
+		{
+			return _pointList.Contains(point);
+		}
+
+		/// <summary>
 		/// Concatenate two adjacent paths together, NOT commutative!
 		/// </summary>
 		/// <param name="path1">First path</param>
@@ -171,6 +181,11 @@ namespace Pathfinding
 		/// <returns>New path consisting of the operands' points</returns>
 		public static Path operator+(Path path1, Path path2)
 		{
+			if (path1.Empty)
+				return path1;
+			if (path2.Empty)
+				return path2;
+
 			if (path1[path1.Length-1] != path2[0])
 			{
 				throw new Exception("ERROR: attempting to concatenate two non-adjacent paths!");
@@ -226,10 +241,116 @@ namespace Pathfinding
 	/// </summary>
 	public class Route
 	{
+		PathfindingAlgorithm _pathfinder;
+		private readonly Vector3Int[] _waypoints;
+		private readonly Dictionary<(Vector3Int, Vector3Int), Path> _paths;
+
+		/* properties */
+
+		public Path CompletePath { get; private set; }
+
+		/* methods */
+
+		public Route(PathfindingAlgorithm pathfinder, params Vector3Int[] waypoints)
+		{
+			_pathfinder = pathfinder;
+			_paths = new Dictionary<(Vector3Int, Vector3Int), Path>();
+			CalculatePaths();
+		}
+
+		private void CalculatePaths()
+		{
+			CompletePath = new Path(new Vector3Int[0]);
+
+			// calculate paths between each pair of waypoints
+			for (var i = 0; i < _waypoints.Length - 1; i++)
+			{
+				var startWaypoint = _waypoints[i];
+				var endWaypoint = _waypoints[i + 1];
+				var path = _pathfinder.GetPathBetweenPoints(startWaypoint, endWaypoint);
+				_paths.Add((startWaypoint, endWaypoint), path);
+
+				CompletePath += path;
+			}
+
+			// calculate path from final waypoint to first waypoint
+			var end = _waypoints[_waypoints.Length - 1];
+			var start = _waypoints[0];
+			var endToStartPath = _pathfinder.GetPathBetweenPoints(end, start);
+			_paths.Add((end, start), endToStartPath);
+
+			CompletePath += endToStartPath;
+		}
+
+		public Vector3Int ClosestWaypoint(Vector3Int point)
+		{
+			if (_waypoints.Length <= 0)
+				MessageLogger.LogWarningMessage(LogType.Path, "Route is empty. Returning null position.");
+
+			if (CompletePath.Contains(point))
+			{
+				return point;
+			}
+
+			var minDistance = float.MaxValue;
+			var closestWaypoint = Graph.NullPos;
+
+			// find closest waypoint
+			foreach (var waypoint in _waypoints)
+			{
+				var distance = Vector3.SqrMagnitude(point - waypoint);
+				if (distance < minDistance)
+				{
+					minDistance = distance;
+					closestWaypoint = waypoint;
+				}
+			}
+
+			return closestWaypoint;
+		}
+
+		public int IndexOfClosestWaypoint(Vector3Int point)
+		{
+			var closestWaypoint = ClosestWaypoint(point);
+			return Array.IndexOf(CompletePath.Points, closestWaypoint);
+		}
+
+		public Vector3Int ClosestPathPoint(Vector3Int point)
+		{
+			var closestIdx = IndexOfClosestPoint(point);
+			return CompletePath[closestIdx];
+		}
+
+		public int IndexOfClosestPoint(Vector3Int point)
+		{
+			if (CompletePath.Length <= 0)
+				MessageLogger.LogWarningMessage(LogType.Path, "Route is empty. Returning null index.");
+
+			if (CompletePath.Contains(point))
+			{
+				return Array.IndexOf(CompletePath.Points, point);
+			}
+
+			var minDistance = float.MaxValue;
+			var minIdx = -1;
+
+			// find index of closest path point
+			for (var i = 0; i < CompletePath.Length; i++)
+			{
+				var distance = Vector3.SqrMagnitude(point - CompletePath[i]);
+				if (distance < minDistance)
+				{
+					minDistance = distance;
+					minIdx = i;
+				}
+			}
+
+			return minIdx;
+		}
 
 	}
 
-	class Graph
+	public class Graph
 	{
 		//enum PathfinderType { BFS, DIJKSTRA, ASTAR} // TODO: implement or get rid of Dijkstra
 		
@@ -359,167 +480,10 @@ namespace Pathfinding
 		}
 	}
 
-	class Pathfinder
-	{
-		public enum PathfinderType { Astar, Bfs, Dijkstra } // TODO: implement or get rid of Dijkstra
-		private PathfinderType _pathfinder = PathfinderType.Astar;
-
-		private Graph _graph;
-
-		private delegate void Heuristic(); // TODO: look up conventions and find if this is necessary
-
-		public Pathfinder(Graph graph)
-		{
-			_graph = graph;
-		}
-
-		// methods
-		public int ManhattanDistance(Vector3Int a, Vector3Int b)
-		{
-			return Math.Abs(a.x - b.x) + Math.Abs(a.y - b.y);
-		}
-
-		public int EuclideanDistanceSquared(Vector3Int a, Vector3Int b)
-		{
-			return (int)(Math.Pow(b.x - a.x, 2) + Mathf.Pow(b.y - a.y, 2));
-		}
-
-		private int Cost(Vector3Int a, Vector3Int b)
-		{
-			return ManhattanDistance(a, b);
-		}
-
-		public Path CalculatePath(Vector3Int start, Vector3Int end)
-		{
-			switch (_pathfinder)
-			{
-				case PathfinderType.Bfs:
-					return BFSEarlyExit(start, end);
-				case PathfinderType.Astar:
-					return AStarSearch(start, end);
-				default:
-					return AStarSearch(start, end);
-			}
-		}
-
-		private Path BFSEarlyExit(Vector3Int start, Vector3Int goal)
-		{
-			Queue<Vector3Int> frontier = new Queue<Vector3Int>();
-			frontier.Enqueue(start);
-			Dictionary<Vector3Int, Vector3Int> cameFrom = new Dictionary<Vector3Int, Vector3Int>() { { start, Graph.NullPos } };
-
-			while (frontier.Count > 0)
-			{
-				Vector3Int cell = frontier.Dequeue();
-
-				if (cell == goal)
-					break;
-
-				Vector3Int[] neighbours = _graph.Neighbours(cell);
-
-				foreach (Vector3Int next in neighbours)
-				{
-					if (!cameFrom.ContainsKey(next))
-					{
-						frontier.Enqueue(next);
-						cameFrom[next] = cell;
-					}
-				}
-			}
-
-			return ReconstructPath(start, goal, cameFrom);
-		}
-
-		private Path Dijkstra(Vector3Int start, Vector3Int goal)
-		{
-			return null;
-		}
-
-		private Path AStarSearch(Vector3Int start, Vector3Int goal)
-		{
-			if (!_graph.ContainsNode(start) || !_graph.ContainsNode(goal))
-			{
-				MessageLogger.LogErrorMessage(LogType.Path, "Cannot find path between undefined nodes");
-				return Path.EmptyPath;
-			}
-
-			if (start == goal)
-			{
-				return Path.EmptyPath;
-			}
-			
-			if (_graph.NodeHasNeighbour(start, goal))
-			{
-				return new Path(new Vector3Int[] { start, goal });
-			}
-
-			NaivePriorityQueue frontier = new NaivePriorityQueue();
-			frontier.Push(start, 0);
-			Dictionary<Vector3Int, Vector3Int> cameFrom = new Dictionary<Vector3Int, Vector3Int>() { { start, Graph.NullPos } };
-			Dictionary<Vector3Int, int> costSoFar = new Dictionary<Vector3Int, int>() { { start, 0 } };
-
-			MessageLogger.LogDebugMessage(LogType.Path, "Starting A* Search...");
-
-			while (frontier.Count > 0)
-			{
-				Vector3Int cell = frontier.PopMin();
-
-				// found goal
-				if (cell == goal)
-				{
-					MessageLogger.LogDebugMessage(LogType.Path, "Finished search.");
-					return ReconstructPath(start, goal, cameFrom);
-				}
-
-				Vector3Int[] neighbours = _graph.Neighbours(cell);
-
-				foreach (Vector3Int next in neighbours)
-				{
-					int newCost = costSoFar[cell] + Cost(cell, next);
-					if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next])
-					{
-						costSoFar[next] = newCost;
-						int priority = newCost + ManhattanDistance(next, goal);
-						frontier.Push(next, priority);
-						cameFrom[next] = cell;
-					}
-				}
-			}
-
-			MessageLogger.LogErrorMessage(LogType.Path, "No path found between {0} and {1}", start, goal);
-			return Path.EmptyPath;
-		}
-
-		private Path ReconstructPath(Vector3Int start, Vector3Int goal, Dictionary<Vector3Int, Vector3Int> cameFrom)
-		{
-			if (!cameFrom.ContainsKey(goal) || !cameFrom.ContainsValue(start))
-			{
-				MessageLogger.LogErrorMessage(LogType.Path, "Given cameFrom does not contain the goal, start, or both");
-				return null;
-			}
-
-			Debug.Log("Reconstructing path...");
-
-			List<Vector3Int> points = new List<Vector3Int>(cameFrom.Count);
-			Vector3Int cell = goal;
-
-			while (cell != start)
-			{
-				points.Add(cell);
-				cell = cameFrom[cell];
-			}
-
-			points.Add(start);
-			points.Reverse();
-
-			return new Path(points.ToArray());
-		}
-	}
-
 	/// <summary>
 	/// Abstract class for finding a path between two points
 	/// </summary>
-	abstract class PathfindingAlgorithm
+	public abstract class PathfindingAlgorithm
 	{
 		protected Graph _graph;
 		protected Vector3Int _currentStart, _currentEnd;
@@ -701,7 +665,7 @@ namespace Pathfinding
 	/// <summary>
 	/// A* Search algorithm
 	/// </summary>
-	class AStarSearch : PathfindingAlgorithm
+	public class AStarSearch : PathfindingAlgorithm
 	{
 		private readonly NaivePriorityQueue _frontier;
 		private readonly Dictionary<Vector3Int, int> _costSoFar;
@@ -775,12 +739,12 @@ namespace Pathfinding
 		}
 	}
 
-	class BFSEarlyExit
+	public class BFSEarlyExit
 	{
 
 	}
 
-	class Dijkstra
+	public class Dijkstra
 	{
 
 	}

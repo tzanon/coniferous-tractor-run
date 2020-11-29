@@ -71,7 +71,6 @@ public abstract class AutoControl : FSMState
 		// check if path is defined and that index is in range
 		if (!(PathDefined && PathIndexInRange))
 		{
-
 			NoPathAction();
 			return;
 		}
