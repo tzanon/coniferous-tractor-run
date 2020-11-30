@@ -4,6 +4,9 @@ using UnityEngine.Tilemaps;
 
 using Pathfinding;
 
+/// <summary>
+/// 
+/// </summary>
 public class NavigationMap : MonoBehaviour
 {
 	/* fields */

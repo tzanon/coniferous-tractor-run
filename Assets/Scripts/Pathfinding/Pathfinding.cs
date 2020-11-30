@@ -133,19 +133,17 @@ namespace Pathfinding
 	/// </summary>
 	public class Path : IEnumerable<Vector3Int>
 	{
-		private List<Vector3Int> _pointList;
-
 		/* properties */
 
-		public Vector3Int[] Points { get => _pointList.ToArray(); }
+		public Vector3Int[] Points { get; }
 
-		public int Length { get => _pointList.Count; }
+		public int Length { get => Points.Length; }
 
 		public bool Empty { get => Length <= 0; }
 
 		public static Path EmptyPath { get => new Path(new Vector3Int[0]); }
 
-		public Vector3Int this[int idx] { get => _pointList[idx]; }
+		public Vector3Int this[int idx] { get => Points[idx]; }
 
 		/// <summary>
 		/// constructor
@@ -153,15 +151,17 @@ namespace Pathfinding
 		/// <param name="pathPoints">Vector3Int points to create path from</param>
 		public Path(Vector3Int[] pathPoints)
 		{
-			if (!PointsValid(pathPoints))
+			Points = pathPoints;
+
+			if (!Validate())
 			{
 				throw new Exception("ERROR: Trying to create path from non-adjacent points!");
 			}
-
-			_pointList = new List<Vector3Int>(pathPoints);
 		}
 
 		/* methods */
+
+		private bool Validate() => ArrayIsValidPath(Points);
 
 		/// <summary>
 		/// Checks if path contains the given point
@@ -170,7 +170,10 @@ namespace Pathfinding
 		/// <returns>True if point in path, false if not</returns>
 		public bool Contains(Vector3Int point)
 		{
-			return _pointList.Contains(point);
+			foreach (var p in Points)
+				if (p == point)
+					return true;
+			return false;
 		}
 
 		/// <summary>
@@ -188,7 +191,8 @@ namespace Pathfinding
 
 			if (path1[path1.Length-1] != path2[0])
 			{
-				throw new Exception("ERROR: attempting to concatenate two non-adjacent paths!");
+				MessageLogger.LogErrorMessage(LogType.Path, "ERROR: attempting to concatenate two non-adjacent paths!");
+				return EmptyPath;
 			}
 
 			Vector3Int[] concatPoints = new Vector3Int[path1.Length + path2.Length - 1];
@@ -210,7 +214,7 @@ namespace Pathfinding
 		/// </summary>
 		/// <param name="points">Vector3Int points to validate</param>
 		/// <returns>True if valid, false if not</returns>
-		public static bool PointsValid(Vector3Int[] points)
+		public static bool ArrayIsValidPath(Vector3Int[] points)
 		{
 			if (points.Length == 0 || points.Length == 1) return true;
 
@@ -227,12 +231,12 @@ namespace Pathfinding
 
 		public IEnumerator<Vector3Int> GetEnumerator()
 		{
-			return ((IEnumerable<Vector3Int>)_pointList).GetEnumerator();
+			return ((IEnumerable<Vector3Int>)Points).GetEnumerator();
 		}
 
 		IEnumerator IEnumerable.GetEnumerator()
 		{
-			return ((IEnumerable)_pointList).GetEnumerator();
+			return ((IEnumerable)Points).GetEnumerator();
 		}
 	}
 
@@ -241,45 +245,48 @@ namespace Pathfinding
 	/// </summary>
 	public class Route
 	{
-		PathfindingAlgorithm _pathfinder;
-		private readonly Vector3Int[] _waypoints;
-		private readonly Dictionary<(Vector3Int, Vector3Int), Path> _paths;
+		protected Vector3Int[] _waypoints;
 
 		/* properties */
 
-		public Path CompletePath { get; private set; }
+		public Path CompletePath { get; private set; }// protected set; }
+
+		public bool Empty { get => CompletePath.Empty || _waypoints.Length <= 0; }
 
 		/* methods */
 
-		public Route(PathfindingAlgorithm pathfinder, params Vector3Int[] waypoints)
+		public Route(Path completePath, params Vector3Int[] waypoints)
 		{
-			_pathfinder = pathfinder;
-			_paths = new Dictionary<(Vector3Int, Vector3Int), Path>();
-			CalculatePaths();
+			SetRoute(completePath, waypoints);
 		}
 
-		private void CalculatePaths()
+		public void SetRoute(Path completePath, params Vector3Int[] waypoints)
 		{
-			CompletePath = new Path(new Vector3Int[0]);
+			_waypoints = waypoints;
+			CompletePath = completePath;
 
-			// calculate paths between each pair of waypoints
-			for (var i = 0; i < _waypoints.Length - 1; i++)
+			if (!Valid())
 			{
-				var startWaypoint = _waypoints[i];
-				var endWaypoint = _waypoints[i + 1];
-				var path = _pathfinder.GetPathBetweenPoints(startWaypoint, endWaypoint);
-				_paths.Add((startWaypoint, endWaypoint), path);
+				throw new Exception("ERROR: cannot create route from given path and waypoints!");
+			}
+		}
 
-				CompletePath += path;
+		protected virtual bool Valid()
+		{
+			if (_waypoints.Length == 0 && CompletePath.Length == 0)
+				return true;
+
+			// make sure every waypoint is in the path and in the same order as its own list
+			var waypointIdx = 0;
+			foreach (var point in CompletePath)
+			{
+				if (point == _waypoints[waypointIdx])
+				{
+					waypointIdx++;
+				}
 			}
 
-			// calculate path from final waypoint to first waypoint
-			var end = _waypoints[_waypoints.Length - 1];
-			var start = _waypoints[0];
-			var endToStartPath = _pathfinder.GetPathBetweenPoints(end, start);
-			_paths.Add((end, start), endToStartPath);
-
-			CompletePath += endToStartPath;
+			return (waypointIdx >= _waypoints.Length);
 		}
 
 		public Vector3Int ClosestWaypoint(Vector3Int point)
@@ -309,7 +316,7 @@ namespace Pathfinding
 			return closestWaypoint;
 		}
 
-		public int IndexOfClosestWaypoint(Vector3Int point)
+		public int PathIndexOfClosestWaypoint(Vector3Int point)
 		{
 			var closestWaypoint = ClosestWaypoint(point);
 			return Array.IndexOf(CompletePath.Points, closestWaypoint);
@@ -317,11 +324,11 @@ namespace Pathfinding
 
 		public Vector3Int ClosestPathPoint(Vector3Int point)
 		{
-			var closestIdx = IndexOfClosestPoint(point);
+			var closestIdx = PathIndexOfClosestPoint(point);
 			return CompletePath[closestIdx];
 		}
 
-		public int IndexOfClosestPoint(Vector3Int point)
+		public int PathIndexOfClosestPoint(Vector3Int point)
 		{
 			if (CompletePath.Length <= 0)
 				MessageLogger.LogWarningMessage(LogType.Path, "Route is empty. Returning null index.");
@@ -347,22 +354,138 @@ namespace Pathfinding
 
 			return minIdx;
 		}
-
 	}
 
+	/// <summary>
+	/// Route with a path connecting the last and first waypoints
+	/// </summary>
+	public class CyclicRoute : Route
+	{
+		public CyclicRoute(Path completePath, params Vector3Int[] waypoints) : base(completePath, waypoints) { }
+
+		protected override bool Valid()
+		{
+			if (!base.Valid())
+				return false;
+
+			// first and last path point must be the first waypoint
+			return CompletePath[0] == _waypoints[0] && CompletePath[0] == CompletePath[CompletePath.Length - 1];
+		}
+	}
+
+	/// <summary>
+	/// Calculates and stores paths for a graph
+	/// </summary>
+	public class PathManager
+	{
+		private readonly PathfindingAlgorithm _pathfinder;
+		private readonly Dictionary<CoordinatePair, Path> _paths;
+
+		public PathManager(PathfindingAlgorithm pathfinder)
+		{
+			_pathfinder = pathfinder;
+			_paths = new Dictionary<CoordinatePair, Path>();
+		}
+
+		public bool HasPath(Vector3Int start, Vector3Int end)
+		{
+			return _paths.ContainsKey(new CoordinatePair(start, end));
+		}
+
+		public Path GetPath(Vector3Int start, Vector3Int end)
+		{
+			var pair = new CoordinatePair(start, end);
+
+			if (_paths.ContainsKey(pair))
+			{
+				return _paths[pair];
+			}
+			
+			Path path = _pathfinder.GetPathBetweenPoints(start, end);
+			_paths.Add(pair, path);
+			return path;
+		}
+	}
+
+	/// <summary>
+	/// Calculates and stores routes for a graph
+	/// </summary>
+	public class RouteManager
+	{
+		private readonly PathManager _pm;
+		private readonly Dictionary<Vector3Int[], Route> _routes;
+		private readonly Dictionary<Vector3Int[], CyclicRoute> _cyclicRoutes;
+
+		public RouteManager(PathManager pathManager)
+		{
+			_pm = pathManager;
+			_routes = new Dictionary<Vector3Int[], Route>();
+			_cyclicRoutes = new Dictionary<Vector3Int[], CyclicRoute>();
+		}
+
+		private Path CreateCompletePath(Vector3Int[] waypoints)
+		{
+			var path = new Path(new Vector3Int[0]);
+
+			// calculate paths between each pair of waypoints
+			for (var i = 0; i < waypoints.Length - 1; i++)
+			{
+				var startWaypoint = waypoints[i];
+				var endWaypoint = waypoints[i + 1];
+				var intermediatePath = _pm.GetPath(startWaypoint, endWaypoint);
+
+				// add intermediate path into central large path
+				path += intermediatePath;
+			}
+
+			return path;
+		}
+
+		public Route CreateRoute(Vector3Int[] waypoints)
+		{
+			if (_routes.ContainsKey(waypoints))
+				return _routes[waypoints];
+
+			var completePath = CreateCompletePath(waypoints);
+
+			// create route DS with waypoints and path
+			Route route = new Route(completePath, waypoints);
+			_routes.Add(waypoints, route);
+			return route;
+		}
+
+		public CyclicRoute CreateCyclicRoute(Vector3Int[] waypoints)
+		{
+			// if already calculated cycle, return it
+			if (_cyclicRoutes.ContainsKey(waypoints))
+				return _cyclicRoutes[waypoints];
+
+			// get normal route to use its path as a starting point
+			var normalRoute = CreateRoute(waypoints);
+			var completePath = normalRoute.CompletePath;
+
+			// add path from end to start
+			var end = waypoints[waypoints.Length - 1];
+			var start = waypoints[0];
+			var endToStartPath = _pm.GetPath(end, start);
+			completePath += endToStartPath;
+
+			var cycle = new CyclicRoute(completePath, waypoints);
+			_cyclicRoutes.Add(waypoints, cycle);
+			return cycle;
+		}
+	}
+
+	/// <summary>
+	/// Graph data structure
+	/// </summary>
 	public class Graph
 	{
-		//enum PathfinderType { BFS, DIJKSTRA, ASTAR} // TODO: implement or get rid of Dijkstra
-		
 		/* fields */
-		
-		//private PathfinderType _pathfinder = PathfinderType.ASTAR;
 
 		private readonly Vector3Int _nullPos = new Vector3Int(0, 0, -1);
 
 		private readonly Dictionary<Vector3Int, List<Vector3Int>> _nodeNeighbours;
-
-		//private delegate void Heuristic(); // TODO: look up conventions and find if this is necessary
 
 		/* properties */
 
@@ -375,9 +498,9 @@ namespace Pathfinding
 		public static Vector3Int NullPos { get => new Vector3Int(0, 0, -1); }
 
 		/// <summary>
-		/// 
+		/// Constructs graph with given max neighbours for each node
 		/// </summary>
-		/// <param name="maxNeighbours"> Maximum number of neighbours that each node can have </param>
+		/// <param name="maxNeighbours">Maximum number of neighbours that each node can have</param>
 		public Graph(int maxNeighbours = 4)
 		{
 			MaxNumNeighbours = maxNeighbours;
@@ -749,3 +872,4 @@ namespace Pathfinding
 
 	}
 }
+
