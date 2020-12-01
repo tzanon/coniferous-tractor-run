@@ -176,6 +176,24 @@ namespace Pathfinding
 			return false;
 		}
 
+		public override bool Equals(object obj)
+		{
+			Path otherPath = (Path)obj;
+
+			if (this.Length != otherPath.Length)
+				return false;
+
+			for (int i = 0; i < this.Length; i++)
+			{
+				if (otherPath[i] != this[i])
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
 		/// <summary>
 		/// Concatenate two adjacent paths together, NOT commutative!
 		/// </summary>
@@ -238,6 +256,11 @@ namespace Pathfinding
 		{
 			return ((IEnumerable)Points).GetEnumerator();
 		}
+
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
+		}
 	}
 
 	/// <summary>
@@ -249,7 +272,7 @@ namespace Pathfinding
 
 		/* properties */
 
-		public Path CompletePath { get; private set; }// protected set; }
+		public Path CompletePath { get; private set; }
 
 		public bool Empty { get => CompletePath.Empty || _waypoints.Length <= 0; }
 
@@ -423,9 +446,9 @@ namespace Pathfinding
 			_cyclicRoutes = new Dictionary<Vector3Int[], CyclicRoute>();
 		}
 
-		private Path CreateCompletePath(Vector3Int[] waypoints)
+		private Path CreatePathFromWaypoints(Vector3Int[] waypoints)
 		{
-			var path = new Path(new Vector3Int[0]);
+			var path = Path.EmptyPath;
 
 			// calculate paths between each pair of waypoints
 			for (var i = 0; i < waypoints.Length - 1; i++)
@@ -446,10 +469,10 @@ namespace Pathfinding
 			if (_routes.ContainsKey(waypoints))
 				return _routes[waypoints];
 
-			var completePath = CreateCompletePath(waypoints);
+			var completePath = CreatePathFromWaypoints(waypoints);
 
 			// create route DS with waypoints and path
-			Route route = new Route(completePath, waypoints);
+			var route = new Route(completePath, waypoints);
 			_routes.Add(waypoints, route);
 			return route;
 		}
