@@ -3294,7 +3294,7 @@ PrefabInstance:
     - target: {fileID: 1562915275074892587, guid: a3f6374ec1aa6644a909969cf7bd0d82,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1562915275074892587, guid: a3f6374ec1aa6644a909969cf7bd0d82,
         type: 3}
@@ -7575,6 +7575,7 @@ GameObject:
   - component: {fileID: 1565289087}
   - component: {fileID: 1565289089}
   - component: {fileID: 1565289091}
+  - component: {fileID: 1565289093}
   - component: {fileID: 1565289090}
   - component: {fileID: 1565289092}
   m_Layer: 0
@@ -7596,6 +7597,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 19498090}
+  - {fileID: 1741511797}
   m_Father: {fileID: 1857980660}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -80473,6 +80475,19 @@ MonoBehaviour:
   _neighbourHighlight: {r: 0.9056604, g: 0.2874495, b: 0, a: 1}
   _searchHighlight: {r: 0.08018869, g: 0.46450204, b: 1, a: 1}
   _hoverSprite: {fileID: 19498089}
+--- !u!114 &1565289093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1565289085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3322321fa6d2b2418e2ab3efbc785a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _collectibles: []
 --- !u!114 &1610142652 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7712710582726886949, guid: eb5492a23a5c684488f965b1a188ca2e,
@@ -81065,11 +81080,11 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 411423862}
-  - {fileID: 1885161739}
   - {fileID: 778722393}
+  - {fileID: 1885161739}
   - {fileID: 1287359079}
-  m_Father: {fileID: 1857980660}
-  m_RootOrder: 2
+  m_Father: {fileID: 1565289086}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!483693784 &1741511798
 TilemapRenderer:
@@ -82107,7 +82122,6 @@ Transform:
   m_Children:
   - {fileID: 1565289086}
   - {fileID: 867132284}
-  - {fileID: 1741511797}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -82161,7 +82175,7 @@ PrefabInstance:
     - target: {fileID: 1562915275074892587, guid: a3f6374ec1aa6644a909969cf7bd0d82,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1562915275074892587, guid: a3f6374ec1aa6644a909969cf7bd0d82,
         type: 3}

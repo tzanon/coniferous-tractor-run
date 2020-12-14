@@ -108,20 +108,6 @@ namespace Pathfinding
 			Coord2 = n2;
 		}
 
-		public static bool operator ==(CoordinatePair a, CoordinatePair b)
-		{
-			return (a.Coord1 == b.Coord1 && a.Coord2 == b.Coord2) || (a.Coord1 == b.Coord2 && a.Coord2 == b.Coord1);
-		}
-
-		public static bool operator !=(CoordinatePair a, CoordinatePair b)
-		{
-			return !(a == b);
-		}
-
-		public override bool Equals(object obj) => base.Equals(obj);
-
-		public override int GetHashCode() => base.GetHashCode();
-
 		public override string ToString()
 		{
 			return "Coord pair (" + Coord1 + ", " + Coord2 + ")";
@@ -142,6 +128,19 @@ namespace Pathfinding
 		public bool Empty { get => Length <= 0; }
 
 		public static Path EmptyPath { get => new Path(new Vector3Int[0]); }
+
+		public Path Reverse
+		{
+			get
+			{
+				Vector3Int[] revPoints = new Vector3Int[Length];
+				Array.Copy(Points, revPoints, Length);
+				Array.Reverse(revPoints);
+
+				Path reversed = new Path(revPoints);
+				return reversed;
+			}
+		}
 
 		public Vector3Int this[int idx] { get => Points[idx]; }
 
@@ -176,24 +175,6 @@ namespace Pathfinding
 			return false;
 		}
 
-		public override bool Equals(object obj)
-		{
-			Path otherPath = (Path)obj;
-
-			if (this.Length != otherPath.Length)
-				return false;
-
-			for (int i = 0; i < this.Length; i++)
-			{
-				if (otherPath[i] != this[i])
-				{
-					return false;
-				}
-			}
-
-			return true;
-		}
-
 		/// <summary>
 		/// Concatenate two adjacent paths together, NOT commutative!
 		/// </summary>
@@ -203,9 +184,9 @@ namespace Pathfinding
 		public static Path operator+(Path path1, Path path2)
 		{
 			if (path1.Empty)
-				return path1;
-			if (path2.Empty)
 				return path2;
+			if (path2.Empty)
+				return path1;
 
 			if (path1[path1.Length-1] != path2[0])
 			{
@@ -257,6 +238,24 @@ namespace Pathfinding
 			return ((IEnumerable)Points).GetEnumerator();
 		}
 
+		public override bool Equals(object obj)
+		{
+			Path otherPath = (Path)obj;
+
+			if (this.Length != otherPath.Length)
+				return false;
+
+			for (int i = 0; i < this.Length; i++)
+			{
+				if (otherPath[i] != this[i])
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
 		public override int GetHashCode()
 		{
 			return base.GetHashCode();
@@ -276,12 +275,16 @@ namespace Pathfinding
 
 		public bool Empty { get => CompletePath.Empty || _waypoints.Length <= 0; }
 
+		public static Route EmptyRoute { get => new Route(Path.EmptyPath); }
+
 		/* methods */
 
 		public Route(Path completePath, params Vector3Int[] waypoints)
 		{
 			SetRoute(completePath, waypoints);
 		}
+
+		public bool Contains(Vector3Int point) => CompletePath.Contains(point);
 
 		public void SetRoute(Path completePath, params Vector3Int[] waypoints)
 		{
@@ -317,17 +320,15 @@ namespace Pathfinding
 			if (_waypoints.Length <= 0)
 				MessageLogger.LogWarningMessage(LogType.Path, "Route is empty. Returning null position.");
 
-			if (CompletePath.Contains(point))
-			{
-				return point;
-			}
-
 			var minDistance = float.MaxValue;
 			var closestWaypoint = Graph.NullPos;
 
 			// find closest waypoint
 			foreach (var waypoint in _waypoints)
 			{
+				if (waypoint == point)
+					return waypoint;
+
 				var distance = Vector3.SqrMagnitude(point - waypoint);
 				if (distance < minDistance)
 				{
@@ -356,17 +357,15 @@ namespace Pathfinding
 			if (CompletePath.Length <= 0)
 				MessageLogger.LogWarningMessage(LogType.Path, "Route is empty. Returning null index.");
 
-			if (CompletePath.Contains(point))
-			{
-				return Array.IndexOf(CompletePath.Points, point);
-			}
-
 			var minDistance = float.MaxValue;
 			var minIdx = -1;
 
 			// find index of closest path point
 			for (var i = 0; i < CompletePath.Length; i++)
 			{
+				if (CompletePath[i] == point)
+					return i;
+
 				var distance = Vector3.SqrMagnitude(point - CompletePath[i]);
 				if (distance < minDistance)
 				{
@@ -377,6 +376,14 @@ namespace Pathfinding
 
 			return minIdx;
 		}
+
+		public override bool Equals(object obj)
+		{
+			var otherRoute = (Route)obj;
+			return (this.CompletePath.Equals(otherRoute.CompletePath));
+		}
+
+		public override int GetHashCode() => base.GetHashCode();
 	}
 
 	/// <summary>
@@ -384,6 +391,8 @@ namespace Pathfinding
 	/// </summary>
 	public class CyclicRoute : Route
 	{
+		public static CyclicRoute EmptyCycle { get => new CyclicRoute(Path.EmptyPath); }
+
 		public CyclicRoute(Path completePath, params Vector3Int[] waypoints) : base(completePath, waypoints) { }
 
 		protected override bool Valid()
@@ -399,12 +408,14 @@ namespace Pathfinding
 	/// <summary>
 	/// Calculates and stores paths for a graph
 	/// </summary>
-	public class PathManager
+	public class PathCalculator
 	{
 		private readonly PathfindingAlgorithm _pathfinder;
 		private readonly Dictionary<CoordinatePair, Path> _paths;
 
-		public PathManager(PathfindingAlgorithm pathfinder)
+		public PathfindingAlgorithm Algorithm { get => _pathfinder; }
+
+		public PathCalculator(PathfindingAlgorithm pathfinder)
 		{
 			_pathfinder = pathfinder;
 			_paths = new Dictionary<CoordinatePair, Path>();
@@ -433,15 +444,15 @@ namespace Pathfinding
 	/// <summary>
 	/// Calculates and stores routes for a graph
 	/// </summary>
-	public class RouteManager
+	public class RouteCalculator
 	{
-		private readonly PathManager _pm;
+		private readonly PathCalculator _pathCalculator;
 		private readonly Dictionary<Vector3Int[], Route> _routes;
 		private readonly Dictionary<Vector3Int[], CyclicRoute> _cyclicRoutes;
 
-		public RouteManager(PathManager pathManager)
+		public RouteCalculator(PathCalculator pathCalculator)
 		{
-			_pm = pathManager;
+			_pathCalculator = pathCalculator;
 			_routes = new Dictionary<Vector3Int[], Route>();
 			_cyclicRoutes = new Dictionary<Vector3Int[], CyclicRoute>();
 		}
@@ -453,18 +464,15 @@ namespace Pathfinding
 			// calculate paths between each pair of waypoints
 			for (var i = 0; i < waypoints.Length - 1; i++)
 			{
-				var startWaypoint = waypoints[i];
-				var endWaypoint = waypoints[i + 1];
-				var intermediatePath = _pm.GetPath(startWaypoint, endWaypoint);
-
 				// add intermediate path into central large path
+				var intermediatePath = _pathCalculator.GetPath(waypoints[i], waypoints[i + 1]);
 				path += intermediatePath;
 			}
 
 			return path;
 		}
 
-		public Route CreateRoute(Vector3Int[] waypoints)
+		public Route GetRoute(Vector3Int[] waypoints)
 		{
 			if (_routes.ContainsKey(waypoints))
 				return _routes[waypoints];
@@ -477,26 +485,34 @@ namespace Pathfinding
 			return route;
 		}
 
-		public CyclicRoute CreateCyclicRoute(Vector3Int[] waypoints)
+		public CyclicRoute GetCyclicRoute(Vector3Int[] waypoints)
 		{
 			// if already calculated cycle, return it
 			if (_cyclicRoutes.ContainsKey(waypoints))
 				return _cyclicRoutes[waypoints];
 
 			// get normal route to use its path as a starting point
-			var normalRoute = CreateRoute(waypoints);
+			var normalRoute = GetRoute(waypoints);
 			var completePath = normalRoute.CompletePath;
 
 			// add path from end to start
 			var end = waypoints[waypoints.Length - 1];
 			var start = waypoints[0];
-			var endToStartPath = _pm.GetPath(end, start);
+			var endToStartPath = _pathCalculator.GetPath(end, start);
 			completePath += endToStartPath;
 
 			var cycle = new CyclicRoute(completePath, waypoints);
 			_cyclicRoutes.Add(waypoints, cycle);
 			return cycle;
 		}
+	}
+
+	/// <summary>
+	/// Finds and stores closest nodes for a given non-node cell
+	/// </summary>
+	public class NodeFinder
+	{
+		// TODO
 	}
 
 	/// <summary>
@@ -634,7 +650,6 @@ namespace Pathfinding
 		protected Graph _graph;
 		protected Vector3Int _currentStart, _currentEnd;
 		protected readonly Dictionary<Vector3Int, Vector3Int> _pathTracker;
-		protected readonly Dictionary<CoordinatePair, Vector3Int[]> _paths;
 
 		protected readonly Queue<ColoredTile> _tileColors;
 		protected readonly HashSet<Vector3Int> _totalVisitedTiles;
@@ -665,7 +680,6 @@ namespace Pathfinding
 			_currentStart = _currentEnd = Graph.NullPos;
 
 			_pathTracker = new Dictionary<Vector3Int, Vector3Int>();
-			_paths = new Dictionary<CoordinatePair, Vector3Int[]>();
 
 			_tileColors = new Queue<ColoredTile>();
 			_totalVisitedTiles = new HashSet<Vector3Int>();
@@ -762,8 +776,6 @@ namespace Pathfinding
 		public Path GetPathBetweenPoints(Vector3Int start, Vector3Int end)
 		{
 			Path path;
-
-			// TODO: get stored path if already calculated
 
 			ResetData(); // clear data from last search
 			PrepareForSearch(start, end); // set up necessary data structures
@@ -895,4 +907,3 @@ namespace Pathfinding
 
 	}
 }
-

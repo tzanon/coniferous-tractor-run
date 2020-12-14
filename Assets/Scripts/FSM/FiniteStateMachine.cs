@@ -106,7 +106,7 @@ public class FiniteStateMachine
 	}
 
 	/// <summary>
-	/// Checks if a transition is ready to be executed
+	/// Checks if a transition is ready to be executed and returns it
 	/// </summary>
 	/// <returns>Transition if ready, null if none ready</returns>
 	private FSMTransition TryGetTransition()

@@ -194,6 +194,7 @@ public class TilemapHighlighter : MonoBehaviour
 		HighlightCell(closestNode, _nodeHighlight, false);
 	}
 
+	// TODO: write HighlightPath() method for an existing path
 	/// <summary>
 	/// Highlights the path between currently chosen nodes
 	/// </summary>

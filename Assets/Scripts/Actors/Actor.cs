@@ -49,6 +49,7 @@ public abstract class Actor : MonoBehaviour
 	[SerializeField] protected TilemapManager _tilemapManager;
 	protected TilemapHighlighter _highlighter;
 	protected NavigationMap _map;
+	protected LevelPathManager _pathManager;
 
 
 	/* properties */
@@ -94,8 +95,9 @@ public abstract class Actor : MonoBehaviour
 		_rb = GetComponent<Rigidbody2D>();
 		_animator = GetComponent<Animator>();
 
-		_highlighter = _tilemapManager?.GetComponent<TilemapHighlighter>();
-		_map = _tilemapManager?.GetComponent<NavigationMap>();
+		_highlighter = _tilemapManager.GetComponent<TilemapHighlighter>();
+		_map = _tilemapManager.GetComponent<NavigationMap>();
+		_pathManager = _tilemapManager.GetComponent<LevelPathManager>();
 	}
 
 	/// <summary>

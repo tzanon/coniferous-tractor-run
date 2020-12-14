@@ -17,21 +17,28 @@ public sealed class PlayerAutoControl : AutoControl
 
 	/* methods */
 
-	public PlayerAutoControl(Player player, TilemapManager tm, NavigationMap nm, LevelCompletionChecker lcc) : base(player, tm, nm)
+	public PlayerAutoControl(Player player, TilemapManager tm, TilemapHighlighter th, NavigationMap nm, LevelPathManager lpm, LevelCompletionChecker lcc) :
+		base(player, tm, th, nm, lpm)
 	{
 		_completionChecker = lcc;
 		_player = (Player)_actor;
+		_destNode = TilemapManager.UndefinedCell;
 	}
 
 	private void Teleport() => _player.Position = _tilemapManager.CenterPositionOfCell(_destNode);
 
-	protected override void CalculatePath()
+	protected override void InitializeData()
 	{
 		var playerCell = _tilemapManager.CellOfPosition(_player.Position);
 		var closestNodeToPlayer = _navMap.ClosestNodeToCell(playerCell);
 
 		_destNode = _completionChecker.CurrentDestNode;
 		FindPath(closestNodeToPlayer, _destNode);
+
+		if (!_currentPath.Empty)
+		{
+			_pathIdx = 0;
+		}
 	}
 
 	protected override void ClearData()

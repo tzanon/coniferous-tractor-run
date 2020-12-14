@@ -13,12 +13,12 @@ public class GameplayManager : MonoBehaviour
 	/// <summary>
 	/// Returns array of positions of all existing collectibles
 	/// </summary>
-	public Vector2[] PositionsOfCollectibles
+	public Vector3[] PositionsOfCollectibles
 	{
 		get
 		{
-			Vector2[] positions = new Vector2[_collectibles.Count];
-			for (int i = 0; i < _collectibles.Count; i++)
+			var positions = new Vector3[_collectibles.Count];
+			for (var i = 0; i < _collectibles.Count; i++)
 			{
 				positions[i] = _collectibles[i].transform.position;
 			}
@@ -56,17 +56,17 @@ public class GameplayManager : MonoBehaviour
 	/// </summary>
 	/// <param name="collectible">collectible to check</param>
 	/// <returns>True if collectible can be removed from the list, false if not</returns>
-	private bool CanDelete(Collectible collectible)
+	public bool CanDelete(Collectible collectible)
 	{
 		if (_collectibles.Count <= 0)
 		{
-			MessageLogger.LogErrorMessage(LogType.Game, "Trying to delete collectible from empty list");
+			MessageLogger.LogDebugMessage(LogType.Game, "Cannot delete collectible from empty list");
 			return false;
 		}
 
 		if (collectible == null || !_collectibles.Contains(collectible))
 		{
-			MessageLogger.LogErrorMessage(LogType.Game, "Trying to delete either nothing or something not in the list");
+			MessageLogger.LogDebugMessage(LogType.Game, "Cannot delete nothing nor something not in the list");
 			return false;
 		}
 

@@ -5,15 +5,17 @@ public abstract class AutoControl : FSMState
 {
 	/* fields */
 
-	private Path _currentPath;
-	private int _pathIdx;
+	protected Path _currentPath;
+	protected int _pathIdx;
 
 	private const float _distanceThreshold = 0.1f;
 
 	// components
 	protected readonly Actor _actor;
 	protected readonly TilemapManager _tilemapManager;
+	protected readonly TilemapHighlighter _highlighter;
 	protected readonly NavigationMap _navMap;
+	protected readonly LevelPathManager _pathManager;
 
 	/* properties */
 
@@ -23,11 +25,13 @@ public abstract class AutoControl : FSMState
 
 	/* methods */
 
-	public AutoControl(Actor actor, TilemapManager tm, NavigationMap nm)
+	public AutoControl(Actor actor, TilemapManager tm, TilemapHighlighter th, NavigationMap nm, LevelPathManager lpm)
 	{
 		_actor = actor;
 		_tilemapManager = tm;
+		_highlighter = th;
 		_navMap = nm;
+		_pathManager = lpm;
 
 		ClearData();
 	}
@@ -45,22 +49,13 @@ public abstract class AutoControl : FSMState
 		return distance.sqrMagnitude < Mathf.Pow(_distanceThreshold, 2f);
 	}
 
-	protected virtual void InitializeData()
-	{
-		CalculatePath();
-		if (!_currentPath.Empty)
-		{
-			_pathIdx = 0;
-		}
-	}
+	protected abstract void InitializeData();
 
 	protected virtual void ClearData()
 	{
 		_currentPath = Path.EmptyPath;
 		_pathIdx = -1;
 	}
-
-	protected abstract void CalculatePath();
 
 	protected abstract void NoPathAction();
 

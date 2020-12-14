@@ -22,7 +22,7 @@ public class TilemapManager : MonoBehaviour
 		_map = GetComponent<Tilemap>();
 		_navMap = GetComponent<NavigationMap>();
 
-		if (!ReferencesAreValid())
+		if (!ReferencesAreValid(_map, _navMap))
 		{
 			MessageLogger.LogErrorMessage(LogType.Tile, "Exiting Awake() in {0}", this.name);
 			return;

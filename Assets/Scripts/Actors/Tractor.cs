@@ -11,8 +11,6 @@ public class Tractor : Actor
 	private LineRenderer _lr; // debug: for pointing to dest?
 
 	private bool _calculatingPath; // if calculating, idle
-	private Vector3Int[] _currentPath;
-	private Vector3 _destPoint; // world space!
 
 	private const float _defaultSpeed = 4f;
 	private const float _chaseSpeed = 8f;

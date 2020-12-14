@@ -57,7 +57,7 @@ public class Player : Actor
 	protected override void SetUpStateMachine()
 	{
 		PlayerInputControl inputState = new PlayerInputControl(this);
-		PlayerAutoControl autoState = new PlayerAutoControl(this, _tilemapManager, _map, _levelCompletionChecker);
+		PlayerAutoControl autoState = new PlayerAutoControl(this, _tilemapManager, _highlighter, _map, _pathManager, _levelCompletionChecker);
 
 		Func<bool> PlayerTryingToLeave = () => _levelCompletionChecker.ContainsPlayer;
 		Func<bool> AutoMovementDone = () => autoState.PlayerReachedDest;

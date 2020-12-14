@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 using Pathfinding;
 
 /// <summary>
-/// 
+/// Middleman script for using graph and pathfinding functions
 /// </summary>
 public class NavigationMap : MonoBehaviour
 {
@@ -13,7 +13,10 @@ public class NavigationMap : MonoBehaviour
 	[SerializeField] private Sprite _nodeSprite;
 
 	private Graph _graph;
-	private AStarSearch _aStarSearch;
+	private PathCalculator _pathCalculator;
+	private RouteCalculator _routeCalculator;
+
+	//private AStarSearch _aStarSearch;
 
 	// finding node from cell
 	[SerializeField] [Range(4, 100)] private int _bfsLimit = 20;
@@ -36,7 +39,9 @@ public class NavigationMap : MonoBehaviour
 		_tileManager = GetComponent<TilemapManager>();
 
 		_graph = new Graph();
-		_aStarSearch = new AStarSearch(_graph);
+		var pathfinder = new AStarSearch(_graph);
+		_pathCalculator = new PathCalculator(pathfinder);
+		_routeCalculator = new RouteCalculator(_pathCalculator);
 	}
 
 	private void Start()
@@ -56,10 +61,10 @@ public class NavigationMap : MonoBehaviour
 
 	public Path FindPathBetweenNodes(Vector3Int start, Vector3Int end, out ColoredTile[] evaluatedCells, out Vector3Int[] nonPathCells)
 	{
-		Path path = _aStarSearch.GetPathBetweenPoints(start, end);
-		evaluatedCells = _aStarSearch.TileHighlightOrder;
+		Path path = _pathCalculator.GetPath(start, end);
+		evaluatedCells = _pathCalculator.Algorithm.TileHighlightOrder; //_aStarSearch.TileHighlightOrder;
 
-		HashSet<Vector3Int> totalCells = new HashSet<Vector3Int>(_aStarSearch.TotalVisitedTiles);
+		HashSet<Vector3Int> totalCells = new HashSet<Vector3Int>(_pathCalculator.Algorithm.TotalVisitedTiles);
 
 		// remove path nodes from list of all cells
 		foreach (Vector3Int node in path)
@@ -78,7 +83,17 @@ public class NavigationMap : MonoBehaviour
 
 	public Path FindPathBetweenNodes(Vector3Int start, Vector3Int end)
 	{
-		return _aStarSearch.GetPathBetweenPoints(start, end);
+		return _pathCalculator.GetPath(start, end);
+	}
+
+	public Route FindRoute(params Vector3Int[] waypoints)
+	{
+		return _routeCalculator.GetRoute(waypoints);
+	}
+
+	public CyclicRoute FindCycle(params Vector3Int[] waypoints)
+	{
+		return _routeCalculator.GetCyclicRoute(waypoints);
 	}
 
 	/// <summary>
