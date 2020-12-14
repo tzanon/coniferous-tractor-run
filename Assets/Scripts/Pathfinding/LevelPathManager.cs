@@ -47,7 +47,7 @@ public class LevelPathManager : MonoBehaviour
 		var cycle = _navMap.FindCycle();
 
 		//return cycle;
-		return null;
+		return CyclicRoute.EmptyCycle;
 	}
 
 	private bool ValidatePoints(Vector3Int[] points)
