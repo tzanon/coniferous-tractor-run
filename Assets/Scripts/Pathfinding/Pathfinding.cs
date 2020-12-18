@@ -306,13 +306,18 @@ namespace Pathfinding
 			var waypointIdx = 0;
 			foreach (var point in CompletePath)
 			{
+				//Debug.Log("comparing point " + point + " with waypoint at index " + waypointIdx + " out of " + (_waypoints.Length - 1));
 				if (point == _waypoints[waypointIdx])
 				{
-					waypointIdx++;
+					if (waypointIdx == _waypoints.Length - 1)
+						return point == CompletePath[CompletePath.Length - 1];
+					else
+						waypointIdx++;
 				}
 			}
 
-			return (waypointIdx >= _waypoints.Length);
+			//return (waypointIdx >= _waypoints.Length);
+			return false;
 		}
 
 		public Vector3Int ClosestWaypoint(Vector3Int point)
@@ -395,13 +400,46 @@ namespace Pathfinding
 
 		public CyclicRoute(Path completePath, params Vector3Int[] waypoints) : base(completePath, waypoints) { }
 
+		// TODO: refactor for code reuse with base, don't use member variables!
 		protected override bool Valid()
 		{
+			/*
 			if (!base.Valid())
 				return false;
 
 			// first and last path point must be the first waypoint
 			return CompletePath[0] == _waypoints[0] && CompletePath[0] == CompletePath[CompletePath.Length - 1];
+			/**/
+
+			if (_waypoints.Length == 0 && CompletePath.Length == 0)
+				return true;
+
+			var cycleWaypoints = new Vector3Int[_waypoints.Length + 1];
+			Array.Copy(_waypoints, cycleWaypoints, _waypoints.Length);
+			cycleWaypoints[_waypoints.Length] = _waypoints[0];
+
+			// make sure every waypoint is in the path and in the same order as its own list
+			var waypointIdx = 0;
+			foreach (var point in CompletePath)
+			{
+				//Debug.Log("comparing point " + point + " with waypoint at index " + waypointIdx + " out of " + (cycleWaypoints.Length - 1));
+				if (point == cycleWaypoints[waypointIdx])
+				{
+					if (waypointIdx == cycleWaypoints.Length - 1)
+					{
+						if (point == CompletePath[CompletePath.Length - 1])
+							return true;
+						else
+							return false;
+					}
+					else
+					{
+						waypointIdx++;
+					}
+				}
+			}
+
+			return false;
 		}
 	}
 

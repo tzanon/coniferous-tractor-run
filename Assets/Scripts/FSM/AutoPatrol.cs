@@ -16,10 +16,10 @@ public abstract class AutoPatrol : AutoControl
 	protected override void InitializeData()
 	{
 		// get patrol route
-		_patrolRoute = _pathManager.GetLevelPatrolRoute(); // TODO
+		_patrolRoute = _pathManager.GetLevelPatrolRoute();
 		_currentPath = _patrolRoute.CompletePath;
 
-		_highlighter.HighlightPath(_currentPath[0], _currentPath[_currentPath.Length - 1]);
+		_highlighter.HighlightPath(_currentPath);
 
 		// check if actor is currently on a point in the route
 		var actorCell = _tilemapManager.CellOfPosition(_actor.Position);
@@ -41,7 +41,7 @@ public abstract class AutoPatrol : AutoControl
 
 	protected override void NoPathAction()
 	{
-		
+		// TODO
 	}
 
 	protected override void PathEndAction()
@@ -59,8 +59,6 @@ public abstract class AutoPatrol : AutoControl
 
 	public override void OnEnter()
 	{
-		
-
 		base.OnEnter();
 	}
 

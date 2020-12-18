@@ -2,30 +2,61 @@
 using UnityEngine;
 using Pathfinding;
 
-public class LevelPathManager : MonoBehaviour
+public class LevelPathManager : MonoBehaviour, IObserver<CollectibleStatus>
 {
 	// TODO: get rid of and replace with reference to Gameplay Manager
-	[SerializeField] private Collectible[] _collectibles;
+	private Collectible[] _collectibles;
+
+	[SerializeField] private Navpoint[] _testNavMarkers;
+
+	[SerializeField] GameplayManager _gameplayManager;
 
 	private TilemapManager _tilemapManager;
 	private NavigationMap _navMap;
+	private TilemapHighlighter _highlighter;
 
 	private void Awake()
 	{
 		_tilemapManager = GetComponent<TilemapManager>();
 		_navMap = GetComponent<NavigationMap>();
+		_highlighter = GetComponent<TilemapHighlighter>();
+	}
+
+	private void Start()
+	{
+		_gameplayManager.Subscribe(this);
+		HighlightTestCycle();
+	}
+
+	private void HighlightTestCycle()
+	{
+		var navMarkerCells = Array.ConvertAll(_testNavMarkers, navpoint => _tilemapManager.CellOfPosition(navpoint.WorldPosition));
+
+		var msg = "cycle waypoints: ";
+		foreach(var cell in navMarkerCells)
+			msg += cell + ", ";
+
+		Debug.Log(msg);
+
+		var cycle = _navMap.FindCycle(navMarkerCells);
+		_highlighter.HighlightPath(cycle.CompletePath);
+	}
+
+	public void CalculatePatrolRoute(Collectible[] collectibles)
+	{
+
 	}
 
 	public CyclicRoute GetLevelPatrolRoute()
 	{
 		// TODO: for each apple, get waypoints
 		var totalWaypoints = 0;
-		Vector3Int[][] waypointGroups = new Vector3Int[_collectibles.Length][];
+		var waypointGroups = new Vector3Int[_collectibles.Length][];
 
 		for (var i = 0; i < waypointGroups.Length; i++)
 		{
-			Vector3[] patrolPositions = _collectibles[i].PatrolPositions;
-			Vector3Int[] waypointGroup = new Vector3Int[patrolPositions.Length];
+			var patrolPositions = _collectibles[i].NavpointPositions;
+			var waypointGroup = new Vector3Int[patrolPositions.Length];
 			totalWaypoints += patrolPositions.Length;
 
 			// convert Vector3 positions to Vector3Int cells
@@ -59,4 +90,17 @@ public class LevelPathManager : MonoBehaviour
 		return true;
 	}
 
+	public void OnNext(CollectibleStatus status)
+	{
+		MessageLogger.LogDebugMessage(LogType.Game, "Path Manager got {0} collectibles", status.RemainingCollectibles.Length);
+
+		// TODO: (re)calculate level patrol route
+	}
+
+	public void OnError(Exception error) => throw error;
+
+	public void OnCompleted()
+	{
+		// TODO: all apples taken?
+	}
 }

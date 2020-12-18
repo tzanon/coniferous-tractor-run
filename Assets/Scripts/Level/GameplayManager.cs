@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class GameplayManager : MonoBehaviour
+public class GameplayManager : MonoBehaviour, IObservable<CollectibleStatus>
 {
 	/* fields */
 
 	private List<Collectible> _collectibles;
 	[SerializeField] private GameObject _barrier;
+
+	private List<IObserver<CollectibleStatus>> _observers;
 
 	/* properties */
 
@@ -38,10 +41,15 @@ public class GameplayManager : MonoBehaviour
 
 	/* Methods */
 
+	private void Awake()
+	{
+		_observers = new List<IObserver<CollectibleStatus>>(capacity: 5);
+	}
+
 	private void Start()
 	{
 		_collectibles = new List<Collectible>(FindObjectsOfType<Collectible>());
-		MessageLogger.LogDebugMessage(LogType.Game, "Number of collectibles in level: ", _collectibles.Count);
+		MessageLogger.LogDebugMessage(LogType.Game, "Number of collectibles in level: {0}", _collectibles.Count);
 	}
 
 	/// <summary>
@@ -88,6 +96,9 @@ public class GameplayManager : MonoBehaviour
 			return;
 		}
 
+		var collectibleStatus = new CollectibleStatus(_collectibles.ToArray(), toDelete.transform.position, toDelete.NavpointPositions);
+		UpdateObservers(collectibleStatus);
+
 		Destroy(toDelete.gameObject);
 	}
 
@@ -105,5 +116,24 @@ public class GameplayManager : MonoBehaviour
 	public void GameLost()
 	{
 
+	}
+
+	private void UpdateObservers(CollectibleStatus status)
+	{
+		foreach (var observer in _observers)
+			observer.OnNext(status);
+	}
+
+	public IDisposable Subscribe(IObserver<CollectibleStatus> observer)
+	{
+		if (!_observers.Contains(observer))
+		{
+			MessageLogger.LogDebugMessage(LogType.Game, "{0} subscribed to Gameplay Manager", observer);
+			_observers.Add(observer);
+			var status = new CollectibleStatus(_collectibles.ToArray());
+			observer.OnNext(status);
+		}
+
+		return new Unsubscriber<CollectibleStatus>(_observers, observer);
 	}
 }

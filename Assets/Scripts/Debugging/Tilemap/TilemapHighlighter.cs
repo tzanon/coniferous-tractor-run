@@ -231,6 +231,12 @@ public class TilemapHighlighter : MonoBehaviour
 	}
 
 	/// <summary>
+	/// Highlight nodes of an existing path
+	/// </summary>
+	/// <param name="path">Path to highlight</param>
+	public void HighlightPath(Path path) => HighlightCells(path.Points, _nodeHighlight, _shouldClearHighlight);
+
+	/// <summary>
 	/// Highlight a single tile with the given colour
 	/// </summary>
 	/// <param name="cell">Coordinates of tile to highlight</param>
