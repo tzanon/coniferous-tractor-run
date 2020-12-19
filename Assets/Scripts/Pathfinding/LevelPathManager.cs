@@ -25,12 +25,13 @@ public class LevelPathManager : MonoBehaviour, IObserver<CollectibleStatus>
 	private void Start()
 	{
 		_gameplayManager.Subscribe(this);
-		HighlightTestCycle();
+		//HighlightTestCycle();
 	}
 
+	//debug
 	private void HighlightTestCycle()
 	{
-		var navMarkerCells = Array.ConvertAll(_testNavMarkers, navpoint => _tilemapManager.CellOfPosition(navpoint.WorldPosition));
+		var navMarkerCells = _tilemapManager.CellsofPositions(_testNavMarkers);
 
 		var msg = "cycle waypoints: ";
 		foreach(var cell in navMarkerCells)
@@ -40,6 +41,24 @@ public class LevelPathManager : MonoBehaviour, IObserver<CollectibleStatus>
 
 		var cycle = _navMap.FindCycle(navMarkerCells);
 		_highlighter.HighlightPath(cycle.CompletePath);
+	}
+
+	//debug
+	private void HighlightCollectibleRoutes(Collectible[] collectibles, bool cyclic = true)
+	{
+		if (_highlighter.RefreshEnabled)
+			_highlighter.ToggleHighlightRefresh();
+
+		foreach (var collectible in collectibles)
+		{
+			var waypoints = _tilemapManager.CellsofPositions(collectible.NavpointPositions);
+			var route = cyclic ? _navMap.FindCycle(waypoints) : _navMap.FindRoute(waypoints);
+
+			_highlighter.HighlightPath(route.CompletePath);
+		}
+
+		if (!_highlighter.RefreshEnabled)
+			_highlighter.ToggleHighlightRefresh();
 	}
 
 	public void CalculatePatrolRoute(Collectible[] collectibles)
@@ -63,12 +82,12 @@ public class LevelPathManager : MonoBehaviour, IObserver<CollectibleStatus>
 			for (var j = 0; j < patrolPositions.Length; j++)
 			{
 				waypointGroup[j] = _tilemapManager.CellOfPosition(patrolPositions[j]);
-				
-				if (!ValidatePoints(waypointGroup))
-				{
-					MessageLogger.LogErrorMessage(LogType.Path, "ERROR: Some patrol waypoints are not pathfinding nodes!");
-					return CyclicRoute.EmptyCycle;
-				}
+			}
+
+			if (!ValidatePoints(waypointGroup))
+			{
+				MessageLogger.LogErrorMessage(LogType.Path, "ERROR: Some patrol waypoints are not pathfinding nodes!");
+				return CyclicRoute.EmptyCycle;
 			}
 		}
 
@@ -95,6 +114,9 @@ public class LevelPathManager : MonoBehaviour, IObserver<CollectibleStatus>
 		MessageLogger.LogDebugMessage(LogType.Game, "Path Manager got {0} collectibles", status.RemainingCollectibles.Length);
 
 		// TODO: (re)calculate level patrol route
+		//CalculatePatrolRoute(status.RemainingCollectibles);
+
+		HighlightCollectibleRoutes(status.RemainingCollectibles);
 	}
 
 	public void OnError(Exception error) => throw error;

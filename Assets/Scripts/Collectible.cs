@@ -1,27 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Collectible : MonoBehaviour
 {
 	// markers constituting patrol route points
-	[SerializeField] private Navpoint[] _patrolNavpoints;
+	//[SerializeField]
+	private Navpoint[] _patrolNavpoints;
 
-	public Vector3[] NavpointPositions
-	{
-		get
-		{
-			var positions = Array.ConvertAll(_patrolNavpoints, navpoint => navpoint.WorldPosition);
-
-			/*
-			Vector3[] positions = new Vector3[_patrolNavpoints.Length];
-
-			for (var i = 0; i < positions.Length; i++)
-				positions[i] = _patrolNavpoints[i].transform.position;
-			/**/
-
-			return positions;
-		}
-	}
+	public Vector3[] NavpointPositions => Array.ConvertAll(_patrolNavpoints, navpoint => navpoint.WorldPosition);
 
 	private void Awake()
 	{
@@ -31,5 +18,18 @@ public class Collectible : MonoBehaviour
 	private void Start()
 	{
 		_patrolNavpoints = GetComponentsInChildren<Navpoint>();
+
+		Array.Sort(_patrolNavpoints, new NavpointNameComparer());
+		var pointStr = NamesOfNavpoints();
+		MessageLogger.LogDebugMessage(LogType.Game, "Navpoints after sorting for {0} are {1}", this.name, pointStr);
 	}
+
+	private string NamesOfNavpoints()
+	{
+		var navList = new List<Navpoint>(_patrolNavpoints);
+		var pointStr = "";
+		navList.ForEach(point => pointStr += (point.name + ", "));
+		return pointStr;
+	}
+
 }

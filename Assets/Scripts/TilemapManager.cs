@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿//using System;
+using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class TilemapManager : MonoBehaviour
@@ -65,6 +66,21 @@ public class TilemapManager : MonoBehaviour
 	public Vector3Int CellOfPosition(Vector3 pos)
 	{
 		return _map.WorldToCell(pos);
+	}
+
+	/// <summary>
+	/// Converts an array of points into an array of cell coordinates
+	/// </summary>
+	/// <param name="points">Vector3 array of positions</param>
+	/// <returns>Vecto3Int array of cells</returns>
+	public Vector3Int[] CellsofPositions(Vector3[] points)
+	{
+		return System.Array.ConvertAll(points, point => CellOfPosition(point));
+	}
+
+	public Vector3Int[] CellsofPositions(Navpoint[] navpoints)
+	{
+		return System.Array.ConvertAll(navpoints, navpoint => CellOfPosition(navpoint.WorldPosition));
 	}
 
 	/// <summary>
