@@ -37,6 +37,11 @@ public abstract class AutoMoveToPoint : AutoControl
 		}
 	}
 
+	protected override void PathEndAction()
+	{
+		// Nothing: ActorReachedDestination is used to trigger exiting of state
+	}
+
 	protected override void ClearData()
 	{
 		base.ClearData();

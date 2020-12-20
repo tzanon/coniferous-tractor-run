@@ -333,7 +333,7 @@ namespace Pathfinding
 			return false;
 		}
 
-		public Vector3Int ClosestWaypoint(Vector3Int point)
+		public Vector3Int ClosestWaypoint(Vector3Int cell)
 		{
 			if (_waypoints.Length <= 0)
 				MessageLogger.LogWarningMessage(LogType.Path, "Route is empty. Returning null position.");
@@ -344,10 +344,10 @@ namespace Pathfinding
 			// find closest waypoint
 			foreach (var waypoint in _waypoints)
 			{
-				if (waypoint == point)
+				if (waypoint == cell)
 					return waypoint;
 
-				var distance = Vector3.SqrMagnitude(point - waypoint);
+				var distance = Vector3.SqrMagnitude(cell - waypoint);
 				if (distance < minDistance)
 				{
 					minDistance = distance;
@@ -358,19 +358,19 @@ namespace Pathfinding
 			return closestWaypoint;
 		}
 
-		public int PathIndexOfClosestWaypoint(Vector3Int point)
+		public int PathIndexOfClosestWaypoint(Vector3Int cell)
 		{
-			var closestWaypoint = ClosestWaypoint(point);
+			var closestWaypoint = ClosestWaypoint(cell);
 			return Array.IndexOf(CompletePath.Points, closestWaypoint);
 		}
 
-		public Vector3Int ClosestPathPoint(Vector3Int point)
+		public Vector3Int ClosestPathPoint(Vector3Int cell)
 		{
-			var closestIdx = PathIndexOfClosestPoint(point);
+			var closestIdx = PathIndexOfClosestPoint(cell);
 			return CompletePath[closestIdx];
 		}
 
-		public int PathIndexOfClosestPoint(Vector3Int point)
+		public int PathIndexOfClosestPoint(Vector3Int cell)
 		{
 			if (CompletePath.Length <= 0)
 				MessageLogger.LogWarningMessage(LogType.Path, "Route is empty. Returning null index.");
@@ -381,10 +381,10 @@ namespace Pathfinding
 			// find index of closest path point
 			for (var i = 0; i < CompletePath.Length; i++)
 			{
-				if (CompletePath[i] == point)
+				if (CompletePath[i] == cell)
 					return i;
 
-				var distance = Vector3.SqrMagnitude(point - CompletePath[i]);
+				var distance = Vector3.SqrMagnitude(cell - CompletePath[i]);
 				if (distance < minDistance)
 				{
 					minDistance = distance;

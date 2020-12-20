@@ -13,8 +13,8 @@ public class Tractor : Actor
 
 	private bool _calculatingPath; // if calculating, idle
 
-	private const float _defaultSpeed = 1.0f;
-	private const float _chaseSpeed = 8f;
+	private const float _defaultSpeed = 4.0f;
+	private const float _chaseSpeed = 8.0f;
 
 	protected override void Awake()
 	{
@@ -42,21 +42,29 @@ public class Tractor : Actor
 		base.SetUpStateMachine();
 
 		// create states
+		var errorState = new Error(this);
 		var idleState = new Idle(this);
+		var findPatrolState = new AutoFindPatrol(this, _tilemapManager, _highlighter, _navMap, _pathManager);
 		var patrolState = new AutoPatrol(this, _tilemapManager, _highlighter, _navMap, _pathManager);
 
 		// create trigger functions
 		bool tractorStuck() => Stuck;
+		bool reachedPatrol() => findPatrolState.ActorReachedDestination;
 
 		// create transitions
-		var switchToIdle = new FSMTransition(idleState, tractorStuck);
+		var anyToError = new FSMTransition(errorState, tractorStuck);
+		var searchToPatrol = new FSMTransition(patrolState, reachedPatrol);
 
 		// add everything and set starting state
-		_stateMachine.AddState(patrolState);
-		_stateMachine.AddState(idleState);
-		_stateMachine.AddUniversalTransition(switchToIdle);
 
-		_stateMachine.CurrentState = patrolState;
+		_stateMachine.AddState(idleState);
+		_stateMachine.AddState(errorState);
+		_stateMachine.AddUniversalTransition(anyToError);
+
+		_stateMachine.AddState(patrolState);
+		_stateMachine.AddState(findPatrolState, searchToPatrol);
+
+		_stateMachine.CurrentState = findPatrolState;
 	}
 
 	private void FixedUpdate()

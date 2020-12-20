@@ -6,10 +6,7 @@ public class AutoPatrol : AutoControl
 
 	private CyclicRoute _patrolRoute;
 
-	public AutoPatrol(Actor actor, TilemapManager tm, TilemapHighlighter th, NavigationMap nm, LevelPathManager lpm) : base(actor, tm, th, nm, lpm)
-	{
-
-	}
+	public AutoPatrol(Actor actor, TilemapManager tm, TilemapHighlighter th, NavigationMap nm, LevelPathManager lpm) : base(actor, tm, th, nm, lpm) { }
 
 	protected override void CalculatePath()
 	{
@@ -22,17 +19,10 @@ public class AutoPatrol : AutoControl
 	{
 		base.InitializeData();
 
-		_highlighter.HighlightPath(_currentPath);
+		//_highlighter.HighlightPath(_currentPath);
 
 		var actorCell = _tilemapManager.CellOfPosition(_actor.Position);
 		_pathIdx = _currentPath.IndexOf(actorCell);
-
-		// check if actor is currently on a point in the route
-		if (_pathIdx < 0)
-		{
-			MessageLogger.LogErrorMessage(LogType.Path, "ERROR: actor {0} is not on patrol route!", _actor.name);
-			_actor.Stuck = true;
-		}
 	}
 
 	protected override void ClearData()
@@ -43,7 +33,8 @@ public class AutoPatrol : AutoControl
 
 	protected override void NoPathAction()
 	{
-		// TODO
+		MessageLogger.LogErrorMessage(LogType.Path, "ERROR: actor {0} is not on patrol route!", _actor.name);
+		_actor.Stuck = true;
 	}
 
 	protected override void PathEndAction()

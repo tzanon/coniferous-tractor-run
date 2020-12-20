@@ -23,7 +23,7 @@ public static class MessageLogger
 		{ LogType.Actor,		LogLevel.Warning | LogLevel.Error },
 		{ LogType.Graph,		LogLevel.Warning | LogLevel.Error },
 		{ LogType.Path,			LogLevel.Warning | LogLevel.Error },
-		{ LogType.FSM,			LogLevel.Warning | LogLevel.Error },
+		{ LogType.FSM,			LogLevel.Debug | LogLevel.Warning | LogLevel.Error },
 		{ LogType.Game,			LogLevel.Debug | LogLevel.Warning | LogLevel.Error },
 		{ LogType.GUI,			LogLevel.Warning | LogLevel.Error }
 	};

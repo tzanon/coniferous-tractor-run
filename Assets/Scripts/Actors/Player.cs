@@ -6,7 +6,7 @@ public class Player : Actor
 {
 	/* fields */
 
-	[SerializeField] private GameplayManager _level;
+	[SerializeField] private GameplayManager _gameplayManager;
 	[SerializeField] private LevelCompletionChecker _levelCompletionChecker;
 
 	[SerializeField] private float _playerSpeed = 5.0f;
@@ -94,12 +94,13 @@ public class Player : Actor
 
 			NumCollectibles++;
 			Collectible collectible = coll.GetComponent<Collectible>();
-			_level.DeleteCollectible(collectible);
+			_gameplayManager.DeleteCollectible(collectible);
 		}
 		else if (coll.CompareTag("Tractor"))
 		{
 			// game over
 			// TODO: put in tractor
+			
 			MessageLogger.LogDebugMessage(LogType.Actor, "Game over...");
 		}
 	}

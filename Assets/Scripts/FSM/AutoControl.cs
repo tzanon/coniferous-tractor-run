@@ -51,6 +51,8 @@ public abstract class AutoControl : FSMState
 		return distance.sqrMagnitude < Mathf.Pow(_distanceThreshold, 2f);
 	}
 
+	protected void Teleport(Vector3Int cell) => _actor.Position = _tilemapManager.CenterPositionOfCell(cell);
+
 	protected abstract void CalculatePath();
 
 	protected virtual void InitializeData()
