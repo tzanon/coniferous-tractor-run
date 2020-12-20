@@ -1,19 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
 
 public class LevelPathManager : MonoBehaviour, IObserver<CollectibleStatus>
 {
-	// TODO: get rid of and replace with reference to Gameplay Manager
-	private Collectible[] _collectibles;
-
+	/* fields */
 	[SerializeField] private Navpoint[] _testNavMarkers;
 
+	// components
 	[SerializeField] GameplayManager _gameplayManager;
-
 	private TilemapManager _tilemapManager;
 	private NavigationMap _navMap;
 	private TilemapHighlighter _highlighter;
+
+	/* properties */
+
+	public CyclicRoute LevelPatrolRoute { get; private set; }
+
+	/* methods */
 
 	private void Awake()
 	{
@@ -61,62 +66,72 @@ public class LevelPathManager : MonoBehaviour, IObserver<CollectibleStatus>
 			_highlighter.ToggleHighlightRefresh();
 	}
 
+	/// <summary>
+	/// Highlight current patrol route
+	/// </summary>
+	private void HighlightPatrolRoute() => _highlighter.HighlightPath(LevelPatrolRoute.CompletePath);
+
+	// TODO: have dummy object go through route at high speed?
+	private void RunThroughPatrol()
+	{
+
+	}
+
 	public void CalculatePatrolRoute(Collectible[] collectibles)
 	{
+		// create array for patrol waypoints
+		var totalNumWaypoints = 0;
+		Array.ForEach(collectibles, coll => totalNumWaypoints += coll.NavpointPositions.Length);
+		var patrolWaypoints = new Vector3Int[totalNumWaypoints];
 
-	}
-
-	public CyclicRoute GetLevelPatrolRoute()
-	{
-		// TODO: for each apple, get waypoints
-		var totalWaypoints = 0;
-		var waypointGroups = new Vector3Int[_collectibles.Length][];
-
-		for (var i = 0; i < waypointGroups.Length; i++)
+		// populate array with cells of navpoints
+		var copyIdx = 0;
+		for (var i = 0; i < collectibles.Length; i++)
 		{
-			var patrolPositions = _collectibles[i].NavpointPositions;
-			var waypointGroup = new Vector3Int[patrolPositions.Length];
-			totalWaypoints += patrolPositions.Length;
-
-			// convert Vector3 positions to Vector3Int cells
-			for (var j = 0; j < patrolPositions.Length; j++)
-			{
-				waypointGroup[j] = _tilemapManager.CellOfPosition(patrolPositions[j]);
-			}
-
-			if (!ValidatePoints(waypointGroup))
-			{
-				MessageLogger.LogErrorMessage(LogType.Path, "ERROR: Some patrol waypoints are not pathfinding nodes!");
-				return CyclicRoute.EmptyCycle;
-			}
+			var navpointCells = _tilemapManager.CellsofPositions(collectibles[i].NavpointPositions);
+			navpointCells.CopyTo(patrolWaypoints, copyIdx);
+			copyIdx += navpointCells.Length;
 		}
 
-		Vector3Int[] patrolWaypoints = new Vector3Int[totalWaypoints];
-		// TODO: make complete waypoint array here or refactor above nested loop
+		// ensure that all waypoints are graph nodes
+		var invalidWaypoints = CheckInvalidNodes(patrolWaypoints);
+		if (invalidWaypoints.Length > 0)
+		{
+			var invalidStr = "";
+			Array.ForEach(invalidWaypoints, point => invalidStr += point + ", ");
+			MessageLogger.LogErrorMessage(LogType.Path, "ERROR: trying to create patrol route from non-node points: " + invalidStr);
+			LevelPatrolRoute = CyclicRoute.EmptyCycle;
+			return;
+		}
 
-		var cycle = _navMap.FindCycle();
+		var waypointStr = "";
+		Array.ForEach(patrolWaypoints, waypoint => waypointStr += waypoint.ToString() + ", ");
+		Debug.Log("Level has " + patrolWaypoints.Length + " waypoints: " + waypointStr);
 
-		//return cycle;
-		return CyclicRoute.EmptyCycle;
+		LevelPatrolRoute = _navMap.FindCycle(patrolWaypoints); // calculate cycle and assign as level's patrol route
 	}
 
-	private bool ValidatePoints(Vector3Int[] points)
+	private Vector3Int[] CheckInvalidNodes(Vector3Int[] points)
 	{
+		var invalidNodes = new List<Vector3Int>();
 		foreach (var point in points)
 			if (!_navMap.IsPathfindingNode(point))
-				return false;
+				invalidNodes.Add(point);
 
-		return true;
+		return invalidNodes.ToArray();
 	}
 
+	/// <summary>
+	/// Recieve update on collectibles from Gameplay Manager
+	/// </summary>
+	/// <param name="status">Status class containing remaining collectibles and </param>
 	public void OnNext(CollectibleStatus status)
 	{
 		MessageLogger.LogDebugMessage(LogType.Game, "Path Manager got {0} collectibles", status.RemainingCollectibles.Length);
 
-		// TODO: (re)calculate level patrol route
-		//CalculatePatrolRoute(status.RemainingCollectibles);
-
-		HighlightCollectibleRoutes(status.RemainingCollectibles);
+		// (re)calculate level patrol route
+		CalculatePatrolRoute(status.RemainingCollectibles);
+		HighlightPatrolRoute();
 	}
 
 	public void OnError(Exception error) => throw error;

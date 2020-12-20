@@ -395,7 +395,7 @@ namespace Pathfinding
 	/// </summary>
 	public class CyclicRoute : Route
 	{
-		public static CyclicRoute EmptyCycle { get => new CyclicRoute(Path.EmptyPath); }
+		public static CyclicRoute EmptyCycle => new CyclicRoute(Path.EmptyPath);
 
 		public CyclicRoute(Path completePath, params Vector3Int[] waypoints) : base(completePath, waypoints) { }
 

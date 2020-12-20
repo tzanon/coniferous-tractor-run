@@ -16,7 +16,7 @@ public abstract class AutoPatrol : AutoControl
 	protected override void InitializeData()
 	{
 		// get patrol route
-		_patrolRoute = _pathManager.GetLevelPatrolRoute();
+		_patrolRoute = _pathManager.LevelPatrolRoute;
 		_currentPath = _patrolRoute.CompletePath;
 
 		_highlighter.HighlightPath(_currentPath);

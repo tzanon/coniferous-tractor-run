@@ -21,7 +21,7 @@ public class Collectible : MonoBehaviour
 
 		Array.Sort(_patrolNavpoints, new NavpointNameComparer());
 		var pointStr = NamesOfNavpoints();
-		MessageLogger.LogDebugMessage(LogType.Game, "Navpoints after sorting for {0} are {1}", this.name, pointStr);
+		//MessageLogger.LogDebugMessage(LogType.Game, "Navpoints after sorting for {0} are {1}", this.name, pointStr);
 	}
 
 	private string NamesOfNavpoints()
