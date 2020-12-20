@@ -1,19 +1,12 @@
 ﻿using UnityEngine;
 
-public sealed class PlayerAutoControl : AutoControl
+public sealed class PlayerAutoControl : AutoMoveToPoint
 {
 	/* fields */
 
 	private Player _player;
 	private LevelCompletionChecker _completionChecker;
 	private Vector3Int _destNode;
-
-	/* properties */
-
-	public bool PlayerReachedDest
-	{
-		get => ActorAtPoint(_tilemapManager.CenterPositionOfCell(_destNode));
-	}
 
 	/* methods */
 
@@ -22,29 +15,13 @@ public sealed class PlayerAutoControl : AutoControl
 	{
 		_completionChecker = lcc;
 		_player = (Player)_actor;
-		_destNode = TilemapManager.UndefinedCell;
 	}
 
 	private void Teleport() => _player.Position = _tilemapManager.CenterPositionOfCell(_destNode);
 
-	protected override void InitializeData()
+	protected override Vector3Int CalculateDestination()
 	{
-		var playerCell = _tilemapManager.CellOfPosition(_player.Position);
-		var closestNodeToPlayer = _navMap.ClosestNodeToCell(playerCell);
-
-		_destNode = _completionChecker.CurrentDestNode;
-		FindPath(closestNodeToPlayer, _destNode);
-
-		if (!_currentPath.Empty)
-		{
-			_pathIdx = 0;
-		}
-	}
-
-	protected override void ClearData()
-	{
-		base.ClearData();
-		_destNode = TilemapManager.UndefinedCell;
+		return _completionChecker.CurrentDestNode;
 	}
 
 	protected override void NoPathAction()

@@ -1,9 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-
 using Directions;
-using UnityEditor.Profiling.Memory.Experimental;
-using UnityEditor.VersionControl;
 
 public abstract class Actor : MonoBehaviour
 {
@@ -30,6 +27,8 @@ public abstract class Actor : MonoBehaviour
 
 	protected Vector2 _lastMovement = Vector3.zero;
 
+	protected FiniteStateMachine _stateMachine;
+
 	// animation sprites and names
 	[SerializeField] private Sprite _idleFwd, _idleBack, _idleSide;
 	protected string _idleAnimFwd, _idleAnimBack, _idleAnimRight, _idleAnimLeft;
@@ -48,11 +47,12 @@ public abstract class Actor : MonoBehaviour
 
 	[SerializeField] protected TilemapManager _tilemapManager;
 	protected TilemapHighlighter _highlighter;
-	protected NavigationMap _map;
+	protected NavigationMap _navMap;
 	protected LevelPathManager _pathManager;
 
-
 	/* properties */
+
+	public bool Stuck { get; set; }
 
 	public float CurrentSpeed { get; protected set; }
 
@@ -70,7 +70,10 @@ public abstract class Actor : MonoBehaviour
 
 	protected abstract void AssignAnimationStateNames();
 
-	protected abstract void SetUpStateMachine();
+	protected virtual void SetUpStateMachine()
+	{
+		_stateMachine = new FiniteStateMachine();
+	}
 
 	/* virtual and normal methods */
 
@@ -78,11 +81,11 @@ public abstract class Actor : MonoBehaviour
 	{
 		_verticalCollSize = _idleFwd.bounds.size;
 		_horizontalCollSize = _idleSide.bounds.size;
+		Stuck = false;
 
 		CacheComponents();
 		AssignAnimationStateNames();
 		SetUpDirectionCharacteristics();
-		SetUpStateMachine();
 	}
 
 	/// <summary>
@@ -96,7 +99,7 @@ public abstract class Actor : MonoBehaviour
 		_animator = GetComponent<Animator>();
 
 		_highlighter = _tilemapManager.GetComponent<TilemapHighlighter>();
-		_map = _tilemapManager.GetComponent<NavigationMap>();
+		_navMap = _tilemapManager.GetComponent<NavigationMap>();
 		_pathManager = _tilemapManager.GetComponent<LevelPathManager>();
 	}
 
@@ -114,6 +117,7 @@ public abstract class Actor : MonoBehaviour
 
 	protected virtual void Start()
 	{
+		SetUpStateMachine();
 		SetIdleAnimInDirection(CardinalDirection.South);
 	}
 
@@ -173,6 +177,9 @@ public abstract class Actor : MonoBehaviour
 	/// <param name="isMoving">Whether a moving or idle animation should be played</param>
 	private void SetDirectionalAnimation(CardinalDirection direction, bool isMoving)
 	{
+		if (!_isAnimated)
+			return;
+
 		// check if trying to set animation in nonexistant direction
 		if (direction == CardinalDirection.Null)
 		{
@@ -191,5 +198,4 @@ public abstract class Actor : MonoBehaviour
 		// set collider to directional size
 		_bc.size = dc.ColliderSize;
 	}
-
 }

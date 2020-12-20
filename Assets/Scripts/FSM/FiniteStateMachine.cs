@@ -6,10 +6,10 @@ using System.Collections.Generic;
 /// </summary>
 public class FiniteStateMachine
 {
-	private Dictionary<FSMState, List<FSMTransition>> _transitions = new Dictionary<FSMState, List<FSMTransition>>();
+	private readonly Dictionary<FSMState, List<FSMTransition>> _transitions = new Dictionary<FSMState, List<FSMTransition>>();
 	private List<FSMTransition> _currentTransitions = new List<FSMTransition>();
-	private List<FSMTransition> _anyTransitions = new List<FSMTransition>();
-	private static List<FSMTransition> EmptyTransitions = new List<FSMTransition>();
+	private readonly List<FSMTransition> _anyTransitions = new List<FSMTransition>();
+	private readonly static List<FSMTransition> EmptyTransitions = new List<FSMTransition>(0);
 
 	private FSMState _currentState;
 
@@ -22,6 +22,7 @@ public class FiniteStateMachine
 		{
 			if (!_transitions.ContainsKey(value))
 			{
+				MessageLogger.LogErrorMessage(LogType.FSM, "ERROR: Attempting to set unavailable state {0} on FSM {1}", value.ToString(), this.ToString());
 				return;
 			}
 
@@ -60,10 +61,22 @@ public class FiniteStateMachine
 	}
 
 	/// <summary>
+	/// Add a transition that can be triggered from any state
+	/// </summary>
+	/// <param name="transition">Transition to another state</param>
+	public void AddUniversalTransition(FSMTransition transition)
+	{
+		if (!_anyTransitions.Contains(transition))
+		{
+			_anyTransitions.Add(transition);
+		}
+	}
+
+	/// <summary>
 	/// Add a transition to a given state
 	/// </summary>
 	/// <param name="from">State being given the transition</param>
-	/// <param name="transition">Transition</param>
+	/// <param name="transition">Transition to the other state</param>
 	public void AddTransition(FSMState from, FSMTransition transition)
 	{
 		if (_transitions.ContainsKey(from))
@@ -72,14 +85,13 @@ public class FiniteStateMachine
 		}
 		else
 		{
-			List<FSMTransition> transitionList = new List<FSMTransition>();
-			transitionList.Add(transition);
+			List<FSMTransition> transitionList = new List<FSMTransition>() { transition };
 			_transitions.Add(from, transitionList);
 		}
 	}
 
 	/// <summary>
-	/// Add transition between two states
+	/// Add a transition to a given state
 	/// </summary>
 	/// <param name="from">State being given the transition</param>
 	/// <param name="condition">Condition for the transition to be activated</param>
@@ -102,7 +114,7 @@ public class FiniteStateMachine
 			MessageLogger.LogVerboseMessage(LogType.FSM, "FSM {0} transitioning to state {1}", this.ToString(), CurrentState.ToString());
 		}
 
-		CurrentState.PerformAction();
+		CurrentState?.PerformAction();
 	}
 
 	/// <summary>

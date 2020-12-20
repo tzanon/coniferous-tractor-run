@@ -44,11 +44,12 @@ public class GameplayManager : MonoBehaviour, IObservable<CollectibleStatus>
 	private void Awake()
 	{
 		_observers = new List<IObserver<CollectibleStatus>>(capacity: 5);
+		_collectibles = new List<Collectible>(FindObjectsOfType<Collectible>());
 	}
 
 	private void Start()
 	{
-		_collectibles = new List<Collectible>(FindObjectsOfType<Collectible>());
+		
 		//MessageLogger.LogDebugMessage(LogType.Game, "Number of collectibles in level: {0}", _collectibles.Count);
 	}
 

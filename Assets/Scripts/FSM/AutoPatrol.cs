@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Pathfinding;
 
-public abstract class AutoPatrol : AutoControl
+public class AutoPatrol : AutoControl
 {
 
 	private CyclicRoute _patrolRoute;
@@ -11,26 +11,28 @@ public abstract class AutoPatrol : AutoControl
 
 	}
 
-	protected abstract void GetPatrolRoute();
-
-	protected override void InitializeData()
+	protected override void CalculatePath()
 	{
 		// get patrol route
 		_patrolRoute = _pathManager.LevelPatrolRoute;
 		_currentPath = _patrolRoute.CompletePath;
+	}
+
+	protected override void InitializeData()
+	{
+		base.InitializeData();
 
 		_highlighter.HighlightPath(_currentPath);
 
-		// check if actor is currently on a point in the route
 		var actorCell = _tilemapManager.CellOfPosition(_actor.Position);
-		if (!_currentPath.Contains(actorCell))
-		{
-			MessageLogger.LogErrorMessage(LogType.Path, "ERROR: actor {0} is not currently on patrol route!", _actor.name);
-			_pathIdx = -1;
-			return;
-		}
+		_pathIdx = _currentPath.IndexOf(actorCell);
 
-		_pathIdx = _patrolRoute.PathIndexOfClosestPoint(actorCell);
+		// check if actor is currently on a point in the route
+		if (_pathIdx < 0)
+		{
+			MessageLogger.LogErrorMessage(LogType.Path, "ERROR: actor {0} is not on patrol route!", _actor.name);
+			_actor.Stuck = true;
+		}
 	}
 
 	protected override void ClearData()
@@ -52,14 +54,8 @@ public abstract class AutoPatrol : AutoControl
 
 	public override void PerformAction()
 	{
-		//base.PerformAction();
+		base.PerformAction();
 		// nothing while testing (highlight on entry)
 		return;
 	}
-
-	public override void OnEnter()
-	{
-		base.OnEnter();
-	}
-
 }

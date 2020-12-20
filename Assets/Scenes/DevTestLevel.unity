@@ -85109,6 +85109,11 @@ PrefabInstance:
       propertyPath: _levelCompletionChecker
       value: 
       objectReference: {fileID: 1177651270}
+    - target: {fileID: 7712710582726886949, guid: eb5492a23a5c684488f965b1a188ca2e,
+        type: 3}
+      propertyPath: _isAnimated
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eb5492a23a5c684488f965b1a188ca2e, type: 3}
 --- !u!1001 &8739432757414460627
@@ -85178,10 +85183,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8739432759012199898, guid: 0efb50a1b34529840a5117894549db3c,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: a05de9947dc45c64a935da8eb19199ba, type: 2}
     - target: {fileID: 8739432759012199899, guid: 0efb50a1b34529840a5117894549db3c,
         type: 3}
       propertyPath: _tilemapManager
       value: 
       objectReference: {fileID: 1565289089}
+    - target: {fileID: 8739432759012199899, guid: 0efb50a1b34529840a5117894549db3c,
+        type: 3}
+      propertyPath: _isAnimated
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0efb50a1b34529840a5117894549db3c, type: 3}

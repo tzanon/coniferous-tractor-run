@@ -36,10 +36,12 @@ public abstract class AutoControl : FSMState
 		ClearData();
 	}
 
-	protected void FindPath(Vector3Int start, Vector3Int end)
+	/*
+	protected virtual void FindPath(Vector3Int start, Vector3Int end)
 	{
 		_currentPath = _navMap.FindPathBetweenNodes(start, end);
 	}
+	/**/
 
 	private bool IncrementPathIndex() => ++_pathIdx < _currentPath.Length;
 
@@ -49,7 +51,12 @@ public abstract class AutoControl : FSMState
 		return distance.sqrMagnitude < Mathf.Pow(_distanceThreshold, 2f);
 	}
 
-	protected abstract void InitializeData();
+	protected abstract void CalculatePath();
+
+	protected virtual void InitializeData()
+	{
+		CalculatePath();
+	}
 
 	protected virtual void ClearData()
 	{

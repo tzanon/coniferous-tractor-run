@@ -9,8 +9,6 @@ public class Player : Actor
 	[SerializeField] private GameplayManager _level;
 	[SerializeField] private LevelCompletionChecker _levelCompletionChecker;
 
-	private FiniteStateMachine _stateMachine;
-
 	[SerializeField] private float _playerSpeed = 5.0f;
 
 	/* properties */
@@ -56,16 +54,21 @@ public class Player : Actor
 	/// </summary>
 	protected override void SetUpStateMachine()
 	{
+		base.SetUpStateMachine();
+
+		// create states
 		PlayerInputControl inputState = new PlayerInputControl(this);
-		PlayerAutoControl autoState = new PlayerAutoControl(this, _tilemapManager, _highlighter, _map, _pathManager, _levelCompletionChecker);
+		PlayerAutoControl autoState = new PlayerAutoControl(this, _tilemapManager, _highlighter, _navMap, _pathManager, _levelCompletionChecker);
 
+		// create transition triggers
 		Func<bool> PlayerTryingToLeave = () => _levelCompletionChecker.ContainsPlayer;
-		Func<bool> AutoMovementDone = () => autoState.PlayerReachedDest;
-
+		Func<bool> AutoMovementDone = () => autoState.ActorReachedDestination;
+		
+		// create transitions
 		FSMTransition switchToAutoMovement = new FSMTransition(autoState, PlayerTryingToLeave);
 		FSMTransition switchToInputMovement = new FSMTransition(inputState, AutoMovementDone);
 
-		_stateMachine = new FiniteStateMachine();
+		// add everything and set starting state
 		_stateMachine.AddState(inputState, switchToAutoMovement);
 		_stateMachine.AddState(autoState, switchToInputMovement);
 		_stateMachine.CurrentState = inputState;
@@ -76,7 +79,7 @@ public class Player : Actor
 	/// </summary>
 	private void LateUpdate()
 	{
-		_stateMachine.Run();
+		_stateMachine?.Run();
 	}
 
 	/// <summary>

@@ -176,6 +176,20 @@ namespace Pathfinding
 		}
 
 		/// <summary>
+		/// Gets index of given point
+		/// </summary>
+		/// <param name="point">Point to search index of</param>
+		/// <returns>Point's index or -1 if not found</returns>
+		public int IndexOf(Vector3Int point)
+		{
+			for (int i = 0; i < Points.Length; i++)
+				if (Points[i] == point)
+					return i;
+
+			return -1;
+		}
+
+		/// <summary>
 		/// Concatenate two adjacent paths together, NOT commutative!
 		/// </summary>
 		/// <param name="path1">First path</param>
