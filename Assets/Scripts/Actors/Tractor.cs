@@ -6,7 +6,8 @@ using UnityEngine.UI;
 using Directions;
 using Pathfinding;
 
-public class Tractor : Actor
+// TODO: make a subscriber of gameplay manager
+public class Tractor : Actor//, IObserver<CollectibleStatus>
 {
 	[SerializeField] private RectTransform _debugDisplay; // TODO: display destination/status above tractor
 	private LineRenderer _lr; // debug: for pointing to dest?
@@ -48,18 +49,21 @@ public class Tractor : Actor
 		var patrolState = new AutoPatrol(this, _tilemapManager, _highlighter, _navMap, _pathManager);
 
 		// create trigger functions
-		bool tractorStuck() => Stuck;
-		bool reachedPatrol() => findPatrolState.ActorReachedDestination;
+		bool GameOver() => _gameplayManager.GameOver;
+		bool TractorStuck() => Stuck;
+		bool ReachedPatrol() => findPatrolState.ActorReachedDestination;
 
 		// create transitions
-		var anyToError = new FSMTransition(errorState, tractorStuck);
-		var searchToPatrol = new FSMTransition(patrolState, reachedPatrol);
+		var gameOverIdle = new FSMTransition(idleState, GameOver);
+		var stuckError = new FSMTransition(errorState, TractorStuck);
+		var searchToPatrol = new FSMTransition(patrolState, ReachedPatrol);
 
 		// add everything and set starting state
-
 		_stateMachine.AddState(idleState);
+		_stateMachine.AddUniversalTransition(gameOverIdle);
+
 		_stateMachine.AddState(errorState);
-		_stateMachine.AddUniversalTransition(anyToError);
+		_stateMachine.AddUniversalTransition(stuckError);
 
 		_stateMachine.AddState(patrolState);
 		_stateMachine.AddState(findPatrolState, searchToPatrol);
@@ -69,7 +73,16 @@ public class Tractor : Actor
 
 	private void FixedUpdate()
 	{
-		// TODO: path following and handling (or not...?)
 		_stateMachine?.Run();
+	}
+
+	private void OnTriggerEnter2D(Collider2D collision)
+	{
+		if (collision.CompareTag("Player"))
+		{
+			// TODO: game over
+			MessageLogger.LogDebugMessage(LogType.Actor, "Tractor hit player! Game over!");
+			_gameplayManager.GameLost();
+		}
 	}
 }

@@ -11,7 +11,11 @@ public class GameplayManager : MonoBehaviour, IObservable<CollectibleStatus>
 
 	private List<IObserver<CollectibleStatus>> _observers;
 
+	private GuiMessageDisplayer _guiMessageDisplayer;
+
 	/* properties */
+
+	public bool GameOver { get; set; }
 
 	/// <summary>
 	/// Returns array of positions of all existing collectibles
@@ -43,13 +47,15 @@ public class GameplayManager : MonoBehaviour, IObservable<CollectibleStatus>
 
 	private void Awake()
 	{
+		GameOver = false;
 		_observers = new List<IObserver<CollectibleStatus>>(capacity: 5);
 		_collectibles = new List<Collectible>(FindObjectsOfType<Collectible>());
+
+		_guiMessageDisplayer = GetComponent<GuiMessageDisplayer>();
 	}
 
 	private void Start()
 	{
-		
 		//MessageLogger.LogDebugMessage(LogType.Game, "Number of collectibles in level: {0}", _collectibles.Count);
 	}
 
@@ -101,6 +107,18 @@ public class GameplayManager : MonoBehaviour, IObservable<CollectibleStatus>
 		UpdateObservers(collectibleStatus);
 
 		Destroy(toDelete.gameObject);
+
+		_guiMessageDisplayer.DisplayRemainingCollectibles(_collectibles.Count, "apple");
+	}
+
+	private void GameStart()
+	{
+		// todo: show instruction msg at start of game
+	}
+
+	public void EarlyExit()
+	{
+		_guiMessageDisplayer.DisplayEarlyExitMessage(_collectibles.Count, "apple");
 	}
 
 	/// <summary>
@@ -108,7 +126,8 @@ public class GameplayManager : MonoBehaviour, IObservable<CollectibleStatus>
 	/// </summary>
 	public void GameWon()
 	{
-
+		_guiMessageDisplayer.DisplayWonMessage();
+		GameOver = true;
 	}
 
 	/// <summary>
@@ -116,13 +135,14 @@ public class GameplayManager : MonoBehaviour, IObservable<CollectibleStatus>
 	/// </summary>
 	public void GameLost()
 	{
-
+		_guiMessageDisplayer.DisplayLostMessage();
+		GameOver = true;
+		// TODO: wait a few seconds then switch to end scene
 	}
 
 	private void UpdateObservers(CollectibleStatus status)
 	{
-		foreach (var observer in _observers)
-			observer.OnNext(status);
+		_observers.ForEach(observer => observer.OnNext(status));
 	}
 
 	public IDisposable Subscribe(IObserver<CollectibleStatus> observer)

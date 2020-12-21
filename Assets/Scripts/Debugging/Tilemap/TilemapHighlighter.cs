@@ -11,6 +11,7 @@ public class TilemapHighlighter : MonoBehaviour
 {
 	[SerializeField] private bool _shouldClearHighlight = true;
 	[SerializeField] private bool _shouldAnimateHighlight = false;
+	[SerializeField] private bool _shouldInitiallyHover = false;
 
 	[SerializeField] private Toggle _refreshToggle, _animationToggle, _hoverToggle;
 	private UnityAction<bool> _readRefreshToggle, _readAnimToggle, _readHoverToggle;
@@ -24,7 +25,7 @@ public class TilemapHighlighter : MonoBehaviour
 
 	private readonly HashSet<Vector3Int> _highlightedCells = new HashSet<Vector3Int>();
 
-	private Vector3Int _hoveredCell = Pathfinding.Graph.NullPos;
+	private Vector3Int _hoveredCell = Graph.NullPos;
 	[SerializeField] private SpriteRenderer _hoverSprite;
 
 	// components
@@ -59,6 +60,8 @@ public class TilemapHighlighter : MonoBehaviour
 		_map = GetComponent<Tilemap>();
 		_navMap = GetComponent<NavigationMap>();
 		_tileManager = GetComponent<TilemapManager>();
+
+		_hoverSprite.enabled = _shouldInitiallyHover;
 
 		InitToggleReaders();
 		EnableToggleListeners();
@@ -98,6 +101,7 @@ public class TilemapHighlighter : MonoBehaviour
 
 		_refreshToggle.isOn = _shouldClearHighlight;
 		_animationToggle.isOn = _shouldAnimateHighlight;
+		_hoverToggle.isOn = _hoverSprite.enabled;
 
 		EnableToggleListeners();
 	}
@@ -110,7 +114,10 @@ public class TilemapHighlighter : MonoBehaviour
 		_animationDelay = !_shouldAnimateHighlight ? 0.0f : 0.2f;
 	}
 
-	public void ToggleHoverHighlight() => _hoverSprite.enabled = !_hoverSprite.enabled;
+	public void ToggleHoverHighlight()
+	{
+		_hoverSprite.enabled = !_hoverSprite.enabled;
+	}
 
 	/// <summary>
 	/// Highlights all pathfinding node tiles

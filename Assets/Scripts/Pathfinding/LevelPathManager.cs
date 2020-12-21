@@ -79,6 +79,13 @@ public class LevelPathManager : MonoBehaviour, IObserver<CollectibleStatus>
 
 	public void CalculatePatrolRoute(Collectible[] collectibles)
 	{
+		if (collectibles.Length <= 0)
+		{
+			// TODO: calculate exit patrol route
+			MessageLogger.LogDebugMessage(LogType.Game, "All collectibles taken, defend the exit!");
+			return;
+		}
+
 		// create array for patrol waypoints
 		var totalNumWaypoints = 0;
 		Array.ForEach(collectibles, coll => totalNumWaypoints += coll.NavpointPositions.Length);

@@ -4,7 +4,7 @@ public class LevelCompletionChecker : MonoBehaviour
 {
 	/* fields */
 
-	[SerializeField] private GameplayManager _gameManager;
+	[SerializeField] private GameplayManager _gameplayManager;
 	[SerializeField] private TilemapManager _tilemapManager;
 
 	[SerializeField] private Transform _rejectDestination;
@@ -39,7 +39,7 @@ public class LevelCompletionChecker : MonoBehaviour
 	{
 		if (coll.CompareTag("Player"))
 		{
-			CheckIfLevelComplete(coll.GetComponent<Player>());
+			CheckIfLevelComplete();
 			ContainsPlayer = true;
 
 			MessageLogger.LogVerboseMessage(LogType.Game, "Player entered leave area");
@@ -59,21 +59,18 @@ public class LevelCompletionChecker : MonoBehaviour
 		}
 	}
 
-	private void CheckIfLevelComplete(Player player)
+	private void CheckIfLevelComplete()
 	{
-		// TODO: set dest node for auto movement to use
-
 		// if game not done, force player back into level
-		if (_gameManager.NumCollectibles > 0)
+		if (_gameplayManager.NumCollectibles > 0)
 		{
-			// TODO: display "must get all items" text
-			// reference separate script for displaying messages
+			_gameplayManager.EarlyExit();
 			MessageLogger.LogDebugMessage(LogType.Game, "Must collect all items before leaving!");
 			CurrentDestNode = RejectDestNode;
 		}
 		else // game done, move player out of level
 		{
-			// TODO: display "game won" text
+			_gameplayManager.GameWon();
 			MessageLogger.LogDebugMessage(LogType.Game, "You're winner!!");
 			CurrentDestNode = AcceptDestNode;
 		}

@@ -6,7 +6,6 @@ public class Player : Actor
 {
 	/* fields */
 
-	[SerializeField] private GameplayManager _gameplayManager;
 	[SerializeField] private LevelCompletionChecker _levelCompletionChecker;
 
 	[SerializeField] private float _playerSpeed = 5.0f;
@@ -57,19 +56,23 @@ public class Player : Actor
 		base.SetUpStateMachine();
 
 		// create states
-		PlayerInputControl inputState = new PlayerInputControl(this);
-		PlayerAutoControl autoState = new PlayerAutoControl(this, _tilemapManager, _highlighter, _navMap, _pathManager, _levelCompletionChecker);
+		var inputState = new PlayerInputControl(this);
+		var autoState = new PlayerAutoControl(this, _tilemapManager, _highlighter, _navMap, _pathManager, _levelCompletionChecker);
+		var idleState = new PlayerIdle(this);
 
 		// create transition triggers
-		Func<bool> PlayerTryingToLeave = () => _levelCompletionChecker.ContainsPlayer;
-		Func<bool> AutoMovementDone = () => autoState.ActorReachedDestination;
-		
+		bool GameOver() => _gameplayManager.GameOver;
+		bool PlayerTryingToLeave() => _levelCompletionChecker.ContainsPlayer;
+		bool AutoMovementDone() => autoState.ActorReachedDestination;
+
 		// create transitions
-		FSMTransition switchToAutoMovement = new FSMTransition(autoState, PlayerTryingToLeave);
-		FSMTransition switchToInputMovement = new FSMTransition(inputState, AutoMovementDone);
+		var gameOverIdle = new FSMTransition(idleState, GameOver);
+		var switchToAutoMovement = new FSMTransition(autoState, PlayerTryingToLeave);
+		var switchToInputMovement = new FSMTransition(inputState, AutoMovementDone);
 
 		// add everything and set starting state
-		_stateMachine.AddState(inputState, switchToAutoMovement);
+		_stateMachine.AddState(idleState);
+		_stateMachine.AddState(inputState, switchToAutoMovement, gameOverIdle);
 		_stateMachine.AddState(autoState, switchToInputMovement);
 		_stateMachine.CurrentState = inputState;
 	}

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Tilemaps;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
@@ -112,31 +110,10 @@ public class TilemapVisualDebugger : MonoBehaviour
 	/// <param name="ctx">Container for mouse position</param>
 	private void ReadMousePosition(InputAction.CallbackContext ctx)
 	{
-		if (_nextHoverUpdate <= 0f)
-		{
-			// get cell of mouse position
-			var _oldPosition = _mousePosition;
-			_mousePosition = ctx.ReadValue<Vector2>();
+		_mousePosition = ctx.ReadValue<Vector2>();
 
-			// clear last hover
-			//var worldMousePos = Camera.main.ScreenToWorldPoint(_oldPosition);
-			//var mouseCell = _tileManager.CellOfPosition(worldMousePos);
-			//_highlighter.ClearHover(mouseCell);
-
-			// highlight if over a tile
-			if (!EventSystem.current.IsPointerOverGameObject())
-			{
-				// hover current tile
-				var worldMousePos = Camera.main.ScreenToWorldPoint(_mousePosition);
-				var mouseCell = _tileManager.CellOfPosition(worldMousePos);
-				//_highlighter.HighlightHover(mouseCell);
-				_highlighter.HoveredTile = mouseCell;
-			}
-
-			_nextHoverUpdate = _hoverUpdateRate;
-		}
-
-		_nextHoverUpdate -= Time.deltaTime;
+		if (_UIDebugMode)
+			HighlightHoveredCell();
 	}
 
 	/// <summary>
@@ -174,6 +151,28 @@ public class TilemapVisualDebugger : MonoBehaviour
 		}
 	}
 
+	private void HighlightHoveredCell()
+	{
+		if (_nextHoverUpdate <= 0.0f)
+		{
+			// get cell of mouse position
+			var _oldPosition = _mousePosition;
+
+			// highlight if over a tile
+			if (!EventSystem.current.IsPointerOverGameObject())
+			{
+				// hover current tile
+				var worldMousePos = Camera.main.ScreenToWorldPoint(_mousePosition);
+				var mouseCell = _tileManager.CellOfPosition(worldMousePos);
+				_highlighter.HoveredTile = mouseCell;
+			}
+
+			_nextHoverUpdate = _hoverUpdateRate;
+		}
+
+		_nextHoverUpdate -= Time.deltaTime;
+	}
+
 	/// <summary>
 	/// Adds node to use for highlighting a path
 	/// </summary>
@@ -197,5 +196,4 @@ public class TilemapVisualDebugger : MonoBehaviour
 			InitPathPoints();
 		}
 	}
-
 }

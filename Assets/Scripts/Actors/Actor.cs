@@ -45,6 +45,7 @@ public abstract class Actor : MonoBehaviour
 	protected Rigidbody2D _rb;
 	private Animator _animator;
 
+	[SerializeField] protected GameplayManager _gameplayManager;
 	[SerializeField] protected TilemapManager _tilemapManager;
 	protected TilemapHighlighter _highlighter;
 	protected NavigationMap _navMap;
