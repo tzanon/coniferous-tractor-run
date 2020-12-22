@@ -80,7 +80,7 @@ public class Tractor : Actor//, IObserver<CollectibleStatus>
 	{
 		if (collision.CompareTag("Player"))
 		{
-			// TODO: game over
+			// game over
 			MessageLogger.LogDebugMessage(LogType.Actor, "Tractor hit player! Game over!");
 			_gameplayManager.GameLost();
 		}

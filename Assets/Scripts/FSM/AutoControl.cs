@@ -36,13 +36,6 @@ public abstract class AutoControl : FSMState
 		ClearData();
 	}
 
-	/*
-	protected virtual void FindPath(Vector3Int start, Vector3Int end)
-	{
-		_currentPath = _navMap.FindPathBetweenNodes(start, end);
-	}
-	/**/
-
 	private bool IncrementPathIndex() => ++_pathIdx < _currentPath.Length;
 
 	protected bool ActorAtPoint(Vector3 point)

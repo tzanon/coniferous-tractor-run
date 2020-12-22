@@ -34,8 +34,9 @@ public abstract class Actor : MonoBehaviour
 	protected string _idleAnimFwd, _idleAnimBack, _idleAnimRight, _idleAnimLeft;
 	protected string _moveAnimFwd, _moveAnimBack, _moveAnimRight, _moveAnimLeft;
 
-	private Vector2 _verticalCollSize;
-	private Vector2 _horizontalCollSize;
+	// TODO: split vertical into forward/backward with offset
+	[SerializeField] private Vector2 _verticalCollSize;
+	[SerializeField] private Vector2 _horizontalCollSize;
 
 	private readonly Dictionary<CardinalDirection, DirectionCharacteristic> _directionCharacteristics = new Dictionary<CardinalDirection, DirectionCharacteristic>();
 
@@ -56,8 +57,6 @@ public abstract class Actor : MonoBehaviour
 	public bool Stuck { get; set; }
 
 	public float CurrentSpeed { get; protected set; }
-
-	//public CardinalDirection CurrentDirection { get; protected set; }
 
 	public bool IsIdle
 	{
@@ -80,8 +79,12 @@ public abstract class Actor : MonoBehaviour
 
 	protected virtual void Awake()
 	{
-		_verticalCollSize = _idleFwd.bounds.size;
-		_horizontalCollSize = _idleSide.bounds.size;
+		if (_verticalCollSize == Vector2.zero)
+			_verticalCollSize = _idleFwd.bounds.size;
+
+		if (_horizontalCollSize == Vector2.zero)
+			_horizontalCollSize = _idleSide.bounds.size;
+		
 		Stuck = false;
 
 		CacheComponents();

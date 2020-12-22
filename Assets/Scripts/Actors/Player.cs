@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 // TODO: put user input in separate class?
 public class Player : Actor
@@ -10,12 +9,22 @@ public class Player : Actor
 
 	[SerializeField] private float _playerSpeed = 5.0f;
 
+	private bool _inputBlocked;
+
 	/* properties */
 
 	/// <summary>
 	/// Whether player is controlled by input
 	/// </summary>
-	public bool InputBlocked { get; set; }
+	public bool InputBlocked
+	{
+		get => _inputBlocked;
+		set
+		{
+			_inputBlocked = value;
+			MoveActor(Vector2.zero);
+		}
+	}
 
 	/// <summary>
 	/// Number of collected items
@@ -29,7 +38,7 @@ public class Player : Actor
 		base.Awake();
 
 		CurrentSpeed = _playerSpeed;
-		InputBlocked = false;
+		_inputBlocked = false;
 	}
 
 	/// <summary>
@@ -98,13 +107,6 @@ public class Player : Actor
 			NumCollectibles++;
 			Collectible collectible = coll.GetComponent<Collectible>();
 			_gameplayManager.DeleteCollectible(collectible);
-		}
-		else if (coll.CompareTag("Tractor"))
-		{
-			// game over
-			// TODO: put in tractor
-			
-			MessageLogger.LogDebugMessage(LogType.Actor, "Game over...");
 		}
 	}
 

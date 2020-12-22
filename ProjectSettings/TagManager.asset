@@ -50,6 +50,9 @@ TagManager:
   - name: Objects
     uniqueID: 3934116813
     locked: 0
+  - name: Actors
+    uniqueID: 2731340087
+    locked: 0
   - name: Debug
     uniqueID: 3621268189
     locked: 0
