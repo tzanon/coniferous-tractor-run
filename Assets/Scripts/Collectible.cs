@@ -13,13 +13,13 @@ public class Collectible : MonoBehaviour
 	private void Awake()
 	{
 		tag = "Collectible";
+		_patrolNavpoints = GetComponentsInChildren<Navpoint>();
+		Array.Sort(_patrolNavpoints, new NavpointNameComparer());
 	}
 
 	private void Start()
 	{
-		_patrolNavpoints = GetComponentsInChildren<Navpoint>();
-
-		Array.Sort(_patrolNavpoints, new NavpointNameComparer());
+		
 		var pointStr = NamesOfNavpoints();
 		//MessageLogger.LogDebugMessage(LogType.Game, "Navpoints after sorting for {0} are {1}", this.name, pointStr);
 	}

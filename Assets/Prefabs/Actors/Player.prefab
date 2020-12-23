@@ -173,8 +173,10 @@ MonoBehaviour:
     type: 3}
   _idleSide: {fileID: -3333066005891325668, guid: ce1f574a3ea753147889b09b1e7c3ece,
     type: 3}
+  _verticalCollSize: {x: 0.3, y: 1.2}
+  _horizontalCollSize: {x: 0.2, y: 1.15}
+  _gameplayManager: {fileID: 0}
   _tilemapManager: {fileID: 0}
-  _level: {fileID: 0}
   _levelCompletionChecker: {fileID: 0}
   _playerSpeed: 5
 --- !u!114 &7712710582726886951

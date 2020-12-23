@@ -251,5 +251,8 @@ MonoBehaviour:
   _idleFwd: {fileID: 21300000, guid: 022b3790093b315429bad97fc3b75a87, type: 3}
   _idleBack: {fileID: 21300000, guid: 6dbf3fc6ae3c0e14ca9070b3a2c373ed, type: 3}
   _idleSide: {fileID: 21300000, guid: 314012f52a2b953418beee81e408bf89, type: 3}
+  _verticalCollSize: {x: 1, y: 2.5}
+  _horizontalCollSize: {x: 2.5, y: 1}
+  _gameplayManager: {fileID: 0}
   _tilemapManager: {fileID: 0}
   _debugDisplay: {fileID: 0}

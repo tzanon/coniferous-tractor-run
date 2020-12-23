@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -127,7 +128,8 @@ public class GameplayManager : MonoBehaviour, IObservable<CollectibleStatus>
 	public void GameWon()
 	{
 		_guiMessageDisplayer.DisplayWonMessage();
-		GameOver = true;
+		//GameOver = true;
+		StartCoroutine(EndTimer());
 	}
 
 	/// <summary>
@@ -136,8 +138,22 @@ public class GameplayManager : MonoBehaviour, IObservable<CollectibleStatus>
 	public void GameLost()
 	{
 		_guiMessageDisplayer.DisplayLostMessage();
-		GameOver = true;
+		
 		// TODO: wait a few seconds then switch to end scene
+		StartCoroutine(EndTimer());
+	}
+
+	private IEnumerator EndTimer()
+	{
+		GameOver = true;
+		yield return new WaitForSeconds(4f);
+		SwitchToGameOverScene();
+	}
+
+	private void SwitchToGameOverScene()
+	{
+		Debug.Log("Going to game over scene");
+		SceneLoadController.ChangeScene("EndMenu");
 	}
 
 	private void UpdateObservers(CollectibleStatus status)

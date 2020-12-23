@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
-
+using TMPro;
 using Directions;
 using Pathfinding;
 
 // TODO: make a subscriber of gameplay manager
 public class Tractor : Actor//, IObserver<CollectibleStatus>
 {
-	[SerializeField] private RectTransform _debugDisplay; // TODO: display destination/status above tractor
+	[SerializeField] private TMP_Text _debugDisplay; // TODO: display destination/status above tractor
 	private LineRenderer _lr; // debug: for pointing to dest?
 
 	private bool _calculatingPath; // if calculating, idle
