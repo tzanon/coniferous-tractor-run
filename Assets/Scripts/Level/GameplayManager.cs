@@ -153,7 +153,7 @@ public class GameplayManager : MonoBehaviour, IObservable<CollectibleStatus>
 	private void SwitchToGameOverScene()
 	{
 		Debug.Log("Going to game over scene");
-		SceneLoadController.ChangeScene("EndMenu");
+		SceneLoadController.ChangeMenu("EndMenu");
 	}
 
 	private void UpdateObservers(CollectibleStatus status)

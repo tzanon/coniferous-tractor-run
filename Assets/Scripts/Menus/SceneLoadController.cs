@@ -13,4 +13,13 @@ public static class SceneLoadController
 		SceneToLoad = sceneName;
 		SceneManager.LoadScene("LoadingScreen");
 	}
+
+	/// <summary>
+	/// Load scene without loading screen, usually a menu
+	/// </summary>
+	/// <param name="menuName">Name of menu scene</param>
+	public static void ChangeMenu(string menuName)
+	{
+		SceneManager.LoadSceneAsync(menuName);
+	}
 }

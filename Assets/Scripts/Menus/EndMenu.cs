@@ -8,8 +8,8 @@ public class EndMenu : MonoBehaviour
 		SceneLoadController.ChangeScene("DevTestLevel");
 	}
 
-	public void PressQuit()
+	public void PressMainMenu()
 	{
-		Application.Quit();
+		SceneLoadController.ChangeMenu("MainMenu");
 	}
 }
