@@ -6072,6 +6072,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb9eb18cd4748c40a4c75db9ef8fb15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gameOverTime: 4
+  _collectibleName: apple
   _barrier: {fileID: 1177651269}
 --- !u!4 &972013122
 Transform:
@@ -6146,7 +6148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96fe1ca356128445858d742654ac6f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  statusMessage: {fileID: 1938464410}
+  _statusMessage: {fileID: 1938464410}
 --- !u!1001 &973193783
 PrefabInstance:
   m_ObjectHideFlags: 0

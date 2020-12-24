@@ -7,6 +7,9 @@ public class GameplayManager : MonoBehaviour, IObservable<CollectibleStatus>
 {
 	/* fields */
 
+	[SerializeField] private float _gameOverTime = 4.0f;
+
+	[SerializeField] private string _collectibleName;
 	private List<Collectible> _collectibles;
 	[SerializeField] private GameObject _barrier;
 
@@ -58,6 +61,7 @@ public class GameplayManager : MonoBehaviour, IObservable<CollectibleStatus>
 	private void Start()
 	{
 		//MessageLogger.LogDebugMessage(LogType.Game, "Number of collectibles in level: {0}", _collectibles.Count);
+		GameStart();
 	}
 
 	/// <summary>
@@ -109,17 +113,17 @@ public class GameplayManager : MonoBehaviour, IObservable<CollectibleStatus>
 
 		Destroy(toDelete.gameObject);
 
-		_guiMessageDisplayer.DisplayRemainingCollectibles(_collectibles.Count, "apple");
+		_guiMessageDisplayer.DisplayRemainingCollectibles(_collectibles.Count, _collectibleName);
 	}
 
 	private void GameStart()
 	{
-		// todo: show instruction msg at start of game
+		_guiMessageDisplayer.DisplayBeginMessage(_collectibleName);
 	}
 
 	public void EarlyExit()
 	{
-		_guiMessageDisplayer.DisplayEarlyExitMessage(_collectibles.Count, "apple");
+		_guiMessageDisplayer.DisplayEarlyExitMessage(_collectibles.Count, _collectibleName);
 	}
 
 	/// <summary>
@@ -128,7 +132,6 @@ public class GameplayManager : MonoBehaviour, IObservable<CollectibleStatus>
 	public void GameWon()
 	{
 		_guiMessageDisplayer.DisplayWonMessage();
-		//GameOver = true;
 		StartCoroutine(EndTimer());
 	}
 
@@ -138,15 +141,13 @@ public class GameplayManager : MonoBehaviour, IObservable<CollectibleStatus>
 	public void GameLost()
 	{
 		_guiMessageDisplayer.DisplayLostMessage();
-		
-		// TODO: wait a few seconds then switch to end scene
 		StartCoroutine(EndTimer());
 	}
 
 	private IEnumerator EndTimer()
 	{
 		GameOver = true;
-		yield return new WaitForSeconds(4f);
+		yield return new WaitForSeconds(_gameOverTime);
 		SwitchToGameOverScene();
 	}
 

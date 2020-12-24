@@ -4,13 +4,19 @@ using TMPro;
 
 public class GuiMessageDisplayer : MonoBehaviour
 {
-	[SerializeField] TMP_Text statusMessage;
+	[SerializeField] TMP_Text _statusMessage;
 
+	private const float _delayTime = 2.0f;
 	private const float _displayTime = 5.0f;
 
 	private void Start()
 	{
-		statusMessage.gameObject.SetActive(false);
+		_statusMessage.gameObject.SetActive(false);
+	}
+
+	public void DisplayBeginMessage(string collectibleNameSingular)
+	{
+		ShowDelayedTimedMessage(string.Format("Collect all {0}s and return here\nBeware the Tractor...", collectibleNameSingular));
 	}
 
 	public void DisplayEarlyExitMessage(int numCollectibles, string collectibleNameSingular)
@@ -21,18 +27,18 @@ public class GuiMessageDisplayer : MonoBehaviour
 			collectibleNameDisplay += "s";
 
 		var message = string.Format("You must find {0} more {1} before leaving!", numCollectibles, collectibleNameDisplay);
-		ShowMessage(message);
+		ShowTimedMessage(message);
 	}
 
 	// TODO: display level completion time?
-	public void DisplayWonMessage() => ShowMessage("You Won!");
+	public void DisplayWonMessage() => ShowTimedMessage("You Won!");
 
-	public void DisplayLostMessage() => ShowMessage("GAME OVER\nYou Were Caught!");
+	public void DisplayLostMessage() => ShowTimedMessage("GAME OVER\nYou Were Caught!");
 
 	public void DisplayRemainingCollectibles(int numCollectibles, string collectibleNameSingular)
 	{
 		var message = FormatCollectibleMessage(numCollectibles, collectibleNameSingular);
-		ShowMessage(message);
+		ShowTimedMessage(message);
 	}
 
 	private string FormatCollectibleMessage(int numCollectibles, string collectibleNameSingular)
@@ -52,16 +58,39 @@ public class GuiMessageDisplayer : MonoBehaviour
 			return string.Format("{0} {1} remains...", numCollectibles, collectibleNameDisplay);
 	}
 
-	private void ShowMessage(string message)
+	private void ShowTextWithMessage(string message)
 	{
-		statusMessage.text = message;
-		StartCoroutine(DisplayForSeconds(statusMessage, _displayTime));
+		_statusMessage.text = message;
+		_statusMessage.gameObject.SetActive(true);
 	}
 
-	private IEnumerator DisplayForSeconds(TMP_Text text, float seconds)
+	private void HideText()
 	{
-		text.gameObject.SetActive(true);
+		_statusMessage.gameObject.SetActive(false);
+	}
+
+	private void ShowTimedMessage(string message)
+	{
+		_statusMessage.text = message;
+		StartCoroutine(DisplayForSeconds(_displayTime));
+	}
+
+	private void ShowDelayedTimedMessage(string message)
+	{
+		_statusMessage.text = message;
+		StartCoroutine(TimedDisplayAfterDelay(_delayTime, _displayTime));
+	}
+
+	private IEnumerator DisplayForSeconds(float seconds)
+	{
+		_statusMessage.gameObject.SetActive(true);
 		yield return new WaitForSeconds(seconds);
-		text.gameObject.SetActive(false);
+		_statusMessage.gameObject.SetActive(false);
+	}
+
+	private IEnumerator TimedDisplayAfterDelay(float delaySeconds, float displaySeconds)
+	{
+		yield return new WaitForSeconds(delaySeconds);
+		StartCoroutine(DisplayForSeconds(displaySeconds));
 	}
 }
