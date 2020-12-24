@@ -94,6 +94,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4290a18f19614184c9eda806918b6fdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _offsetPoint: {fileID: 0}
   _calculationRate: 0.1
-  _offset: -1
+  _offset: -2
   _runOnlyOnce: 1

@@ -8,6 +8,8 @@
 [RequireComponent(typeof(SpriteRenderer))]
 public class SpritePositionRenderer : MonoBehaviour
 {
+	[SerializeField] private GameObject _offsetPoint;
+
 	[SerializeField] private float _calculationRate = 0.1f;
 	private float _nextCalculation = 0f;
 
@@ -25,7 +27,9 @@ public class SpritePositionRenderer : MonoBehaviour
 		if (_runOnlyOnce)
 		{
 			CalculateOrder();
+			
 			Destroy(this);
+			
 		}
 	}
 
@@ -35,7 +39,7 @@ public class SpritePositionRenderer : MonoBehaviour
 		
 		_nextCalculation -= Time.deltaTime;
 
-		if (_nextCalculation <= 0f)
+		if (_nextCalculation <= 0.0f)
 		{
 			CalculateOrder();
 			_nextCalculation = _calculationRate;
@@ -45,5 +49,8 @@ public class SpritePositionRenderer : MonoBehaviour
 	private void CalculateOrder()
 	{
 		_sr.sortingOrder = (int)(_sortingOrderBase - transform.position.y - _offset);
+
+		if (_offsetPoint)
+			_offsetPoint.transform.localPosition = new Vector3(0, _offset, 0);
 	}
 }

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1562915275074892581}
   - component: {fileID: 4815779940955261802}
   - component: {fileID: -9221102826678581144}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Apple
   m_TagString: Collectible
   m_Icon: {fileID: 0}
@@ -134,6 +134,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4290a18f19614184c9eda806918b6fdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  calculationRate: 0.1
-  offset: 0
-  runOnlyOnce: 1
+  _calculationRate: 0.1
+  _offset: 0
+  _runOnlyOnce: 1

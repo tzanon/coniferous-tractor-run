@@ -16,10 +16,10 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
+  - Collectible
+  - LevelBounds
+  - Player
+  - NPC
   - 
   - 
   - 

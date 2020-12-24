@@ -13,11 +13,14 @@ public abstract class Actor : MonoBehaviour
 		public string MoveAnimState { get; }
 		public Vector2 ColliderSize { get; }
 
-		public DirectionCharacteristic(string idle, string move, Vector2 collSize)
+		public Vector2 ColliderOffset { get; }
+
+		public DirectionCharacteristic(string idle, string move, Vector2 collSize, Vector2 collOffset)
 		{
 			IdleAnimState = idle;
 			MoveAnimState = move;
 			ColliderSize = collSize;
+			ColliderOffset = collOffset;
 		}
 	}
 
@@ -35,7 +38,10 @@ public abstract class Actor : MonoBehaviour
 	protected string _moveAnimFwd, _moveAnimBack, _moveAnimRight, _moveAnimLeft;
 
 	// TODO: split vertical into forward/backward with offset
+	[SerializeField] private Vector2 _verticalCollOffset;
 	[SerializeField] private Vector2 _verticalCollSize;
+
+	[SerializeField] private Vector2 _horizontalCollOffset;
 	[SerializeField] private Vector2 _horizontalCollSize;
 
 	private readonly Dictionary<CardinalDirection, DirectionCharacteristic> _directionCharacteristics = new Dictionary<CardinalDirection, DirectionCharacteristic>();
@@ -112,10 +118,10 @@ public abstract class Actor : MonoBehaviour
 	/// </summary>
 	private void SetUpDirectionCharacteristics()
 	{
-		_directionCharacteristics[CardinalDirection.South] = new DirectionCharacteristic(_idleAnimFwd, _moveAnimFwd, _verticalCollSize);
-		_directionCharacteristics[CardinalDirection.North] = new DirectionCharacteristic(_idleAnimBack, _moveAnimBack, _verticalCollSize);
-		_directionCharacteristics[CardinalDirection.East] = new DirectionCharacteristic(_idleAnimRight, _moveAnimRight, _horizontalCollSize);
-		_directionCharacteristics[CardinalDirection.West] = new DirectionCharacteristic(_idleAnimLeft, _moveAnimLeft, _horizontalCollSize);
+		_directionCharacteristics[CardinalDirection.South] = new DirectionCharacteristic(_idleAnimFwd, _moveAnimFwd, _verticalCollSize, _verticalCollOffset);
+		_directionCharacteristics[CardinalDirection.North] = new DirectionCharacteristic(_idleAnimBack, _moveAnimBack, _verticalCollSize, _verticalCollOffset);
+		_directionCharacteristics[CardinalDirection.East] = new DirectionCharacteristic(_idleAnimRight, _moveAnimRight, _horizontalCollSize, _horizontalCollOffset);
+		_directionCharacteristics[CardinalDirection.West] = new DirectionCharacteristic(_idleAnimLeft, _moveAnimLeft, _horizontalCollSize, _horizontalCollOffset);
 		_directionCharacteristics[CardinalDirection.Center] = _directionCharacteristics[CardinalDirection.South];
 	}
 
@@ -201,5 +207,6 @@ public abstract class Actor : MonoBehaviour
 
 		// set collider to directional size
 		_bc.size = dc.ColliderSize;
+		_bc.offset = dc.ColliderOffset;
 	}
 }
