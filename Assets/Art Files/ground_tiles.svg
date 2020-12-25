@@ -17,7 +17,15 @@
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
    sodipodi:docname="ground_tiles.svg">
   <defs
-     id="defs2" />
+     id="defs2">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 142.875 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="507.99998 : 142.875 : 1"
+       inkscape:persp3d-origin="253.99999 : 95.25 : 1"
+       id="perspective1805" />
+  </defs>
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -25,9 +33,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.1697044"
-     inkscape:cx="1320.49"
-     inkscape:cy="2239.4038"
+     inkscape:zoom="0.725"
+     inkscape:cx="-209.82171"
+     inkscape:cy="1946.3351"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -6692,5 +6700,248 @@
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96"
        inkscape:export-filename="C:\Users\tdzan\OneDrive\Pictures\Games\Forest Maze Chaser\Placeholder assets\open_path.png" />
+    <rect
+       style="opacity:1;fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:1.99215686;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect1754"
+       width="31.87451"
+       height="31.87451"
+       x="-362.77872"
+       y="-160.82283" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="-206.10757"
+       y="-163.4877"
+       id="text1766"><tspan
+         sodipodi:role="line"
+         id="tspan1764"
+         x="-206.10757"
+         y="-153.8322"
+         style="stroke-width:0.26458332" /></text>
+    <g
+       id="g1899"
+       transform="translate(12.408046,5.1091953)"
+       inkscape:export-filename="D:\Unity_Projects\forest-maze-chaser\Assets\Sprites\Controls\arrowControls.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
+      <g
+         inkscape:export-ydpi="96"
+         inkscape:export-xdpi="96"
+         inkscape:export-filename="D:\Unity_Projects\forest-maze-chaser\Assets\Sprites\Controls\keyRight.png"
+         transform="translate(-22.133658,-19.493109)"
+         id="g1775">
+        <rect
+           style="opacity:1;fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:1.99215686;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect1750"
+           width="31.87451"
+           height="31.87451"
+           x="-167.68192"
+           y="-186.85713" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           x="-159.89575"
+           y="-164.63051"
+           id="text1770"><tspan
+             sodipodi:role="line"
+             id="tspan1768"
+             x="-159.89575"
+             y="-164.63051"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:19.75555611px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332">&gt;</tspan></text>
+      </g>
+      <g
+         inkscape:export-ydpi="96"
+         inkscape:export-xdpi="96"
+         inkscape:export-filename="D:\Unity_Projects\forest-maze-chaser\Assets\Sprites\Controls\keyLeft.png"
+         id="g1783"
+         transform="matrix(-1,0,0,1,-412.29684,-19.493109)">
+        <rect
+           y="-186.85713"
+           x="-167.68192"
+           height="31.87451"
+           width="31.87451"
+           id="rect1777"
+           style="opacity:1;fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:1.99215686;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+        <text
+           id="text1781"
+           y="-164.63051"
+           x="-159.89575"
+           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           xml:space="preserve"><tspan
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:19.75555611px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332"
+             y="-164.63051"
+             x="-159.89575"
+             id="tspan1779"
+             sodipodi:role="line">&gt;</tspan></text>
+      </g>
+      <g
+         inkscape:export-ydpi="96"
+         inkscape:export-xdpi="96"
+         inkscape:export-filename="D:\Unity_Projects\forest-maze-chaser\Assets\Sprites\Controls\keyDown.png"
+         id="g1791"
+         transform="rotate(90,-174.96149,-213.62981)">
+        <rect
+           y="-186.85713"
+           x="-167.68192"
+           height="31.87451"
+           width="31.87451"
+           id="rect1785"
+           style="opacity:1;fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:1.99215686;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+        <text
+           id="text1789"
+           y="-164.63051"
+           x="-159.89575"
+           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           xml:space="preserve"><tspan
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:19.75555611px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332"
+             y="-164.63051"
+             x="-159.89575"
+             id="tspan1787"
+             sodipodi:role="line">&gt;</tspan></text>
+      </g>
+      <g
+         inkscape:export-ydpi="96"
+         inkscape:export-xdpi="96"
+         inkscape:export-filename="D:\Unity_Projects\forest-maze-chaser\Assets\Sprites\Controls\keyUp.png"
+         transform="matrix(0,-1,-1,0,-388.59131,-384.49099)"
+         id="g1799">
+        <rect
+           style="opacity:1;fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:1.99215686;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect1793"
+           width="31.87451"
+           height="31.87451"
+           x="-167.68192"
+           y="-186.85713" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           x="-159.89575"
+           y="-164.63051"
+           id="text1797"><tspan
+             sodipodi:role="line"
+             id="tspan1795"
+             x="-159.89575"
+             y="-164.63051"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:19.75555611px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332">&gt;</tspan></text>
+      </g>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="-79.222374"
+       y="-167.23796"
+       id="text1803"><tspan
+         sodipodi:role="line"
+         id="tspan1801"
+         x="-79.222374"
+         y="-157.58246"
+         style="stroke-width:0.26458332" /></text>
+    <g
+       id="g1881"
+       transform="translate(13.502873,4.7442528)"
+       inkscape:export-filename="D:\Unity_Projects\forest-maze-chaser\Assets\Sprites\Controls\wasdControls.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
+      <g
+         inkscape:export-ydpi="96"
+         inkscape:export-xdpi="96"
+         inkscape:export-filename="D:\Unity_Projects\forest-maze-chaser\Assets\Sprites\Controls\keyA.png"
+         transform="translate(-22.448366,-17.653527)"
+         id="g1814">
+        <rect
+           y="-188.33177"
+           x="-92.736481"
+           height="31.87451"
+           width="31.87451"
+           id="rect1756"
+           style="opacity:1;fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:1.99215686;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.93333244px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           x="-82.586983"
+           y="-166.23882"
+           id="text1809"><tspan
+             sodipodi:role="line"
+             id="tspan1807"
+             x="-82.586983"
+             y="-166.23882"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.93333244px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332">A</tspan></text>
+      </g>
+      <g
+         transform="translate(-18.275606,-25.653175)"
+         inkscape:export-ydpi="96"
+         inkscape:export-xdpi="96"
+         inkscape:export-filename="D:\Unity_Projects\forest-maze-chaser\Assets\Sprites\Controls\keyS.png"
+         id="g1858">
+        <rect
+           style="opacity:1;fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:1.99215686;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect1816"
+           width="31.87451"
+           height="31.87451"
+           x="-54.028481"
+           y="-180.33212" />
+        <text
+           id="text1820"
+           y="-158.23917"
+           x="-43.945133"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.93333244px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           xml:space="preserve"><tspan
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.93333244px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332"
+             y="-158.23917"
+             x="-43.945133"
+             id="tspan1818"
+             sodipodi:role="line">S</tspan></text>
+      </g>
+      <g
+         inkscape:export-ydpi="96"
+         inkscape:export-xdpi="96"
+         inkscape:export-filename="D:\Unity_Projects\forest-maze-chaser\Assets\Sprites\Controls\keyD.png"
+         transform="translate(-24.802896,-28.233712)"
+         id="g1863">
+        <rect
+           y="-177.75159"
+           x="-3.7080817"
+           height="31.87451"
+           width="31.87451"
+           id="rect1824"
+           style="opacity:1;fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:1.99215686;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.93333244px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           x="5.3748116"
+           y="-155.65863"
+           id="text1828"><tspan
+             sodipodi:role="line"
+             id="tspan1826"
+             x="5.3748116"
+             y="-155.65863"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.93333244px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332">D</tspan></text>
+      </g>
+      <g
+         inkscape:export-ydpi="96"
+         inkscape:export-xdpi="96"
+         inkscape:export-filename="D:\Unity_Projects\forest-maze-chaser\Assets\Sprites\Controls\keyW.png"
+         transform="translate(-17.759506,-22.311086)"
+         id="g1847">
+        <rect
+           y="-226.00755"
+           x="-54.54459"
+           height="31.87451"
+           width="31.87451"
+           id="rect1832"
+           style="opacity:1;fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:1.99215686;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.93333244px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           x="-46.978916"
+           y="-203.9146"
+           id="text1836"><tspan
+             sodipodi:role="line"
+             id="tspan1834"
+             x="-46.978916"
+             y="-203.9146"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.93333244px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332">W</tspan></text>
+      </g>
+    </g>
   </g>
 </svg>
