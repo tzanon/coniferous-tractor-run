@@ -64,6 +64,14 @@ public class GameplayManager : MonoBehaviour, IObservable<CollectibleStatus>
 		GameStart();
 	}
 
+	private void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.Escape))
+		{
+			SceneLoadController.ChangeMenu("MainMenu");
+		}
+	}
+
 	/// <summary>
 	/// Returns position of collectible at the given index
 	/// </summary>

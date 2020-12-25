@@ -96,5 +96,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _offsetPoint: {fileID: 0}
   _calculationRate: 0.1
-  _offset: -2
+  _offset: -1
   _runOnlyOnce: 1
