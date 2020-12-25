@@ -14,9 +14,9 @@ public class GuiMessageDisplayer : MonoBehaviour
 		_statusMessage.gameObject.SetActive(false);
 	}
 
-	public void DisplayBeginMessage(string collectibleNameSingular)
+	public void DisplayBeginMessage(int numCollectibles, string collectibleNameSingular)
 	{
-		ShowDelayedTimedMessage(string.Format("Collect all {0}s and return here\nBeware the Tractor...", collectibleNameSingular));
+		ShowDelayedTimedMessage(string.Format("Collect all {0} {1}s and return here\nBeware the Tractor...", numCollectibles, collectibleNameSingular));
 	}
 
 	public void DisplayEarlyExitMessage(int numCollectibles, string collectibleNameSingular)

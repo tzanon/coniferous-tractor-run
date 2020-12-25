@@ -118,7 +118,7 @@ public class GameplayManager : MonoBehaviour, IObservable<CollectibleStatus>
 
 	private void GameStart()
 	{
-		_guiMessageDisplayer.DisplayBeginMessage(_collectibleName);
+		_guiMessageDisplayer.DisplayBeginMessage(_collectibles.Count, _collectibleName);
 	}
 
 	public void EarlyExit()
