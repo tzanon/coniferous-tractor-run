@@ -87559,7 +87559,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d4ad23e3593f014e8fc439a41ee9ffc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _UIDebugMode: 0
+  _UIDebugMode: 1
   _hoverUpdateRate: 0.05
   _UIDebugMenu: {fileID: 1508038468}
 --- !u!114 &1565289091
@@ -116017,12 +116017,12 @@ PrefabInstance:
     - target: {fileID: 7712710582726886946, guid: eb5492a23a5c684488f965b1a188ca2e,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 11.5
+      value: 11.54
       objectReference: {fileID: 0}
     - target: {fileID: 7712710582726886946, guid: eb5492a23a5c684488f965b1a188ca2e,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 12.87
+      value: 10.38
       objectReference: {fileID: 0}
     - target: {fileID: 7712710582726886946, guid: eb5492a23a5c684488f965b1a188ca2e,
         type: 3}
@@ -118232,12 +118232,12 @@ PrefabInstance:
     - target: {fileID: 8739432759012199894, guid: 0efb50a1b34529840a5117894549db3c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 13.5
+      value: 13.04
       objectReference: {fileID: 0}
     - target: {fileID: 8739432759012199894, guid: 0efb50a1b34529840a5117894549db3c,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -66.5
+      value: -66.81
       objectReference: {fileID: 0}
     - target: {fileID: 8739432759012199894, guid: 0efb50a1b34529840a5117894549db3c,
         type: 3}
@@ -118314,6 +118314,11 @@ PrefabInstance:
       propertyPath: _gameplayManager
       value: 
       objectReference: {fileID: 972013121}
+    - target: {fileID: 8739432759012199899, guid: 0efb50a1b34529840a5117894549db3c,
+        type: 3}
+      propertyPath: _debugDisplay
+      value: 
+      objectReference: {fileID: 222354341}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0efb50a1b34529840a5117894549db3c, type: 3}
 --- !u!114 &8896329989040026349

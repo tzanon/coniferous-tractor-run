@@ -1,8 +1,5 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
-using Directions;
-using Pathfinding;
 
 // TODO: make a subscriber of gameplay manager
 public class Tractor : Actor//, IObserver<CollectibleStatus>
@@ -74,6 +71,11 @@ public class Tractor : Actor//, IObserver<CollectibleStatus>
 		_stateMachine?.Run();
 	}
 
+	private void LateUpdate()
+	{
+		UpdateDebugDisplay();
+	}
+
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
 		if (collision.CompareTag("Player"))
@@ -81,6 +83,16 @@ public class Tractor : Actor//, IObserver<CollectibleStatus>
 			// game over
 			MessageLogger.LogDebugMessage(LogType.Actor, "Tractor hit player! Game over!");
 			_gameplayManager.GameLost();
+		}
+	}
+
+	private void UpdateDebugDisplay()
+	{
+		var stateName = _stateMachine.CurrentState.ToString();
+
+		if (!_debugDisplay.text.Equals(stateName))
+		{
+			_debugDisplay.text = stateName;
 		}
 	}
 }
