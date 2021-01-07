@@ -55,6 +55,12 @@ public class GameplayManager : MonoBehaviour, IObservable<CollectibleStatus>
 		_observers = new List<IObserver<CollectibleStatus>>(capacity: 5);
 		_collectibles = new List<Collectible>(FindObjectsOfType<Collectible>());
 
+		RandomizeCollectibleOrder();
+
+		var collStr = "";
+		_collectibles.ForEach(coll => collStr += coll.name + ", ");
+		MessageLogger.LogDebugMessage(LogType.Game, "Collectible order: {0}", collStr);
+
 		_guiMessageDisplayer = GetComponent<GuiMessageDisplayer>();
 	}
 
@@ -70,6 +76,31 @@ public class GameplayManager : MonoBehaviour, IObservable<CollectibleStatus>
 		{
 			SceneLoadController.ChangeMenu("MainMenu");
 		}
+	}
+
+	/// <summary>
+	/// Randomize collectible order with Fisher-Yates shuffle
+	/// </summary>
+	private void RandomizeCollectibleOrder()
+	{
+		for (var i = _collectibles.Count - 1; i > 1; i--)
+		{
+			var j = UnityEngine.Random.Range(0, i + 1);
+			var temp = _collectibles[i];
+			_collectibles[i] = _collectibles[j];
+			_collectibles[j] = temp;
+		}
+
+		/**
+		while (idx1 > 1)
+		{
+			idx1--;
+			var k = UnityEngine.Random.Range(0, idx1 + 1);
+			var collectible = _collectibles[k];
+			_collectibles[k] = _collectibles[idx1];
+			_collectibles[idx1] = collectible;
+		}
+		/**/
 	}
 
 	/// <summary>

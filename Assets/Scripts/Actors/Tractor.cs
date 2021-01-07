@@ -17,7 +17,6 @@ public class Tractor : Actor//, IObserver<CollectibleStatus>
 		base.Awake();
 
 		CurrentSpeed = _defaultSpeed;
-		// TODO: set animation state names
 	}
 
 	protected override void AssignAnimationStateNames()
