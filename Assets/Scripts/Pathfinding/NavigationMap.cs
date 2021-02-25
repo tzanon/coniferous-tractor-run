@@ -10,6 +10,7 @@ using Pathfinding;
 public class NavigationMap : MonoBehaviour
 {
 	/* fields */
+
 	[SerializeField] private Sprite _nodeSprite;
 
 	private Graph _graph;
@@ -28,6 +29,7 @@ public class NavigationMap : MonoBehaviour
 	private TilemapManager _tileManager;
 
 	/* properties */
+
 	public int PathfindingNodeCount { get => _graph.NumNodes; }
 	public Vector3Int[] PathfindingNodes { get => _graph.Nodes; }
 
@@ -71,7 +73,7 @@ public class NavigationMap : MonoBehaviour
 		{
 			if (!totalCells.Remove(node))
 			{
-				Debug.LogError("could not remove node from total cells");
+				MessageLogger.LogErrorMessage(LogType.Highlight, "could not remove node from total cells");
 			}
 		}
 

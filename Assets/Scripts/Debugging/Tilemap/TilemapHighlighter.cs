@@ -25,7 +25,6 @@ public class TilemapHighlighter : MonoBehaviour
 
 	private readonly HashSet<Vector3Int> _highlightedCells = new HashSet<Vector3Int>();
 
-	private Vector3Int _hoveredCell = Graph.NullPos;
 	[SerializeField] private SpriteRenderer _hoverSprite;
 
 	// components
@@ -173,13 +172,11 @@ public class TilemapHighlighter : MonoBehaviour
 	/// <param name="cell">Cell to search from</param>
 	public void HighlightClosestNode(Vector3Int cell)
 	{
-		Queue<Vector3Int> examinedCells;
-
-		Vector3Int closestNode = _navMap.ClosestNodeToCell(cell, out examinedCells);
+		var closestNode = _navMap.ClosestNodeToCell(cell, out var examinedCells);
 
 		if (_shouldAnimateHighlight)
 		{
-			ColoredTile[] tileColors = new ColoredTile[examinedCells.Count + 1];
+			var tileColors = new ColoredTile[examinedCells.Count + 1];
 
 			int i = 0;
 			while (examinedCells.Count > 0)
@@ -201,7 +198,6 @@ public class TilemapHighlighter : MonoBehaviour
 		HighlightCell(closestNode, _nodeHighlight, false);
 	}
 
-	// TODO: write HighlightPath() method for an existing path
 	/// <summary>
 	/// Highlights the path between currently chosen nodes
 	/// </summary>
@@ -219,8 +215,7 @@ public class TilemapHighlighter : MonoBehaviour
 
 		Path path;
 
-		// TODO: animate option
-		if (_shouldAnimateHighlight)
+		if (_shouldAnimateHighlight) // animate option
 		{
 			ColoredTile[] tileColors;
 			Vector3Int[] nonPathCells;
@@ -284,10 +279,11 @@ public class TilemapHighlighter : MonoBehaviour
 	/// <summary>
 	/// Animate the highlighting by having delays between each tile
 	/// </summary>
-	/// <param name="coloredCells">List of queues of cells with their corresponding colours</param>
-	/// <param name="col">Colour to highlight tiles with</param>
+	/// <param name="tileColors">Tiles to highlight with associated color</param>
 	/// <param name="removeExistingHighlight">Whether to reset currently highlighted cells</param>
-	private IEnumerator AnimateCellHighlight(ColoredTile[] tileColors, bool removeExistingHighlight = true, Vector3Int[] nonPathTiles = null)
+	/// <param name="extraSearchTiles">Tiles used in algorithm but not relevant to final result</param>
+	/// <returns>Animation delay</returns>
+	private IEnumerator AnimateCellHighlight(ColoredTile[] tileColors, bool removeExistingHighlight = true, Vector3Int[] extraSearchTiles = null)
 	{
 		if (_isAnimating)
 		{
@@ -307,12 +303,11 @@ public class TilemapHighlighter : MonoBehaviour
 		}
 
 		// clear remaining cells not in the path
-		if (nonPathTiles != null)
+		if (extraSearchTiles != null)
 		{
-			HighlightCells(nonPathTiles, Color.white, false);
+			HighlightCells(extraSearchTiles, Color.white, false);
 		}
 
 		_isAnimating = false;
 	}
-
 }

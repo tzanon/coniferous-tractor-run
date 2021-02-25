@@ -131,7 +131,7 @@ public class LevelPathManager : MonoBehaviour, IObserver<CollectibleStatus>
 	/// <summary>
 	/// Recieve update on collectibles from Gameplay Manager
 	/// </summary>
-	/// <param name="status">Status class containing remaining collectibles and </param>
+	/// <param name="status">Status class containing collectible information</param>
 	public void OnNext(CollectibleStatus status)
 	{
 		MessageLogger.LogDebugMessage(LogType.Game, "Path Manager got {0} collectibles", status.RemainingCollectibles.Length);

@@ -778,7 +778,7 @@ namespace Pathfinding
 			}
 			else if (_currentStart == _currentEnd) // check if start and end are the same
 			{
-				MessageLogger.LogWarningMessage(LogType.Path, "Returning empty path between two nodes that are the same");
+				MessageLogger.LogWarningMessage(LogType.Path, "Returning empty path between two identical nodes");
 				return false;
 			}
 			else
@@ -830,13 +830,6 @@ namespace Pathfinding
 			nodeList.Add(_currentStart);
 			nodeList.Reverse();
 
-			/* TODO: do this in highlighter class
-			foreach (Vector3Int node in nodeList)
-				_totalVisitedTiles.Remove(node);
-
-			foreach (Vector3Int node in _totalVisitedTiles)
-				_tileColors.Enqueue(new ColoredTile(node, _clearColor));
-			/**/
 			return new Path(nodeList.ToArray());
 		}
 	}
