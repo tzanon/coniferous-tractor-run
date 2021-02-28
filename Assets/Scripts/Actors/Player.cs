@@ -66,7 +66,7 @@ public class Player : Actor
 
 		// create states
 		var inputState = new PlayerInputControl(this);
-		var autoState = new PlayerAutoControl(this, _tilemapManager, _highlighter, _navMap, _pathManager, _levelCompletionChecker);
+		var autoState = new PlayerAutoControl(this, _tilemapManager, _painter, _navMap, _pathManager, _levelCompletionChecker);
 		var idleState = new PlayerIdle(this);
 
 		// create transition triggers

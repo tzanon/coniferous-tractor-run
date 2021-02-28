@@ -39,8 +39,8 @@ public class Tractor : Actor//, IObserver<CollectibleStatus>
 		// create states
 		var errorState = new Error(this);
 		var idleState = new Idle(this);
-		var findPatrolState = new AutoFindPatrol(this, _tilemapManager, _highlighter, _navMap, _pathManager);
-		var patrolState = new AutoPatrol(this, _tilemapManager, _highlighter, _navMap, _pathManager);
+		var findPatrolState = new AutoFindPatrol(this, _tilemapManager, _painter, _navMap, _pathManager);
+		var patrolState = new AutoPatrol(this, _tilemapManager, _painter, _navMap, _pathManager);
 
 		// create trigger functions
 		bool GameOver() => _gameplayManager.GameOver;

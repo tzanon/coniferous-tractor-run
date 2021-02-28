@@ -6,12 +6,11 @@ public sealed class PlayerAutoControl : AutoMoveToPoint
 
 	private Player _player;
 	private LevelCompletionChecker _completionChecker;
-	private Vector3Int _destNode;
 
 	/* methods */
 
-	public PlayerAutoControl(Player player, TilemapManager tm, TilemapHighlighter th, NavigationMap nm, LevelPathManager lpm, LevelCompletionChecker lcc) :
-		base(player, tm, th, nm, lpm)
+	public PlayerAutoControl(Player player, TilemapManager tm, TilePainter tp, NavigationMap nm, LevelPathManager lpm, LevelCompletionChecker lcc) :
+		base(player, tm, tp, nm, lpm)
 	{
 		_completionChecker = lcc;
 		_player = (Player)_actor;

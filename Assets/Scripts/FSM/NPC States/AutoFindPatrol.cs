@@ -5,7 +5,7 @@ public class AutoFindPatrol : AutoMoveToPoint
 {
 	CyclicRoute _patrolRoute;
 
-	public AutoFindPatrol(Actor actor, TilemapManager tm, TilemapHighlighter th, NavigationMap nm, LevelPathManager lpm) : base(actor, tm, th, nm, lpm) { }
+	public AutoFindPatrol(Actor actor, TilemapManager tm, TilePainter tp, NavigationMap nm, LevelPathManager lpm) : base(actor, tm, tp, nm, lpm) { }
 
 	protected override void CalculatePath()
 	{
@@ -35,5 +35,4 @@ public class AutoFindPatrol : AutoMoveToPoint
 	{
 		base.PerformAction();
 	}
-
 }

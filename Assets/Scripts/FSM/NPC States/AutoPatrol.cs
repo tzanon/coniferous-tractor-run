@@ -6,7 +6,7 @@ public class AutoPatrol : AutoControl
 
 	private CyclicRoute _patrolRoute;
 
-	public AutoPatrol(Actor actor, TilemapManager tm, TilemapHighlighter th, NavigationMap nm, LevelPathManager lpm) : base(actor, tm, th, nm, lpm) { }
+	public AutoPatrol(Actor actor, TilemapManager tm, TilePainter tp, NavigationMap nm, LevelPathManager lpm) : base(actor, tm, tp, nm, lpm) { }
 
 	protected override void CalculatePath()
 	{

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -43,15 +42,15 @@ public class TilePainter
 	/// <summary>
 	/// Highlights all pathfinding node tiles
 	/// </summary>
-	public void HighlightAllNodes()
+	public void PaintAllNodes()
 	{
-		HighlightCells(_navMap.PathfindingNodes, _paintColor, RefreshEnabled);
+		PaintCells(_navMap.PathfindingNodes, _paintColor, RefreshEnabled);
 	}
 
 	/// <summary>
 	/// Remove any highlighting
 	/// </summary>
-	public void RemoveHighlight()
+	public void RemovePaint()
 	{
 		foreach (Vector3Int cell in _highlightedCells)
 			_map.SetColor(cell, Color.white);
@@ -63,15 +62,15 @@ public class TilePainter
 	/// Highlight a tile with default tint
 	/// </summary>
 	/// <param name="cell">Position of tile to highlight</param>
-	public void HighlightStandardCell(Vector3Int cell) => HighlightCell(cell, _paintColor, RefreshEnabled);
+	public void PaintStandardCell(Vector3Int cell) => PaintCell(cell, _paintColor, RefreshEnabled);
 
 	/// <summary>
 	/// Highlights the given node and its neighbours
 	/// </summary>
 	/// <param name="node">Node to highlight neighbours of</param>
-	public void HighlightNodeNeighbours(Vector3Int node)
+	public void PaintNodeNeighbours(Vector3Int node)
 	{
-		HighlightStandardCell(node);
+		PaintStandardCell(node);
 
 		if (!_navMap.IsPathfindingNode(node))
 		{
@@ -80,22 +79,22 @@ public class TilePainter
 		}
 
 		Vector3Int[] neighbours = _navMap.GetNeighboursOfNode(node);
-		HighlightCells(neighbours, _secondaryColor, false);
+		PaintCells(neighbours, _secondaryColor, false);
 	}
 
 	/// <summary>
 	/// Highlights closest node of given cell
 	/// </summary>
 	/// <param name="cell">Cell to search from</param>
-	public void HighlightClosestNode(Vector3Int cell)
+	public void PaintClosestNode(Vector3Int cell)
 	{
 		var closestNode = _navMap.ClosestNodeToCell(cell, out var examinedCells);
 
 		if (RefreshEnabled)
-			RemoveHighlight();
+			RemovePaint();
 
-		HighlightCells(examinedCells.ToArray(), _secondaryColor, false);
-		HighlightCell(closestNode, _paintColor, false);
+		PaintCells(examinedCells.ToArray(), _secondaryColor, false);
+		PaintCell(closestNode, _paintColor, false);
 	}
 
 	/// <summary>
@@ -103,18 +102,18 @@ public class TilePainter
 	/// </summary>
 	/// <param name="start">Start node of path</param>
 	/// <param name="end">End node of path</param>
-	public void HighlightPath(Vector3Int start, Vector3Int end)
+	public void PaintPath(Vector3Int start, Vector3Int end)
 	{
 		MessageLogger.LogVerboseMessage(LogType.Highlight, "Highlighting path between {0} and {1}...", start, end);
 		var path = _navMap.FindPathBetweenNodes(start, end);
-		HighlightPath(path);
+		PaintPath(path);
 	}
 
 	/// <summary>
 	/// Highlight nodes of an existing path
 	/// </summary>
 	/// <param name="path">Path to highlight</param>
-	public void HighlightPath(Path path) => HighlightCells(path.Points, _paintColor, RefreshEnabled);
+	public void PaintPath(Path path) => PaintCells(path.Points, _paintColor, RefreshEnabled);
 
 	/// <summary>
 	/// Highlight a single tile with the given colour
@@ -122,10 +121,10 @@ public class TilePainter
 	/// <param name="cell">Coordinates of tile to highlight</param>
 	/// <param name="col">Colour to highlight tile with</param>
 	/// <param name="removeExistingHighlight">Whether to reset currently highlighted cells</param>
-	protected void HighlightCell(Vector3Int cell, Color col, bool removeExistingHighlight = true)
+	protected void PaintCell(Vector3Int cell, Color col, bool removeExistingHighlight = true)
 	{
 		if (removeExistingHighlight)
-			RemoveHighlight();
+			RemovePaint();
 
 		if (!_map.HasTile(cell))
 		{
@@ -143,14 +142,14 @@ public class TilePainter
 	/// <param name="cells">Cells to highlight</param>
 	/// <param name="col">Colour to highlight tiles with</param>
 	/// <param name="removeExistingHighlight">Whether to reset currently highlighted cells</param>
-	protected void HighlightCells(Vector3Int[] cells, Color col, bool removeExistingHighlight = true)
+	protected void PaintCells(Vector3Int[] cells, Color col, bool removeExistingHighlight = true)
 	{
 		if (removeExistingHighlight)
-			RemoveHighlight();
+			RemovePaint();
 
 		foreach (Vector3Int cell in cells)
 		{
-			HighlightCell(cell, col, false);
+			PaintCell(cell, col, false);
 		}
 	}
 }

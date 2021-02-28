@@ -30,7 +30,8 @@ public class TilemapVisualDebugger : MonoBehaviour
 
 	private TilemapManager _tileManager;
 	private NavigationMap _navMap;
-	private TilemapHighlighter _highlighter;
+	//private TilemapHighlighter _highlighter;
+	private HighlightManager _highlightManager;
 
 	/* Unity methods */
 
@@ -69,7 +70,8 @@ public class TilemapVisualDebugger : MonoBehaviour
 	{
 		_tileManager = GetComponent<TilemapManager>();
 		_navMap = GetComponent<NavigationMap>();
-		_highlighter = GetComponent<TilemapHighlighter>();
+		//_highlighter = GetComponent<TilemapHighlighter>();
+		_highlightManager = GetComponent<HighlightManager>();
 	}
 
 	private void SetupMouseInput()
@@ -89,7 +91,8 @@ public class TilemapVisualDebugger : MonoBehaviour
 
 	public void NoVisualDebug()
 	{
-		_highlighter.RemoveHighlight();
+		//_highlighter.RemoveHighlight();
+		_highlightManager.RemoveHighlight();
 		SetVisualDebugType(VisualDebugType.None);
 	}
 
@@ -135,16 +138,19 @@ public class TilemapVisualDebugger : MonoBehaviour
 		switch (_visualDebugType)
 		{
 			case VisualDebugType.Cell:
-				_highlighter.HighlightStandardCell(mouseCell);
+				//_highlighter.HighlightStandardCell(mouseCell);
+				_highlightManager.HighlightStandardCell(mouseCell);
 				break;
 			case VisualDebugType.Neighbours:
-				_highlighter.HighlightNodeNeighbours(mouseCell);
+				//_highlighter.HighlightNodeNeighbours(mouseCell);
+				_highlightManager.HighlightNodeNeighbours(mouseCell);
 				break;
 			case VisualDebugType.Path:
 				AddVisualPathPoint(mouseCell);
 				break;
 			case VisualDebugType.Closest:
-				_highlighter.HighlightClosestNode(mouseCell);
+				//_highlighter.HighlightClosestNode(mouseCell);
+				_highlightManager.HighlightClosestNode(mouseCell);
 				break;
 			default:
 				break;
@@ -164,7 +170,8 @@ public class TilemapVisualDebugger : MonoBehaviour
 				// hover current tile
 				var worldMousePos = Camera.main.ScreenToWorldPoint(_mousePosition);
 				var mouseCell = _tileManager.CellOfPosition(worldMousePos);
-				_highlighter.HoveredTile = mouseCell;
+				//_highlighter.HoveredTile = mouseCell;
+				_highlightManager.HoveredTile = mouseCell;
 			}
 
 			_nextHoverUpdate = _hoverUpdateRate;
@@ -188,11 +195,13 @@ public class TilemapVisualDebugger : MonoBehaviour
 		MessageLogger.LogDebugMessage(LogType.Highlight, "Adding node {0} to path", node);
 
 		_visualPathPoints[_visualPathIdx++] = node;
-		_highlighter.HighlightStandardCell(node);
+		//_highlighter.HighlightStandardCell(node);
+		_highlightManager.HighlightStandardCell(node);
 
 		if (_visualPathIdx > 1)
 		{
-			_highlighter.HighlightPath(_visualPathPoints[0], _visualPathPoints[1]);
+			//_highlighter.HighlightPath(_visualPathPoints[0], _visualPathPoints[1]);
+			_highlightManager.HighlightPath(_visualPathPoints[0], _visualPathPoints[1]);
 			InitPathPoints();
 		}
 	}

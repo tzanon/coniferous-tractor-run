@@ -2,7 +2,7 @@
 
 public abstract class AutoMoveToPoint : AutoControl
 {
-	private Vector3Int _destNode;
+	protected Vector3Int _destNode;
 
 	/* properties */
 
@@ -11,8 +11,8 @@ public abstract class AutoMoveToPoint : AutoControl
 		get => ActorAtPoint(_tilemapManager.CenterPositionOfCell(_destNode));
 	}
 
-	public AutoMoveToPoint(Actor actor, TilemapManager tm, TilemapHighlighter th, NavigationMap nm, LevelPathManager lpm) :
-		base(actor, tm, th, nm, lpm)
+	public AutoMoveToPoint(Actor actor, TilemapManager tm, TilePainter tp, NavigationMap nm, LevelPathManager lpm) :
+		base(actor, tm, tp, nm, lpm)
 	{
 		_destNode = TilemapManager.UndefinedCell;
 	}

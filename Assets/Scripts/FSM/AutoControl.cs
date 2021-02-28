@@ -13,7 +13,8 @@ public abstract class AutoControl : FSMState
 	// components
 	protected readonly Actor _actor;
 	protected readonly TilemapManager _tilemapManager;
-	protected readonly TilemapHighlighter _highlighter;
+	//protected readonly TilemapHighlighter _highlighter;
+	protected readonly TilePainter _painter;
 	protected readonly NavigationMap _navMap;
 	protected readonly LevelPathManager _pathManager;
 
@@ -25,11 +26,12 @@ public abstract class AutoControl : FSMState
 
 	/* methods */
 
-	public AutoControl(Actor actor, TilemapManager tm, TilemapHighlighter th, NavigationMap nm, LevelPathManager lpm)
+	public AutoControl(Actor actor, TilemapManager tm, TilePainter tp, NavigationMap nm, LevelPathManager lpm)
 	{
 		_actor = actor;
 		_tilemapManager = tm;
-		_highlighter = th;
+		//_highlighter = th;
+		_painter = tp;
 		_navMap = nm;
 		_pathManager = lpm;
 

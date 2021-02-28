@@ -12,7 +12,7 @@ public class LevelPathManager : MonoBehaviour, IObserver<CollectibleStatus>
 	[SerializeField] GameplayManager _gameplayManager;
 	private TilemapManager _tilemapManager;
 	private NavigationMap _navMap;
-	private TilemapHighlighter _highlighter;
+	private TilePainter _mapPainter;
 
 	/* properties */
 
@@ -24,7 +24,7 @@ public class LevelPathManager : MonoBehaviour, IObserver<CollectibleStatus>
 	{
 		_tilemapManager = GetComponent<TilemapManager>();
 		_navMap = GetComponent<NavigationMap>();
-		_highlighter = GetComponent<TilemapHighlighter>();
+		_mapPainter = GetComponent<HighlightManager>().CreateTilePainter(Color.cyan);
 	}
 
 	private void Start()
@@ -45,31 +45,30 @@ public class LevelPathManager : MonoBehaviour, IObserver<CollectibleStatus>
 		Debug.Log(msg);
 
 		var cycle = _navMap.FindCycle(navMarkerCells);
-		_highlighter.HighlightPath(cycle.CompletePath);
+		_mapPainter.PaintPath(cycle.CompletePath);
 	}
 
 	//debug
 	private void HighlightCollectibleRoutes(Collectible[] collectibles, bool cyclic = true)
 	{
-		if (_highlighter.RefreshEnabled)
-			_highlighter.ToggleHighlightRefresh();
+		_mapPainter.RefreshEnabled = false;
 
 		foreach (var collectible in collectibles)
 		{
 			var waypoints = _tilemapManager.CellsofPositions(collectible.NavpointPositions);
 			var route = cyclic ? _navMap.FindCycle(waypoints) : _navMap.FindRoute(waypoints);
 
-			_highlighter.HighlightPath(route.CompletePath);
+			//_highlighter.HighlightPath(route.CompletePath);
+			_mapPainter.PaintPath(route.CompletePath);
 		}
 
-		if (!_highlighter.RefreshEnabled)
-			_highlighter.ToggleHighlightRefresh();
+		_mapPainter.RefreshEnabled = true;
 	}
 
 	/// <summary>
 	/// Highlight current patrol route
 	/// </summary>
-	private void HighlightPatrolRoute() => _highlighter.HighlightPath(LevelPatrolRoute.CompletePath);
+	private void HighlightPatrolRoute() => _mapPainter.PaintPath(LevelPatrolRoute.CompletePath);
 
 	// TODO: have dummy object go through route at high speed?
 	private void RunThroughPatrol()
@@ -101,7 +100,7 @@ public class LevelPathManager : MonoBehaviour, IObserver<CollectibleStatus>
 		}
 
 		// ensure that all waypoints are graph nodes
-		var invalidWaypoints = CheckInvalidNodes(patrolWaypoints);
+		var invalidWaypoints = CalculateInvalidNodes(patrolWaypoints);
 		if (invalidWaypoints.Length > 0)
 		{
 			var invalidStr = "";
@@ -118,7 +117,7 @@ public class LevelPathManager : MonoBehaviour, IObserver<CollectibleStatus>
 		LevelPatrolRoute = _navMap.FindCycle(patrolWaypoints); // calculate cycle and assign as level's patrol route
 	}
 
-	private Vector3Int[] CheckInvalidNodes(Vector3Int[] points)
+	private Vector3Int[] CalculateInvalidNodes(Vector3Int[] points)
 	{
 		var invalidNodes = new List<Vector3Int>();
 		foreach (var point in points)

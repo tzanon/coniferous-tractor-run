@@ -11,25 +11,21 @@ public class AnimatedTilePainter : TilePainter
 
 	public bool CurrentlyAnimating { get; private set; }
 
-	public AnimatedTilePainter(Tilemap m, TilemapManager tm, NavigationMap nm, float ad = 0.5f) : base(m, tm, nm) => InitAnim(ad);
+	public AnimatedTilePainter(Tilemap m, TilemapManager tm, NavigationMap nm, float ad = 0.2f) : base(m, tm, nm) => AnimInit(ad);
 
-	public AnimatedTilePainter(Tilemap m, TilemapManager tm, NavigationMap nm, Color c, float ad = 0.5f) : base(m, tm, nm, c) => InitAnim(ad);
+	public AnimatedTilePainter(Tilemap m, TilemapManager tm, NavigationMap nm, Color c, float ad = 0.2f) : base(m, tm, nm, c) => AnimInit(ad);
 
-	private void InitAnim(float ad)
+	private void AnimInit(float ad)
 	{
+		CurrentlyAnimating = false;
 		_delayInterval = new WaitForSecondsRealtime(ad);
 	}
 
-	// necessary?
-	public IEnumerator AnimateNodeNeighbours(Vector3Int node)
+	private bool AnimCheck()
 	{
 		if (CurrentlyAnimating)
-		{
 			MessageLogger.LogErrorMessage(LogType.Highlight, "Error: cannot start a new animation until the current one is complete");
-			yield break;
-		}
-
-		yield break;
+		return CurrentlyAnimating;
 	}
 
 	/// <summary>
@@ -38,11 +34,8 @@ public class AnimatedTilePainter : TilePainter
 	/// <param name="cell">Cell to search from</param>
 	public IEnumerator AnimateClosestNode(Vector3Int cell)
 	{
-		if (CurrentlyAnimating)
-		{
-			MessageLogger.LogErrorMessage(LogType.Highlight, "Error: cannot start a new animation until the current one is complete");
+		if (AnimCheck())
 			yield break;
-		}
 
 		// run algorithm and send evaluated tiles to animate methods
 
@@ -67,11 +60,8 @@ public class AnimatedTilePainter : TilePainter
 	/// <param name="end">End node of path</param>
 	public IEnumerator AnimatePath(Vector3Int start, Vector3Int end)
 	{
-		if (CurrentlyAnimating)
-		{
-			MessageLogger.LogErrorMessage(LogType.Highlight, "Error: cannot start a new animation until the current one is complete");
+		if (AnimCheck())
 			yield break;
-		}
 
 		// run algorithm and send evaluated tiles to animate methods
 		_navMap.FindPathBetweenNodes(start, end, out var tileColors, out var nonPathCells);
@@ -90,17 +80,17 @@ public class AnimatedTilePainter : TilePainter
 		CurrentlyAnimating = true;
 
 		if (removeExistingHighlight)
-			RemoveHighlight();
+			RemovePaint();
 
 		foreach (ColoredTile coloredTile in tileColors)
 		{
-			HighlightCell(coloredTile.Tile, coloredTile.Color, false);
+			PaintCell(coloredTile.Tile, coloredTile.Color, false);
 			yield return _delayInterval;
 		}
 
 		// clear remaining cells not in the path
 		if (extraSearchTiles != null)
-			HighlightCells(extraSearchTiles, Color.white, false);
+			PaintCells(extraSearchTiles, Color.white, false);
 
 		CurrentlyAnimating = false;
 	}
