@@ -6,7 +6,7 @@ using Pathfinding;
 public class LevelPathManager : MonoBehaviour, IObserver<CollectibleStatus>
 {
 	/* fields */
-	[SerializeField] private Navpoint[] _testNavMarkers;
+	[SerializeField] private GameObject _exitPatrolPointGroup;
 
 	// components
 	[SerializeField] GameplayManager _gameplayManager;
@@ -24,28 +24,12 @@ public class LevelPathManager : MonoBehaviour, IObserver<CollectibleStatus>
 	{
 		_tilemapManager = GetComponent<TilemapManager>();
 		_navMap = GetComponent<NavigationMap>();
-		_mapPainter = GetComponent<HighlightManager>().CreateTilePainter(Color.cyan);
 	}
 
 	private void Start()
 	{
+		_mapPainter = GetComponent<HighlightManager>().CreateTilePainter(Color.cyan);
 		_gameplayManager.Subscribe(this);
-		//HighlightTestCycle();
-	}
-
-	//debug
-	private void HighlightTestCycle()
-	{
-		var navMarkerCells = _tilemapManager.CellsofPositions(_testNavMarkers);
-
-		var msg = "cycle waypoints: ";
-		foreach(var cell in navMarkerCells)
-			msg += cell + ", ";
-
-		Debug.Log(msg);
-
-		var cycle = _navMap.FindCycle(navMarkerCells);
-		_mapPainter.PaintPath(cycle.CompletePath);
 	}
 
 	//debug
@@ -76,12 +60,25 @@ public class LevelPathManager : MonoBehaviour, IObserver<CollectibleStatus>
 
 	}
 
+	private void CalculateExitRoute()
+	{
+		var exitNavpoints = _exitPatrolPointGroup.GetComponentsInChildren<Navpoint>();
+		Array.Sort(exitNavpoints, new NavpointNameComparer());
+
+		var navpointPositions = Array.ConvertAll(exitNavpoints, navpoint => navpoint.WorldPosition);
+		Vector3Int[] navpointCells = _tilemapManager.CellsofPositions(navpointPositions);
+
+		LevelPatrolRoute = _navMap.FindCycle(navpointCells);
+	}
+
 	public void CalculatePatrolRoute(Collectible[] collectibles)
 	{
 		if (collectibles.Length <= 0)
 		{
-			// TODO: calculate exit patrol route
-			MessageLogger.LogDebugMessage(LogType.Game, "All collectibles taken, defend the exit!");
+			// TODO: calculate exit patrol 
+			CalculateExitRoute();
+
+			MessageLogger.LogDebugMessage(LogType.Game, "All collectibles taken, get to the exit!");
 			return;
 		}
 

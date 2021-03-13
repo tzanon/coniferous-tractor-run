@@ -90,17 +90,6 @@ public class GameplayManager : MonoBehaviour, IObservable<CollectibleStatus>
 			_collectibles[i] = _collectibles[j];
 			_collectibles[j] = temp;
 		}
-
-		/**
-		while (idx1 > 1)
-		{
-			idx1--;
-			var k = UnityEngine.Random.Range(0, idx1 + 1);
-			var collectible = _collectibles[k];
-			_collectibles[k] = _collectibles[idx1];
-			_collectibles[idx1] = collectible;
-		}
-		/**/
 	}
 
 	/// <summary>
