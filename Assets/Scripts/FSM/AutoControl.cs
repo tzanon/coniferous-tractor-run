@@ -13,7 +13,6 @@ public abstract class AutoControl : FSMState
 	// components
 	protected readonly Actor _actor;
 	protected readonly TilemapManager _tilemapManager;
-	//protected readonly TilemapHighlighter _highlighter;
 	protected readonly TilePainter _painter;
 	protected readonly NavigationMap _navMap;
 	protected readonly LevelPathManager _pathManager;
@@ -30,7 +29,6 @@ public abstract class AutoControl : FSMState
 	{
 		_actor = actor;
 		_tilemapManager = tm;
-		//_highlighter = th;
 		_painter = tp;
 		_navMap = nm;
 		_pathManager = lpm;
@@ -93,10 +91,12 @@ public abstract class AutoControl : FSMState
 	public override void OnEnter()
 	{
 		InitializeData();
+		_painter.PaintPath(_currentPath);
 	}
 
 	public override void OnExit()
 	{
 		ClearData();
+		_painter.RemovePaint();
 	}
 }

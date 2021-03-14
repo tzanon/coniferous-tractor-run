@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using TMPro;
 
 // TODO: make a subscriber of gameplay manager
-public class Tractor : Actor//, IObserver<CollectibleStatus>
+public class Tractor : Actor, IObserver<CollectibleStatus>
 {
 	[SerializeField] private TMP_Text _debugDisplay; // TODO: display destination/status above tractor
 	private LineRenderer _lr; // debug: for pointing to dest?
@@ -12,11 +13,21 @@ public class Tractor : Actor//, IObserver<CollectibleStatus>
 	private const float _defaultSpeed = 4.0f;
 	private const float _chaseSpeed = 8.0f;
 
+	// apple investigating
+	public CollectibleStatus LastCollectibleTakenStatus { get; private set; } = null;
+
 	protected override void Awake()
 	{
 		base.Awake();
 
 		CurrentSpeed = _defaultSpeed;
+	}
+
+	protected override void Start()
+	{
+		base.Start();
+
+		_gameplayManager.Subscribe(this);
 	}
 
 	protected override void AssignAnimationStateNames()
@@ -41,16 +52,21 @@ public class Tractor : Actor//, IObserver<CollectibleStatus>
 		var idleState = new Idle(this);
 		var findPatrolState = new AutoFindPatrol(this, _tilemapManager, _painter, _navMap, _pathManager);
 		var patrolState = new AutoPatrol(this, _tilemapManager, _painter, _navMap, _pathManager);
+		var investigateState = new AutoInvestigate(this, _tilemapManager, _painter, _navMap, _pathManager);
 
 		// create trigger functions
 		bool GameOver() => _gameplayManager.GameOver;
 		bool TractorStuck() => Stuck;
 		bool ReachedPatrol() => findPatrolState.ActorReachedDestination;
+		bool CollectibleTaken() => LastCollectibleTakenStatus != null && LastCollectibleTakenStatus.CollectibleTaken;
+		bool DoneInvestigating() => investigateState.ActorAtEnd;
 
 		// create transitions
 		var gameOverIdle = new FSMTransition(idleState, GameOver);
 		var stuckError = new FSMTransition(errorState, TractorStuck);
 		var searchToPatrol = new FSMTransition(patrolState, ReachedPatrol);
+		var toInvestigate = new FSMTransition(investigateState, CollectibleTaken);
+		var investigateToSearch = new FSMTransition(findPatrolState, DoneInvestigating);
 
 		// add everything and set starting state
 		_stateMachine.AddState(idleState);
@@ -59,8 +75,9 @@ public class Tractor : Actor//, IObserver<CollectibleStatus>
 		_stateMachine.AddState(errorState);
 		_stateMachine.AddUniversalTransition(stuckError);
 
-		_stateMachine.AddState(patrolState);
-		_stateMachine.AddState(findPatrolState, searchToPatrol);
+		_stateMachine.AddState(patrolState, toInvestigate);
+		_stateMachine.AddState(findPatrolState, searchToPatrol, toInvestigate);
+		_stateMachine.AddState(investigateState, investigateToSearch);
 
 		_stateMachine.CurrentState = findPatrolState;
 	}
@@ -93,5 +110,23 @@ public class Tractor : Actor//, IObserver<CollectibleStatus>
 		{
 			_debugDisplay.text = stateName;
 		}
+	}
+
+	public void DoneInvestigating()
+	{
+		LastCollectibleTakenStatus = null;
+	}
+
+	public void OnError(Exception error) => throw error;
+
+	public void OnNext(CollectibleStatus status)
+	{
+		// TODO: collectible taken, switch to investigate state
+		LastCollectibleTakenStatus = status;
+	}
+
+	public void OnCompleted()
+	{
+
 	}
 }

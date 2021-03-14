@@ -134,7 +134,7 @@ public class LevelPathManager : MonoBehaviour, IObserver<CollectibleStatus>
 
 		// (re)calculate level patrol route
 		CalculatePatrolRoute(status.RemainingCollectibles);
-		HighlightPatrolRoute();
+		//HighlightPatrolRoute();
 	}
 
 	public void OnError(Exception error) => throw error;

@@ -54,6 +54,7 @@ public abstract class Actor : MonoBehaviour
 
 	[SerializeField] protected GameplayManager _gameplayManager;
 	[SerializeField] protected TilemapManager _tilemapManager;
+	[SerializeField] protected Color _paintColor;
 	protected TilePainter _painter;
 	protected NavigationMap _navMap;
 	protected LevelPathManager _pathManager;
@@ -93,7 +94,6 @@ public abstract class Actor : MonoBehaviour
 		
 		Stuck = false;
 
-		CacheComponents();
 		AssignAnimationStateNames();
 		SetUpDirectionCharacteristics();
 	}
@@ -108,7 +108,7 @@ public abstract class Actor : MonoBehaviour
 		_rb = GetComponent<Rigidbody2D>();
 		_animator = GetComponent<Animator>();
 
-		_painter = _tilemapManager.GetComponent<HighlightManager>().CreateTilePainter();
+		_painter = _tilemapManager.GetComponent<HighlightManager>().CreateTilePainter(_paintColor);
 		
 		_navMap = _tilemapManager.GetComponent<NavigationMap>();
 		_pathManager = _tilemapManager.GetComponent<LevelPathManager>();
@@ -128,6 +128,7 @@ public abstract class Actor : MonoBehaviour
 
 	protected virtual void Start()
 	{
+		CacheComponents();
 		SetUpStateMachine();
 		SetIdleAnimInDirection(CardinalDirection.South);
 	}

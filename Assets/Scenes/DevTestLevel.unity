@@ -116104,6 +116104,26 @@ PrefabInstance:
       propertyPath: _verticalCollOffset.y
       value: -0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 7712710582726886949, guid: eb5492a23a5c684488f965b1a188ca2e,
+        type: 3}
+      propertyPath: _paintColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7712710582726886949, guid: eb5492a23a5c684488f965b1a188ca2e,
+        type: 3}
+      propertyPath: _paintColor.g
+      value: 0.8289442
+      objectReference: {fileID: 0}
+    - target: {fileID: 7712710582726886949, guid: eb5492a23a5c684488f965b1a188ca2e,
+        type: 3}
+      propertyPath: _paintColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7712710582726886949, guid: eb5492a23a5c684488f965b1a188ca2e,
+        type: 3}
+      propertyPath: _paintColor.a
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eb5492a23a5c684488f965b1a188ca2e, type: 3}
 --- !u!114 &7713536499434079148
@@ -118192,7 +118212,7 @@ PrefabInstance:
     - target: {fileID: 8739432759012199892, guid: 0efb50a1b34529840a5117894549db3c,
         type: 3}
       propertyPath: m_UsedByComposite
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8739432759012199894, guid: 0efb50a1b34529840a5117894549db3c,
         type: 3}
@@ -118284,6 +118304,26 @@ PrefabInstance:
       propertyPath: _debugDisplay
       value: 
       objectReference: {fileID: 222354341}
+    - target: {fileID: 8739432759012199899, guid: 0efb50a1b34529840a5117894549db3c,
+        type: 3}
+      propertyPath: _paintColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8739432759012199899, guid: 0efb50a1b34529840a5117894549db3c,
+        type: 3}
+      propertyPath: _paintColor.g
+      value: 0.15546039
+      objectReference: {fileID: 0}
+    - target: {fileID: 8739432759012199899, guid: 0efb50a1b34529840a5117894549db3c,
+        type: 3}
+      propertyPath: _paintColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8739432759012199899, guid: 0efb50a1b34529840a5117894549db3c,
+        type: 3}
+      propertyPath: _paintColor.a
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0efb50a1b34529840a5117894549db3c, type: 3}
 --- !u!114 &8896329989040026349
